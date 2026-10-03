@@ -50,7 +50,7 @@ manual:
     month: 9
     venue: "16th meeting of the Expert Group on Telecommunication/ICT Indicators (EGTI), Geneva, Switzerland"
     links:
-      Presentation: "assets/presentations/Geneva_QAQC.pdf"
+       Presentation: "assets/presentations/Geneva_QAQC.pdf"
 
   # ----- CONFERENCE POSTERS -----
 
@@ -62,7 +62,7 @@ manual:
     venue: "72nd Indian Dental Conference, Indore, India"
     award: "Best Paper Presentation"
     links:
-      Poster: "assets/presentations/astrodontics_poster.pdf"
+       Poster: "assets/presentations/astrodontics_poster.pdf"
 
   - type: poster
     title: "Space-age dentistry — An insight into aeronautic dentistry"
@@ -72,7 +72,7 @@ manual:
     venue: "31st Annual International Conference, Indian Society for Dental Research, Mumbai, India"
     award: "Second Prize"
     links:
-      Presentation: "assets/presentations/astrodontics_paper.pdf"
+       Presentation: "assets/presentations/astrodontics_paper.pdf"
 
   - type: poster
     title: "Trigger points in trigeminal neuralgia"
@@ -82,7 +82,7 @@ manual:
     venue: "Indian Society of Pain Clinicians Conference (ISPCCON), Navi Mumbai, India"
     award: "First Prize"
     links:
-      Poster: "assets/presentations/tn_triggerpoints.pdf"
+       Poster: "assets/presentations/tn_triggerpoints.pdf"
 
   - type: poster
     title: "Sweet peril — Sugar is the new tobacco"
@@ -91,7 +91,7 @@ manual:
     month: 12
     venue: "National BDS Students' Convention, Indian Academy of Oral Medicine and Radiology (IAOMR), Maharashtra, India"
     links:
-      Poster: "assets/presentations/sweet_peril.pdf"
+       Poster: "assets/presentations/sweet_peril.pdf"
 
   - type: poster
     title: "Laser tissue welding"
@@ -99,7 +99,7 @@ manual:
     year: 2017
     venue: "World Dental Show, Mumbai, India"
     links:
-      Poster: "assets/presentations/laser_tissue_welding.jpg"
+       Poster: "assets/presentations/laser_tissue_welding.jpg"
 
   - type: poster
     title: "An insight into evidence-based dentistry"
@@ -107,7 +107,7 @@ manual:
     year: 2017
     venue: "1st Student Conference on Research in Education, Manipal, India"
     links:
-      Poster: "assets/presentations/evidence_based_dentistry.pdf"
+       Poster: "assets/presentations/evidence_based_dentistry.pdf"
 
   # ----- OTHER -----
 
@@ -117,4 +117,4 @@ manual:
     year: 2022
     venue: "Suitradhaar Science Solutions · Copyright L-124516/2023"
     links:
-      Paper: "assets/presentations/algorithm_optimization_whitepaper.pdf"
+       Paper: "assets/presentations/algorithm_optimization_whitepaper.pdf"

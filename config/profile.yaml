@@ -118,7 +118,7 @@ education:
   - degree: "Bachelor of Dental Surgery (BDS)"
     institution: "Maharashtra University of Health Sciences"
     year: 2019
-    logo: "assets/logos/muhs.svg"
+    logo: "assets/logos/muhs.png"
     logo_invert_on_dark: false
 
 # ============================================================
