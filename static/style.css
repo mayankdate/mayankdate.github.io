@@ -251,8 +251,11 @@ main { min-height: 50vh; }
   height: 220px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--surface);
-  box-shadow: var(--card-shadow);
+  /* Dynamic gold ring — swaps tone between light & dark mode via --gold */
+  box-shadow:
+    0 0 0 10px var(--gold),
+    0 0 32px 0 color-mix(in oklab, var(--gold) 40%, transparent),
+    var(--card-shadow);
 }
 .hero-cta {
   display: flex;
@@ -586,6 +589,9 @@ main { min-height: 50vh; }
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 1rem;
+  box-shadow:
+    0 0 0 5px var(--gold),
+    0 0 18px 0 color-mix(in oklab, var(--gold) 40%, transparent);
 }
 .contact-name {
   font-family: var(--serif);
