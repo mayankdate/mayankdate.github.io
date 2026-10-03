@@ -796,3 +796,21 @@ main { min-height: 50vh; }
 }
 
 ::selection { background: var(--gold-soft); color: var(--text); }
+
+/* ---------- RESEARCH PAGE HEADER ---------------------------------------- */
+
+.research-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.research-header-text { flex: 1 1 420px; min-width: 0; }
+.research-header-text .lede { margin-bottom: 0; }
+.research-header-links {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  padding-top: .5rem;
+}

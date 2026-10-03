@@ -80,22 +80,22 @@ def _parse_work(w: dict) -> Publication | None:
     norm_type = TYPE_MAP.get(orcid_type, "other")
 
     date = w.get("publication-date") or {}
-    year = _int(date.get("year", {}).get("value"))
-    month = _int(date.get("month", {}).get("value"))
+    year = _int((date.get("year") or {}).get("value"))
+    month = _int((date.get("month") or {}).get("value"))
 
     doi = None
     url = None
     for eid in (w.get("external-ids") or {}).get("external-id", []) or []:
         if (eid.get("external-id-type") or "").lower() == "doi":
             doi = (eid.get("external-id-value") or "").strip().lower()
-            url = (eid.get("external-id-url") or {}).get("value")
+            url = ((eid.get("external-id-url") or {}) or {}).get("value")
 
-    url = url or (w.get("url") or {}).get("value") or (
+    url = url or ((w.get("url") or {}) or {}).get("value") or (
         f"https://doi.org/{doi}" if doi else None
     )
 
     authors = _parse_authors(w.get("contributors") or {})
-    venue = (w.get("journal-title") or {}).get("value") or ""
+    venue = ((w.get("journal-title") or {}) or {}).get("value") or ""
 
     return Publication(
         title=title,

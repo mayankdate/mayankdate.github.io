@@ -4,12 +4,21 @@
 {% block content %}
 
 <section class="page-header container">
-  <h1 class="display">Publications &amp; Presentations</h1>
-  <p class="lede">
-    Peer-reviewed articles pulled live from
-    <a href="https://orcid.org/{{ profile.orcid_id }}" rel="noopener">ORCID</a>,
-    posters and other work added by hand.
-  </p>
+  <div class="research-header">
+    <div class="research-header-text">
+      <h1 class="display">Publications &amp; Presentations</h1>
+      <p class="lede">
+        Peer-reviewed articles pulled live from ORCID; posters and other work added by hand.
+      </p>
+    </div>
+    <div class="research-header-links">
+      {% for s in profile.socials %}
+        {% if s.name in ["ORCID", "ResearchGate", "Google Scholar"] %}
+          <a class="btn btn-ghost btn-sm" href="{{ s.url }}" rel="noopener">{{ s.name }} →</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
 {% for group in pub_groups %}
