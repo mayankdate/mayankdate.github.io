@@ -1,0 +1,112 @@
+# ============================================================
+# PROJECTS  —  shown on the Projects page.
+# ============================================================
+#
+# Required: title, year, tags (list), blurb
+# Optional:
+#   links:                        # map of label → url (local path or external)
+#     DOI: "https://doi.org/..."
+#     Repo: "https://github.com/..."
+#     Live: "https://..."
+#
+# Sort inside each tag section is by year, descending.
+# ============================================================
+
+projects:
+
+  # ----- WORK -----
+
+  - title: "EHR Analytics Dashboard"
+    year: 2024
+    tags: [work, research]
+    blurb: >
+      Prototype electronic-health-record analytics dashboard now in use by
+      a state government for monitoring non-communicable diseases.
+      Translates routine EHR data into population-level indicators.
+    links: {}
+
+  - title: "ML Quality-Assurance Pipeline"
+    year: 2024
+    tags: [work]
+    blurb: >
+      Isolation-forest-based QA pipeline for primary health-survey data.
+      Improved data quality by 85% in the first month of use across a
+      multi-country deployment.
+    links: {}
+
+  - title: "mPFPH — Mobile-phone Full Pregnancy History"
+    year: 2025
+    tags: [work, research]
+    blurb: >
+      Feasibility and validity analysis of a phone-based proxy pregnancy
+      history for estimating perinatal mortality in rural Bangladesh.
+      Published in Tropical Medicine & International Health.
+    links:
+      DOI: "https://doi.org/10.1111/tmi.14094"
+
+  - title: "ICT Household Survey Quality Framework"
+    year: 2025
+    tags: [work, research]
+    blurb: >
+      Real-time quality-assurance framework for ICT household surveys,
+      presented at the ITU Expert Group on Telecommunication/ICT
+      Indicators (EGTI) in Geneva.
+    links: {}
+
+  # ----- RESEARCH -----
+
+  - title: "LLM Evidence Summarization vs Human Researchers"
+    year: 2023
+    tags: [research]
+    blurb: >
+      Evaluated the ability of large language models to produce evidence
+      summaries comparable to human researchers across 15 biomedical
+      papers. Published in JMIR Formative Research.
+    links:
+      DOI: "https://doi.org/10.2196/69707"
+
+  - title: "Digital Well-Being Interventions Rapid Review"
+    year: 2024
+    tags: [research]
+    blurb: >
+      Co-authored a rapid systematic review of prevention and
+      health-promotion interventions for youth in the context of digital
+      well-being. Published in JMIR.
+    links:
+      DOI: "https://doi.org/10.2196/59968"
+
+  # ----- IDEA -----
+
+  - title: "Gamified Digital Training Tool for Public Health in LMICs"
+    year: 2023
+    tags: [idea, research]
+    blurb: >
+      Capstone framework for a gamified digital training tool to
+      strengthen public health systems in low- and middle-income
+      country settings.
+    links: {}
+
+  # ----- VIBECODED -----
+
+  - title: "This website"
+    year: 2026
+    tags: [vibecoded]
+    blurb: >
+      Personal homepage and business card. Built as a static site
+      generator — YAML config, Jinja2 templates, Python notebook that
+      pulls from ORCID and generates the business-card QR codes at build
+      time.
+    links:
+      Repo: "https://github.com/mayankdate/mayankdate.github.io"
+      Live: "https://mayankdate.github.io"
+
+  # Add your other vibecoded projects below following the same shape.
+  # Example:
+  #
+  # - title: "Something you built with Claude"
+  #   year: 2025
+  #   tags: [vibecoded]
+  #   blurb: >
+  #     What problem it solved, what it does.
+  #   links:
+  #     Repo: "https://github.com/..."

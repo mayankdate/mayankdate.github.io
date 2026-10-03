@@ -1,0 +1,40 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# ---- Jupyter ----
+.jupyter/
+profile_default/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ---- Editors ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- Logs / caches ----
+*.log
+logs/
+.cache/
+
+# NOTE: unlike a typical analysis project, this repo does NOT ignore
+# the built output (index.html, assets/qr/, etc).  Those files ARE the
+# site that GitHub Pages serves — they must be committed.

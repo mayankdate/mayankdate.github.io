@@ -1,0 +1,128 @@
+{% extends "base.html.j2" %}
+{% set page = 'contact' %}
+{% block title %}Contact · {{ profile.name }}{% endblock %}
+{% block content %}
+
+<!-- ========== DESKTOP VIEW (hidden on narrow screens) ========== -->
+<section class="contact-desktop container">
+  <h1 class="display">Let's connect</h1>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-photo">
+        <img src="{{ profile.photo }}" alt="Portrait of {{ profile.name }}" />
+      </div>
+      <div class="contact-name">{{ profile.name }}</div>
+      <div class="contact-title">{{ profile.title }}</div>
+
+      <ul class="contact-list">
+        {% for email in profile.emails %}
+          <li>
+            <span class="contact-label">Email · {{ email.label }}</span>
+            <a href="mailto:{{ email.address }}">{{ email.address }}</a>
+          </li>
+        {% endfor %}
+        {% for phone in profile.phones %}
+          <li>
+            <span class="contact-label">Phone · {{ phone.label }}</span>
+            <a href="tel:{{ phone.number }}">{{ phone.number }}</a>
+          </li>
+        {% endfor %}
+        <li>
+          <span class="contact-label">Location</span>
+          <span>{{ profile.location }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-right">
+      <div class="qr-card">
+        <img src="assets/qr/vcard.png" alt="Scan to save contact to your phone" />
+        <div class="qr-caption">Scan to save contact</div>
+        <a class="btn btn-ghost btn-sm" href="assets/qr/mayank-date.vcf" download>Download .vcf</a>
+      </div>
+
+      <ul class="social-buttons">
+        {% for s in profile.socials %}
+          <li>
+            <a class="social-btn" href="{{ s.url }}" rel="noopener">
+              <span class="social-icon" data-icon="{{ s.icon }}">{{ s.name[0] }}</span>
+              <span class="social-name">{{ s.name }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MOBILE VIEW — business-card carousel ========== -->
+<section class="contact-mobile">
+  <div class="container">
+    <h1 class="display">Let's connect</h1>
+    <p class="lede">Swipe through the cards. Scan a QR to save my contact, open my site, or connect on LinkedIn.</p>
+  </div>
+
+  <div class="carousel" data-carousel>
+    <div class="carousel-track" data-carousel-track>
+
+      <!-- Card 1: vCard -->
+      <article class="bcard" data-card="vcard">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Save contact</div>
+          <h2 class="bcard-title">{{ profile.name }}</h2>
+          <div class="bcard-subtitle">{{ profile.title }}</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/vcard.png" alt="Scan to save contact" />
+        </div>
+        <div class="bcard-footer">Scan to save all my contact info</div>
+      </article>
+
+      <!-- Card 2: Site -->
+      <article class="bcard" data-card="site">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Visit my site</div>
+          <h2 class="bcard-title">{{ profile.name }}</h2>
+          <div class="bcard-subtitle">{{ profile.site_url | replace('https://', '') }}</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/site.png" alt="Scan to open my site" />
+        </div>
+        <div class="bcard-footer">Scan to visit my homepage</div>
+      </article>
+
+      <!-- Card 3: LinkedIn -->
+      <article class="bcard" data-card="linkedin">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Connect on LinkedIn</div>
+          <h2 class="bcard-title">{{ profile.name }}</h2>
+          <div class="bcard-subtitle">linkedin.com/in/mayankdate</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/linkedin.png" alt="Scan to connect on LinkedIn" />
+        </div>
+        <div class="bcard-footer">Scan to connect on LinkedIn</div>
+      </article>
+
+    </div>
+
+    <div class="carousel-dots" data-carousel-dots aria-hidden="true">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <div class="container contact-mobile-actions">
+    <a class="btn btn-primary btn-block" href="tel:{{ profile.phones[0].number }}">📱 Call ({{ profile.phones[0].label }})</a>
+    <a class="btn btn-ghost btn-block" href="mailto:{{ profile.emails[0].address }}">✉ Email</a>
+    <a class="btn btn-ghost btn-block" href="assets/qr/mayank-date.vcf" download>⇩ Save .vcf</a>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block page_scripts %}
+<script src="/static/carousel.js"></script>
+{% endblock %}

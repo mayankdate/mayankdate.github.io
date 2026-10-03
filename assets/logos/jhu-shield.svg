@@ -1,0 +1,8 @@
+<!-- Placeholder for the Johns Hopkins shield. Replace with the official
+     SVG from brand.jhu.edu for the real site.  This stand-in reads "JHU"
+     so the layout works until the file is swapped. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" aria-label="JHU">
+  <rect width="56" height="56" rx="6" fill="#002D72"/>
+  <text x="28" y="36" text-anchor="middle" font-family="Georgia, serif"
+        font-weight="700" font-size="18" fill="#F0B323">JHU</text>
+</svg>

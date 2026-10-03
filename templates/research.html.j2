@@ -1,0 +1,60 @@
+{% extends "base.html.j2" %}
+{% set page = 'research' %}
+{% block title %}Research · {{ profile.name }}{% endblock %}
+{% block content %}
+
+<section class="page-header container">
+  <h1 class="display">Publications &amp; Presentations</h1>
+  <p class="lede">
+    Peer-reviewed articles pulled live from
+    <a href="https://orcid.org/{{ profile.orcid_id }}" rel="noopener">ORCID</a>,
+    posters and other work added by hand.
+  </p>
+</section>
+
+{% for group in pub_groups %}
+<section class="section container">
+  <h2 class="section-h">{{ group.heading }}</h2>
+  <div class="rule-gold"></div>
+  <ul class="pub-list">
+    {% for p in group.pubs %}
+      <li class="pub">
+        <div class="pub-citation">
+          <span class="pub-authors">{{ p.authors | citation_authors }}</span>
+          <span class="pub-year">({{ p | year_month }}).</span>
+          <span class="pub-title">{{ p.title }}.</span>
+          {% if p.venue %}
+            <span class="pub-venue">{{ p.venue }}.</span>
+          {% endif %}
+        </div>
+        <div class="pub-meta">
+          <span class="chip chip-type">{{ p.type.replace('-', ' ') | title }}</span>
+          {% if p.award %}
+            <span class="chip chip-award">{{ p.award }}</span>
+          {% endif %}
+          {% if p.note %}
+            <span class="pub-note">{{ p.note }}</span>
+          {% endif %}
+        </div>
+        {% set has_doi = p.doi %}
+        {% set has_url = p.url %}
+        {% set has_links = p.links %}
+        {% if has_doi or has_url or has_links %}
+          <ul class="link-row">
+            {% if has_doi %}
+              <li><a href="https://doi.org/{{ p.doi }}" rel="noopener">DOI</a></li>
+            {% elif has_url %}
+              <li><a href="{{ p.url }}" rel="noopener">Link</a></li>
+            {% endif %}
+            {% for label, url in (p.links or {}).items() %}
+              <li><a href="{{ url }}" rel="noopener">{{ label }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+
+{% endblock %}

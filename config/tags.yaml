@@ -1,0 +1,32 @@
+# ============================================================
+# TAG SYSTEM for projects
+# ============================================================
+#
+# tag_order: ordering of tag groups on the Projects page (first = top).
+# Add a new tag just by appending it here and tagging a project with it.
+# Any project tag that is NOT in `tag_order` gets appended to the end
+# automatically — the build never breaks.
+#
+# tag_labels: human-readable chip text.
+# tag_description: shown under the group header on the Projects page.
+# ============================================================
+
+tag_order:
+  - work
+  - research
+  - idea
+  - vibecoded
+
+tag_labels:
+  work: "Work"
+  research: "Research"
+  idea: "Idea"
+  vibecoded: "Vibecoded"
+
+tag_descriptions:
+  work: "Projects I've shipped as part of my role at Hopkins or elsewhere."
+  research: "Projects tied to published or in-progress research."
+  idea: "Experiments and prototypes exploring an idea."
+  vibecoded: >
+    Projects built with Claude as the engineering partner.
+    The code is Claude's, the problem framing and ideas are mine.

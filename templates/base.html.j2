@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ profile.name }}{% endblock %}</title>
+  <meta name="description" content="{{ profile.title }}" />
+
+  <!-- OpenGraph / social -->
+  <meta property="og:title" content="{{ profile.name }}" />
+  <meta property="og:description" content="{{ profile.title }}" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="{{ profile.site_url }}" />
+
+  <!-- Fonts: Fraunces (serif) + Inter (sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- Prevent light-mode flash on first paint -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">{{ profile.name }}</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" {% if page == 'home' %}aria-current="page"{% endif %}>Home</a>
+        <a href="/projects.html" {% if page == 'projects' %}aria-current="page"{% endif %}>Projects</a>
+        <a href="/research.html" {% if page == 'research' %}aria-current="page"{% endif %}>Research</a>
+        {% if profile.substack and profile.substack.url and show_writing_tab %}
+          <a href="/writing.html" {% if page == 'writing' %}aria-current="page"{% endif %}>Writing</a>
+        {% endif %}
+        <a href="/contact.html" {% if page == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div class="footer-left">
+        <div>&copy; {{ build_date[:4] }} {{ profile.name }}</div>
+        <div class="footer-meta">
+          <a href="mailto:{{ profile.emails[0].address }}">{{ profile.emails[0].address }}</a>
+          <span class="dot">·</span>
+          <span>Last updated {{ build_date }}</span>
+        </div>
+      </div>
+      <nav class="footer-socials" aria-label="Social">
+        {% for s in profile.socials %}
+          <a href="{{ s.url }}" rel="me noopener" aria-label="{{ s.name }}">{{ s.name }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/static/theme.js"></script>
+  {% block page_scripts %}{% endblock %}
+</body>
+</html>

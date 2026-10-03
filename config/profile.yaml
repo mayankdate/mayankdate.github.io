@@ -1,0 +1,189 @@
+# ============================================================
+# IDENTITY  — edit here to change what shows across the site
+# ============================================================
+
+name: "Mayank Date"
+title: "Public health researcher · Global digital health analytics"
+headline: "Public health researcher · Global digital health analytics"
+
+# One-paragraph bio, shown in the About section on the home page.
+# Multi-line YAML — the `|` keeps line breaks, `>` folds them. Use `>` for prose.
+blurb: >
+  Public health researcher trained at Johns Hopkins Bloomberg School of
+  Public Health, specializing in epidemiologic methods, measurement of
+  population health indicators, and digital health systems. I lead
+  analytics for multi-country projects at the Center for Global Digital
+  Health Innovations with partners including UNICEF, the World Bank, and
+  the ITU. My work spans machine-learning quality-assurance pipelines,
+  statistical analyses on large cohort studies and RCTs, and
+  population-level health surveys. I'm preparing for doctoral training
+  to advance measurement science and build scalable tools that
+  strengthen how global health programs are run.
+
+# Shown in the hero and the footer. The URL that gets encoded into the
+# "visit site" QR code on the contact page.
+site_url: "https://mayankdate.github.io"
+location: "Baltimore, MD  /  Mumbai, IN"
+
+photo: "assets/photo.jpg"
+
+# ============================================================
+# CONTACT  — all of these appear on the Contact page and in the vCard
+# ============================================================
+
+emails:
+  - address: "mayank.date@gmail.com"
+    label: "Personal"
+    primary: true           # shown in the footer and hero CTA
+  - address: "mdate1@jhu.edu"
+    label: "Work"
+
+phones:
+  - number: "+1-480-280-5530"
+    label: "US"
+  - number: "+91-9619439292"
+    label: "India"
+
+# ============================================================
+# SOCIALS  — the Contact page renders a button for each.
+# Order here is the order on the page.
+# ============================================================
+
+socials:
+  - name: "LinkedIn"
+    url: "https://linkedin.com/in/mayankdate"
+    icon: "linkedin"
+  - name: "GitHub"
+    url: "https://github.com/mayankdate"
+    icon: "github"
+  - name: "ORCID"
+    url: "https://orcid.org/0009-0001-0863-5428"
+    icon: "orcid"
+  - name: "ResearchGate"
+    url: "https://www.researchgate.net/profile/Mayank-Date"
+    icon: "researchgate"
+  - name: "Google Scholar"
+    url: "https://scholar.google.com/citations?user=mayankdate"
+    icon: "scholar"
+
+# ============================================================
+# ORCID  — publications are pulled from here at build time
+# ============================================================
+
+orcid_id: "0009-0001-0863-5428"
+
+# ============================================================
+# EXPERIENCE  — the timeline on the home page.
+# Order newest → oldest.  "ongoing: true" sets the end date to "present".
+# ============================================================
+
+experience:
+  - role: "Data Analyst, Biostatistics"
+    org: "Center for Global Digital Health Innovation"
+    org_sub: "Johns Hopkins Bloomberg School of Public Health"
+    start: 2023
+    ongoing: true
+  - role: "Graduate Research Assistant"
+    org: "Johns Hopkins Bloomberg School of Public Health"
+    start: 2022
+    end: 2023
+  - role: "Research Assistant"
+    org: "Suitradhaar Science Solutions"
+    start: 2021
+    end: 2022
+  - role: "Associate · Clinical Documentation"
+    org: "OnPoint Healthcare"
+    start: 2021
+    end: 2022
+  - role: "Associate · Clinical Documentation"
+    org: "IKS Health"
+    start: 2019
+    end: 2021
+  - role: "Dentist"
+    org: "Private practice & clinical rotations"
+    org_sub: "Shree Dental Clinic · Advanced Dental Care · MGM Dental College"
+    start: 2018
+    end: 2021
+
+# ============================================================
+# EDUCATION
+# ============================================================
+
+education:
+  - degree: "Master of Public Health (MPH)"
+    institution: "Johns Hopkins Bloomberg School of Public Health"
+    year: 2023
+    logo: "assets/logos/jhu-shield.svg"
+    logo_invert_on_dark: true
+  - degree: "Bachelor of Dental Surgery (BDS)"
+    institution: "Maharashtra University of Health Sciences"
+    year: 2019
+    logo: "assets/logos/muhs.svg"
+    logo_invert_on_dark: false
+
+# ============================================================
+# CERTIFICATIONS — no logos (per HBS's thin-skinned brand policy)
+# ============================================================
+
+certifications:
+  - name: "Credential of Readiness (CORe) · Pass with High Honors"
+    institution: "Harvard Business School Online"
+    year: 2024
+  - name: "AI Programming in Python for Public Health"
+    institution: "Johns Hopkins Bloomberg School of Public Health"
+    year: 2025
+
+# ============================================================
+# SKILLS  — grouped. Chips rendered in order.
+# ============================================================
+
+skills:
+  Scientific:
+    - "Hypothesis testing"
+    - "Biostatistics"
+    - "Statistical modeling"
+    - "RWE / RWD"
+    - "Study design"
+  Technical:
+    - "R"
+    - "Python"
+    - "STATA"
+    - "Tableau"
+    - "Machine learning"
+    - "XGBoost"
+    - "Neural networks"
+    - "Random forests"
+  Business:
+    - "Financial modeling"
+    - "Forecasting"
+    - "Market analysis"
+    - "Strategy"
+    - "Product positioning"
+    - "Pitch decks"
+  Interpersonal:
+    - "Leadership"
+    - "Project management"
+    - "Stakeholder communication"
+    - "Critical thinking"
+
+# ============================================================
+# CVs  — files in the assets folder.  Both get a download button.
+# ============================================================
+
+cvs:
+  - name: "Academic CV"
+    file: "assets/CV_Academic.pdf"
+    description: "Full academic CV with publications and presentations"
+  - name: "One-pager"
+    file: "assets/CV_OnePage.pdf"
+    description: "Short summary CV"
+
+# ============================================================
+# SUBSTACK  — leave `url` null until you have one.
+# When set, a Writing tab appears in the nav and the home page shows
+# recent posts.
+# ============================================================
+
+substack:
+  url: null
+  max_posts_on_home: 3

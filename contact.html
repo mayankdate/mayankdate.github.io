@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact · Mayank Date</title>
+  <meta name="description" content="Public health researcher · Global digital health analytics" />
+
+  <!-- OpenGraph / social -->
+  <meta property="og:title" content="Mayank Date" />
+  <meta property="og:description" content="Public health researcher · Global digital health analytics" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://mayankdate.github.io" />
+
+  <!-- Fonts: Fraunces (serif) + Inter (sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- Prevent light-mode flash on first paint -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/">Mayank Date</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" >Home</a>
+        <a href="/projects.html" >Projects</a>
+        <a href="/research.html" >Research</a>
+        <a href="/contact.html" aria-current="page">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+<!-- ========== DESKTOP VIEW (hidden on narrow screens) ========== -->
+<section class="contact-desktop container">
+  <h1 class="display">Let's connect</h1>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-photo">
+        <img src="assets/photo.jpg" alt="Portrait of Mayank Date" />
+      </div>
+      <div class="contact-name">Mayank Date</div>
+      <div class="contact-title">Public health researcher · Global digital health analytics</div>
+
+      <ul class="contact-list">
+          <li>
+            <span class="contact-label">Email · Personal</span>
+            <a href="mailto:mayank.date@gmail.com">mayank.date@gmail.com</a>
+          </li>
+          <li>
+            <span class="contact-label">Email · Work</span>
+            <a href="mailto:mdate1@jhu.edu">mdate1@jhu.edu</a>
+          </li>
+          <li>
+            <span class="contact-label">Phone · US</span>
+            <a href="tel:+1-480-280-5530">+1-480-280-5530</a>
+          </li>
+          <li>
+            <span class="contact-label">Phone · India</span>
+            <a href="tel:+91-9619439292">+91-9619439292</a>
+          </li>
+        <li>
+          <span class="contact-label">Location</span>
+          <span>Baltimore, MD  /  Mumbai, IN</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-right">
+      <div class="qr-card">
+        <img src="assets/qr/vcard.png" alt="Scan to save contact to your phone" />
+        <div class="qr-caption">Scan to save contact</div>
+        <a class="btn btn-ghost btn-sm" href="assets/qr/mayank-date.vcf" download>Download .vcf</a>
+      </div>
+
+      <ul class="social-buttons">
+          <li>
+            <a class="social-btn" href="https://linkedin.com/in/mayankdate" rel="noopener">
+              <span class="social-icon" data-icon="linkedin">L</span>
+              <span class="social-name">LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a class="social-btn" href="https://github.com/mayankdate" rel="noopener">
+              <span class="social-icon" data-icon="github">G</span>
+              <span class="social-name">GitHub</span>
+            </a>
+          </li>
+          <li>
+            <a class="social-btn" href="https://orcid.org/0009-0001-0863-5428" rel="noopener">
+              <span class="social-icon" data-icon="orcid">O</span>
+              <span class="social-name">ORCID</span>
+            </a>
+          </li>
+          <li>
+            <a class="social-btn" href="https://www.researchgate.net/profile/Mayank-Date" rel="noopener">
+              <span class="social-icon" data-icon="researchgate">R</span>
+              <span class="social-name">ResearchGate</span>
+            </a>
+          </li>
+          <li>
+            <a class="social-btn" href="https://scholar.google.com/citations?user=mayankdate" rel="noopener">
+              <span class="social-icon" data-icon="scholar">G</span>
+              <span class="social-name">Google Scholar</span>
+            </a>
+          </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MOBILE VIEW — business-card carousel ========== -->
+<section class="contact-mobile">
+  <div class="container">
+    <h1 class="display">Let's connect</h1>
+    <p class="lede">Swipe through the cards. Scan a QR to save my contact, open my site, or connect on LinkedIn.</p>
+  </div>
+
+  <div class="carousel" data-carousel>
+    <div class="carousel-track" data-carousel-track>
+
+      <!-- Card 1: vCard -->
+      <article class="bcard" data-card="vcard">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Save contact</div>
+          <h2 class="bcard-title">Mayank Date</h2>
+          <div class="bcard-subtitle">Public health researcher · Global digital health analytics</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/vcard.png" alt="Scan to save contact" />
+        </div>
+        <div class="bcard-footer">Scan to save all my contact info</div>
+      </article>
+
+      <!-- Card 2: Site -->
+      <article class="bcard" data-card="site">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Visit my site</div>
+          <h2 class="bcard-title">Mayank Date</h2>
+          <div class="bcard-subtitle">mayankdate.github.io</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/site.png" alt="Scan to open my site" />
+        </div>
+        <div class="bcard-footer">Scan to visit my homepage</div>
+      </article>
+
+      <!-- Card 3: LinkedIn -->
+      <article class="bcard" data-card="linkedin">
+        <div class="bcard-top">
+          <div class="bcard-eyebrow">Connect on LinkedIn</div>
+          <h2 class="bcard-title">Mayank Date</h2>
+          <div class="bcard-subtitle">linkedin.com/in/mayankdate</div>
+        </div>
+        <div class="bcard-qr">
+          <img src="assets/qr/linkedin.png" alt="Scan to connect on LinkedIn" />
+        </div>
+        <div class="bcard-footer">Scan to connect on LinkedIn</div>
+      </article>
+
+    </div>
+
+    <div class="carousel-dots" data-carousel-dots aria-hidden="true">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <div class="container contact-mobile-actions">
+    <a class="btn btn-primary btn-block" href="tel:+1-480-280-5530">📱 Call (US)</a>
+    <a class="btn btn-ghost btn-block" href="mailto:mayank.date@gmail.com">✉ Email</a>
+    <a class="btn btn-ghost btn-block" href="assets/qr/mayank-date.vcf" download>⇩ Save .vcf</a>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div class="footer-left">
+        <div>&copy; 2026 Mayank Date</div>
+        <div class="footer-meta">
+          <a href="mailto:mayank.date@gmail.com">mayank.date@gmail.com</a>
+          <span class="dot">·</span>
+          <span>Last updated 2026-10-03</span>
+        </div>
+      </div>
+      <nav class="footer-socials" aria-label="Social">
+          <a href="https://linkedin.com/in/mayankdate" rel="me noopener" aria-label="LinkedIn">LinkedIn</a>
+          <a href="https://github.com/mayankdate" rel="me noopener" aria-label="GitHub">GitHub</a>
+          <a href="https://orcid.org/0009-0001-0863-5428" rel="me noopener" aria-label="ORCID">ORCID</a>
+          <a href="https://www.researchgate.net/profile/Mayank-Date" rel="me noopener" aria-label="ResearchGate">ResearchGate</a>
+          <a href="https://scholar.google.com/citations?user=mayankdate" rel="me noopener" aria-label="Google Scholar">Google Scholar</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/static/theme.js"></script>
+<script src="/static/carousel.js"></script>
+</body>
+</html>

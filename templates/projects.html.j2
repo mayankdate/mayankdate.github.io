@@ -1,0 +1,44 @@
+{% extends "base.html.j2" %}
+{% set page = 'projects' %}
+{% block title %}Projects · {{ profile.name }}{% endblock %}
+{% block content %}
+
+<section class="page-header container">
+  <h1 class="display">Projects</h1>
+  <p class="lede">Research work, side projects, and ideas I've vibecoded with Claude.</p>
+</section>
+
+{% for group in project_groups %}
+<section class="section container">
+  <h2 class="section-h">{{ group.label }}</h2>
+  <div class="rule-gold"></div>
+  {% if group.description %}
+    <p class="group-desc">{{ group.description }}</p>
+  {% endif %}
+  <div class="card-grid">
+    {% for p in group.projects %}
+      <article class="card">
+        <header class="card-head">
+          <h3 class="card-title">{{ p.title }}</h3>
+          <span class="card-year">{{ p.year }}</span>
+        </header>
+        <ul class="chips chips-sm">
+          {% for t in p.tags_ordered %}
+            <li class="chip chip-{{ t }}">{{ tag_labels[t] | default(t | title) }}</li>
+          {% endfor %}
+        </ul>
+        <p class="card-blurb">{{ p.blurb }}</p>
+        {% if p.links %}
+          <ul class="link-row">
+            {% for label, url in p.links.items() %}
+              <li><a href="{{ url }}" rel="noopener">{{ label }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+# Install with:  pip install -r requirements.txt
+# Needed to run scripts/build.ipynb or scripts/build.py
+
+jinja2>=3.1
+pyyaml>=6.0
+requests>=2.31
+segno>=1.5
+rapidfuzz>=3.0
+
+# For placeholder asset generation (optional — only used if you re-run the
+# placeholder helpers in scripts/).
+Pillow>=10.0
+reportlab>=4.0
+
+# For running the notebook interactively (install if you don't already
+# have Jupyter)
+# jupyter>=1.0

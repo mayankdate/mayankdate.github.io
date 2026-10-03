@@ -1,0 +1,126 @@
+{% extends "base.html.j2" %}
+{% set page = 'home' %}
+{% block title %}{{ profile.name }} · {{ profile.title }}{% endblock %}
+{% block content %}
+
+<section class="hero container">
+  <div class="hero-text">
+    <p class="eyebrow">Hello, I'm</p>
+    <h1 class="display">{{ profile.name }}</h1>
+    <p class="lede">{{ profile.title }}</p>
+    {% if sparkline_svg %}
+      <div class="sparkline" aria-label="Publications per year">
+        {{ sparkline_svg | safe }}
+        <span class="sparkline-caption">Publications by year</span>
+      </div>
+    {% endif %}
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="{{ profile.cvs[0].file }}" download>Download CV</a>
+      <a class="btn btn-ghost" href="/contact.html">Contact</a>
+    </div>
+  </div>
+  <div class="hero-photo">
+    <img src="{{ profile.photo }}" alt="Portrait of {{ profile.name }}" />
+  </div>
+</section>
+
+<section class="section container">
+  <h2 class="section-h">About</h2>
+  <div class="rule-gold"></div>
+  <p class="prose">{{ profile.blurb }}</p>
+</section>
+
+<section class="section container">
+  <h2 class="section-h">Experience</h2>
+  <div class="rule-gold"></div>
+  <ol class="timeline">
+    {% for job in profile.experience %}
+      <li class="timeline-item">
+        <span class="timeline-dot" aria-hidden="true"></span>
+        <div class="timeline-years">
+          {{ job.start }}{% if job.ongoing %}–present{% elif job.end %}–{{ job.end }}{% endif %}
+        </div>
+        <div class="timeline-body">
+          <div class="timeline-role">{{ job.role }}</div>
+          <div class="timeline-org">{{ job.org }}</div>
+          {% if job.org_sub %}
+            <div class="timeline-sub">{{ job.org_sub }}</div>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="section container">
+  <h2 class="section-h">Education</h2>
+  <div class="rule-gold"></div>
+  <ul class="cred-list">
+    {% for ed in profile.education %}
+      <li class="cred">
+        <div class="cred-logo{% if ed.logo_invert_on_dark %} invert-on-dark{% endif %}">
+          <img src="{{ ed.logo }}" alt="" />
+        </div>
+        <div class="cred-body">
+          <div class="cred-title">{{ ed.degree }}</div>
+          <div class="cred-inst">{{ ed.institution }}</div>
+        </div>
+        <div class="cred-year">{{ ed.year }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="section container">
+  <h2 class="section-h">Certifications</h2>
+  <div class="rule-gold"></div>
+  <ul class="cred-list cred-list-nologo">
+    {% for c in profile.certifications %}
+      <li class="cred">
+        <div class="cred-body">
+          <div class="cred-title">{{ c.name }}</div>
+          <div class="cred-inst">{{ c.institution }}</div>
+        </div>
+        <div class="cred-year">{{ c.year }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="section container">
+  <h2 class="section-h">Skills</h2>
+  <div class="rule-gold"></div>
+  <div class="skills-grid">
+    {% for group, items in profile.skills.items() %}
+      <div class="skills-group">
+        <h3 class="skills-group-h">{{ group }}</h3>
+        <ul class="chips">
+          {% for item in items %}
+            <li class="chip">{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if substack_posts %}
+<section class="section container">
+  <h2 class="section-h">Recent writing</h2>
+  <div class="rule-gold"></div>
+  <ul class="writing-list">
+    {% for post in substack_posts %}
+      <li>
+        <a class="writing-link" href="{{ post.url }}" rel="noopener">
+          <div class="writing-title">{{ post.title }}</div>
+          {% if post.date %}<div class="writing-date">{{ post.date }}</div>{% endif %}
+          <div class="writing-excerpt">{{ post.excerpt }}</div>
+          <div class="writing-cta">Read on Substack →</div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% endblock %}

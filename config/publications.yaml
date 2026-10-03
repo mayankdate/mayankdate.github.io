@@ -1,0 +1,113 @@
+# ============================================================
+# PUBLICATIONS
+# ============================================================
+#
+# How this file is read:
+#   1. The build fetches your public works from ORCID (orcid_id in
+#      profile.yaml) at build time.
+#   2. For each ORCID entry whose DOI matches a key in `orcid_overrides`
+#      below, the override's fields are merged onto the entry
+#      (award, note).
+#   3. All `manual` entries are appended.
+#   4. The combined list is deduped: journal articles supersede preprints
+#      with ≥85% title similarity.  Override with `hide: true` or
+#      `keep_as_preprint: true` on a per-DOI basis in `orcid_overrides`.
+#   5. The result is grouped on the Research page by `type` and sorted
+#      year-descending inside each group.
+#
+# Groups shown on the page (in order):
+#   - journal-article
+#   - preprint
+#   - conference-paper / poster / conference-presentation
+#   - book-chapter / other / copyright-registration
+# ============================================================
+
+# Overlay fields onto ORCID entries, keyed by lowercase DOI.
+orcid_overrides:
+  # Example — uncomment and edit:
+  #
+  # "10.2196/59968":
+  #   note: "Co-author · digital well-being rapid review"
+  #
+  # "10.2196/preprints.109155":
+  #   hide: true                 # force-hide this preprint if a published
+  #                              # version appears on ORCID
+  #   # keep_as_preprint: true   # or force-show even if a match exists
+
+# ============================================================
+# MANUAL ENTRIES  — anything not on ORCID: posters, oral
+# presentations, copyright registrations, invited talks, etc.
+# ============================================================
+
+manual:
+
+  # ----- CONFERENCE PRESENTATIONS -----
+
+  - type: conference-presentation
+    title: "Real-time quality assurance in ICT household surveys"
+    authors: ["Date, M."]
+    year: 2025
+    month: 9
+    venue: "16th meeting of the Expert Group on Telecommunication/ICT Indicators (EGTI), Geneva, Switzerland"
+    links: {}
+
+  # ----- CONFERENCE POSTERS -----
+
+  - type: poster
+    title: "Astrodontics — A study of orodental effects of microgravity"
+    authors: ["Date, M."]
+    year: 2019
+    month: 1
+    venue: "72nd Indian Dental Conference, Indore, India"
+    award: "Best Paper Presentation"
+    links: {}
+      # Slides: "assets/presentations/astrodontics.pdf"
+
+  - type: poster
+    title: "Space-age dentistry — An insight into aeronautic dentistry"
+    authors: ["Date, M."]
+    year: 2018
+    month: 12
+    venue: "31st Annual International Conference, Indian Society for Dental Research, Mumbai, India"
+    award: "Second Prize"
+    links: {}
+
+  - type: poster
+    title: "Trigger points in trigeminal neuralgia"
+    authors: ["Date, M."]
+    year: 2017
+    month: 11
+    venue: "Indian Society of Pain Clinicians Conference (ISPCCON), Navi Mumbai, India"
+    award: "First Prize"
+    links: {}
+
+  - type: poster
+    title: "Sweet peril — Sugar is the new tobacco"
+    authors: ["Date, M.", "Mukherjee, P."]
+    year: 2017
+    month: 12
+    venue: "National BDS Students' Convention, Indian Academy of Oral Medicine and Radiology (IAOMR), Maharashtra, India"
+    links: {}
+
+  - type: poster
+    title: "Laser tissue welding"
+    authors: ["Date, M.", "Mukherjee, P."]
+    year: 2017
+    venue: "World Dental Show, Mumbai, India"
+    links: {}
+
+  - type: poster
+    title: "An insight into evidence-based dentistry"
+    authors: ["Date, M."]
+    year: 2017
+    venue: "1st Student Conference on Research in Education, Manipal, India"
+    links: {}
+
+  # ----- OTHER -----
+
+  - type: copyright-registration
+    title: "Design Thinking in Dental Sciences — A Primer"
+    authors: ["Date, M.", "Rajgarhia, R.", "Thakkar, N.", "Jadhav, S.", "Kumar, V."]
+    year: 2022
+    venue: "Suitradhaar Science Solutions · Copyright L-124516/2023"
+    links: {}

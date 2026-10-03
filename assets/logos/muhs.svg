@@ -1,0 +1,7 @@
+<!-- Placeholder for Maharashtra University of Health Sciences. Replace
+     with the official logo PNG/SVG from muhs.ac.in if you can source one. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" aria-label="MUHS">
+  <rect width="56" height="56" rx="6" fill="#2E6B4F"/>
+  <text x="28" y="36" text-anchor="middle" font-family="Georgia, serif"
+        font-weight="700" font-size="16" fill="#F2EEE5">MUHS</text>
+</svg>
