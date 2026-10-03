@@ -37,8 +37,8 @@
       <a class="brand" href="/">{{ profile.name }}</a>
       <nav class="nav" aria-label="Primary">
         <a href="/" {% if page == 'home' %}aria-current="page"{% endif %}>Home</a>
-        <a href="/projects.html" {% if page == 'projects' %}aria-current="page"{% endif %}>Projects</a>
         <a href="/research.html" {% if page == 'research' %}aria-current="page"{% endif %}>Research</a>
+        <a href="/projects.html" {% if page == 'projects' %}aria-current="page"{% endif %}>Projects</a>
         {% if profile.substack and profile.substack.url and show_writing_tab %}
           <a href="/writing.html" {% if page == 'writing' %}aria-current="page"{% endif %}>Writing</a>
         {% endif %}
