@@ -15,16 +15,6 @@
 projects:
 
   # ----- WORK -----
-
-  - title: "EHR Analytics Dashboard"
-    year: 2024
-    tags: [work, research]
-    blurb: >
-      Prototype electronic-health-record analytics dashboard now in use by
-      a state government for monitoring non-communicable diseases.
-      Translates routine EHR data into population-level indicators.
-    links: {}
-
   - title: "ML Quality-Assurance Pipeline"
     year: 2024
     tags: [work]
@@ -34,57 +24,20 @@ projects:
       multi-country deployment.
     links: {}
 
-  - title: "mPFPH — Mobile-phone Full Pregnancy History"
-    year: 2025
-    tags: [work, research]
-    blurb: >
-      Feasibility and validity analysis of a phone-based proxy pregnancy
-      history for estimating perinatal mortality in rural Bangladesh.
-      Published in Tropical Medicine & International Health.
-    links:
-      DOI: "https://doi.org/10.1111/tmi.14094"
-
-  - title: "ICT Household Survey Quality Framework"
-    year: 2025
-    tags: [work, research]
-    blurb: >
-      Real-time quality-assurance framework for ICT household surveys,
-      presented at the ITU Expert Group on Telecommunication/ICT
-      Indicators (EGTI) in Geneva.
-    links: {}
-
   # ----- RESEARCH -----
-
-  - title: "LLM Evidence Summarization vs Human Researchers"
-    year: 2023
-    tags: [research]
-    blurb: >
-      Evaluated the ability of large language models to produce evidence
-      summaries comparable to human researchers across 15 biomedical
-      papers. Published in JMIR Formative Research.
-    links:
-      DOI: "https://doi.org/10.2196/69707"
-
-  - title: "Digital Well-Being Interventions Rapid Review"
-    year: 2024
-    tags: [research]
-    blurb: >
-      Co-authored a rapid systematic review of prevention and
-      health-promotion interventions for youth in the context of digital
-      well-being. Published in JMIR.
-    links:
-      DOI: "https://doi.org/10.2196/59968"
-
-  # ----- IDEA -----
-
   - title: "Gamified Digital Training Tool for Public Health in LMICs"
     year: 2023
     tags: [idea, research]
     blurb: >
-      Capstone framework for a gamified digital training tool to
+      MPH Capstone project: Framework for a gamified digital training tool to
       strengthen public health systems in low- and middle-income
       country settings.
-    links: {}
+    links:
+     Capstone Paper: "assets/docs/Mayank_Date_MPH_Capstone.pdf"
+
+  # ----- IDEA -----
+
+
 
   # ----- VIBECODED -----
 

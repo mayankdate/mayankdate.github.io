@@ -49,7 +49,8 @@ manual:
     year: 2025
     month: 9
     venue: "16th meeting of the Expert Group on Telecommunication/ICT Indicators (EGTI), Geneva, Switzerland"
-    links: {}
+    links:
+      Presentation: "assets/presentations/Geneva_QAQC.pdf"
 
   # ----- CONFERENCE POSTERS -----
 
@@ -60,8 +61,8 @@ manual:
     month: 1
     venue: "72nd Indian Dental Conference, Indore, India"
     award: "Best Paper Presentation"
-    links: {}
-      # Slides: "assets/presentations/astrodontics.pdf"
+    links:
+      Poster: "assets/presentations/astrodontics_poster.pdf"
 
   - type: poster
     title: "Space-age dentistry — An insight into aeronautic dentistry"
@@ -70,7 +71,8 @@ manual:
     month: 12
     venue: "31st Annual International Conference, Indian Society for Dental Research, Mumbai, India"
     award: "Second Prize"
-    links: {}
+    links:
+      Presentation: "assets/presentations/astrodontics_paper.pdf"
 
   - type: poster
     title: "Trigger points in trigeminal neuralgia"
@@ -79,7 +81,8 @@ manual:
     month: 11
     venue: "Indian Society of Pain Clinicians Conference (ISPCCON), Navi Mumbai, India"
     award: "First Prize"
-    links: {}
+    links:
+      Poster: "assets/presentations/tn_triggerpoints.pdf"
 
   - type: poster
     title: "Sweet peril — Sugar is the new tobacco"
@@ -87,27 +90,31 @@ manual:
     year: 2017
     month: 12
     venue: "National BDS Students' Convention, Indian Academy of Oral Medicine and Radiology (IAOMR), Maharashtra, India"
-    links: {}
+    links:
+      Poster: "assets/presentations/sweet_peril.pdf"
 
   - type: poster
     title: "Laser tissue welding"
     authors: ["Date, M.", "Mukherjee, P."]
     year: 2017
     venue: "World Dental Show, Mumbai, India"
-    links: {}
+    links:
+      Poster: "assets/presentations/laser_tissue_welding.jpg"
 
   - type: poster
     title: "An insight into evidence-based dentistry"
     authors: ["Date, M."]
     year: 2017
     venue: "1st Student Conference on Research in Education, Manipal, India"
-    links: {}
+    links:
+      Poster: "assets/presentations/evidence_based_dentistry.pdf"
 
   # ----- OTHER -----
 
-  - type: copyright-registration
-    title: "Design Thinking in Dental Sciences — A Primer"
+  - type: Whitepaper
+    title: "Widen the Reach of your Research"
     authors: ["Date, M.", "Rajgarhia, R.", "Thakkar, N.", "Jadhav, S.", "Kumar, V."]
     year: 2022
     venue: "Suitradhaar Science Solutions · Copyright L-124516/2023"
-    links: {}
+    links:
+      Paper: "assets/presentations/algorithm_optimization_whitepaper.pdf"

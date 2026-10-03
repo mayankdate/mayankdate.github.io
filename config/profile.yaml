@@ -23,9 +23,9 @@ blurb: >
 # Shown in the hero and the footer. The URL that gets encoded into the
 # "visit site" QR code on the contact page.
 site_url: "https://mayankdate.github.io"
-location: "Baltimore, MD  /  Mumbai, IN"
+location: "Mumbai, IN"
 
-photo: "assets/photo.jpg"
+photo: "assets/photo.png"
 
 # ============================================================
 # CONTACT  — all of these appear on the Contact page and in the vCard
@@ -40,7 +40,7 @@ emails:
 
 phones:
   - number: "+1-480-280-5530"
-    label: "US"
+    label: "USA"
   - number: "+91-9619439292"
     label: "India"
 
@@ -78,10 +78,18 @@ orcid_id: "0009-0001-0863-5428"
 # ============================================================
 
 experience:
-  - role: "Data Analyst, Biostatistics"
-    org: "Center for Global Digital Health Innovation"
-    org_sub: "Johns Hopkins Bloomberg School of Public Health"
+  - role: "Data Scientist, Biostatistics"
+    org: "Johns Hopkins Bloomberg School of Public Health"
+    org_sub: "Department of International Health"
     start: 2023
+    ongoing: true
+  - role: "Consultant"
+    org: "The World Bank"
+    start: 2025
+    ongoing: true
+  - role: "Data Scientist"
+    org: "Evidence for Digital Transformation (EDiT) Consortium"
+    start: 2024
     ongoing: true
   - role: "Graduate Research Assistant"
     org: "Johns Hopkins Bloomberg School of Public Health"
@@ -91,17 +99,9 @@ experience:
     org: "Suitradhaar Science Solutions"
     start: 2021
     end: 2022
-  - role: "Associate · Clinical Documentation"
-    org: "OnPoint Healthcare"
-    start: 2021
-    end: 2022
-  - role: "Associate · Clinical Documentation"
-    org: "IKS Health"
-    start: 2019
-    end: 2021
   - role: "Dentist"
     org: "Private practice & clinical rotations"
-    org_sub: "Shree Dental Clinic · Advanced Dental Care · MGM Dental College"
+    org_sub: "Advanced Dental Care · Shree Dental Clinic · MGM Dental College"
     start: 2018
     end: 2021
 
@@ -172,10 +172,10 @@ skills:
 
 cvs:
   - name: "Academic CV"
-    file: "assets/CV_Academic.pdf"
+    file: "assets/Mayank Date_Academic_CV_Full.pdf"
     description: "Full academic CV with publications and presentations"
   - name: "One-pager"
-    file: "assets/CV_OnePage.pdf"
+    file: "assets/Mayank Date_Resume_1page.pdf"
     description: "Short summary CV"
 
 # ============================================================
