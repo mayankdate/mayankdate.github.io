@@ -96,6 +96,15 @@ projects:
     links:
       Github Repo: "https://github.com/mayankdate/InternetSpeedLog"
 
+  - title: "Map Poster Maker"
+    year: 2026
+    tags: [personal, vibecoded]
+    blurb: >
+      A local Python script that opens a browser tab for designing and exporting printable, 
+      label-free street maps from OpenStreetMap data — the style used in those city poster prints.
+    links:
+      Github Repo: "https://github.com/mayankdate/MapMaker"
+
   - title: "Book to Movie Prints"
     year: 2026
     tags: [personal, vibecoded]
