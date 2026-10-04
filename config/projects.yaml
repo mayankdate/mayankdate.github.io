@@ -33,7 +33,7 @@ projects:
       **WORK IN PROGRESS.** My professor at Hopkins,
       [Dr. Diwakar Mohan](https://publichealth.jhu.edu/faculty/3214/diwakar-mohan),
       built the sample size calculator. The distribution explorer is inspired by
-      [Matt Bognar's probability applets](https://homepage.divms.uiowa.edu/~mbognar/).
+      [Matt Bognar's probability applets](https://mabognar.github.io/apps/).
     links:
       WebApp: "https://mayankdate.github.io/BioStatsApp/"
       Github Repo: "https://github.com/mayankdate/BioStatsApp"
