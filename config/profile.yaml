@@ -131,7 +131,7 @@ education:
   - degree: "Master of Public Health (MPH)"
     institution: "Johns Hopkins Bloomberg School of Public Health"
     year: 2023
-    logo: "assets/logos/jhu-shield.svg"
+    logo: "assets/logos/jhu-shield-black.svg"
     logo_invert_on_dark: true
   - degree: "Bachelor of Dental Surgery (BDS)"
     institution: "Maharashtra University of Health Sciences"
