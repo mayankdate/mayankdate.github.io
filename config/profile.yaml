@@ -79,7 +79,7 @@ socials:
     logo: "assets/logos/researchgate.svg"
   - name: "Google Scholar"
     url: "https://scholar.google.com/citations?user=mayankdate"
-    logo: "assets/logos/scholar.svg"
+    logo: "assets/logos/googlescholar.svg"
   - name: "Instagram"
     url: "https://www.instagram.com/mayank.date"
     logo: "assets/logos/instagram.svg"

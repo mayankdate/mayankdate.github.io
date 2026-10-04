@@ -31,7 +31,7 @@ projects:
     tags: [work, research]
     blurb: >
       **WORK IN PROGRESS.** My professor at Hopkins,
-      [Dr. Diwakar Mohan](https://publichealth.jhu.edu/faculty/4178/diwakar-mohan),
+      [Dr. Diwakar Mohan](https://publichealth.jhu.edu/faculty/3214/diwakar-mohan),
       built the sample size calculator. The distribution explorer is inspired by
       [Matt Bognar's probability applets](https://homepage.divms.uiowa.edu/~mbognar/).
     links:
@@ -42,7 +42,7 @@ projects:
     year: 2026
     tags: [work, research]
     blurb: >
-      WORK IN PROGRESS. Using LLMS to assist with title abstract screening for systematic reviews.
+      **WORK IN PROGRESS**. Using LLMS to assist with title abstract screening for systematic reviews.
       The workflow uses Covidence extract to run multi-agent title abstract screening with human in the loop.
     links: {}
 
