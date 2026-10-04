@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import datetime as dt
+import re
 from pathlib import Path
 from typing import Any
 
+import markdown as md_lib
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
 
 def make_env(templates_dir: Path) -> Environment:
@@ -18,7 +21,68 @@ def make_env(templates_dir: Path) -> Environment:
     )
     env.filters["citation_authors"] = _citation_authors
     env.filters["year_month"] = _year_month
+    env.filters["md"] = _md
+    env.filters["md_inline"] = _md_inline
+    env.filters["new_tab"] = _new_tab
     return env
+
+
+# --------------------------------------------------------------------
+# Markdown / rich-text filters
+# --------------------------------------------------------------------
+# You can use Markdown inside blurbs and descriptions:
+#   **bold**, *italic*, `code`, [text](url)
+# Inline HTML (`<b>`, `<i>`, `<a>`) also passes through for people who
+# prefer that syntax.
+# External links automatically get target="_blank" and rel="noopener"
+# so they open in a new tab.
+# --------------------------------------------------------------------
+
+_EXT_LINK_RE = re.compile(r'<a\s+href="(https?://[^"]+|mailto:[^"]+)"')
+
+
+def _add_new_tab(html: str) -> str:
+    """Add target="_blank" to any <a> whose href is http/https/mailto."""
+    return _EXT_LINK_RE.sub(
+        r'<a href="\1" target="_blank" rel="noopener noreferrer"',
+        html,
+    )
+
+
+def _md(text: Any) -> Markup:
+    """Render Markdown. Keeps a wrapping <p> if present (block-level use)."""
+    if not text:
+        return Markup("")
+    html = md_lib.markdown(str(text), extensions=["extra"])
+    html = _add_new_tab(html)
+    return Markup(html)
+
+
+def _md_inline(text: Any) -> Markup:
+    """Render Markdown and strip the outer <p>...</p> if single paragraph.
+
+    Use this inside existing <p> tags so you don't get nested <p>.
+    """
+    if not text:
+        return Markup("")
+    html = md_lib.markdown(str(text), extensions=["extra"]).strip()
+    if (html.startswith("<p>") and html.endswith("</p>")
+            and html.count("<p>") == 1):
+        html = html[3:-4]
+    html = _add_new_tab(html)
+    return Markup(html)
+
+
+def _new_tab(url: Any) -> str:
+    """Return 'target="_blank" rel="noopener noreferrer"' for external URLs,
+    empty string for same-site/relative links. Use in attribute position:
+
+        <a href="{{ url }}" {{ url | new_tab }}>...</a>
+    """
+    s = str(url) if url else ""
+    if s.startswith(("http://", "https://", "mailto:")):
+        return Markup('target="_blank" rel="noopener noreferrer"')
+    return Markup("")
 
 
 def render_page(env: Environment, template: str, out_path: Path, **ctx: Any) -> Path:

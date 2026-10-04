@@ -14,7 +14,19 @@
     <div class="research-header-links">
       {% for s in profile.socials %}
         {% if s.name in ["ORCID", "ResearchGate", "Google Scholar"] %}
-          <a class="btn btn-ghost btn-sm" href="{{ s.url }}" rel="noopener">{{ s.name }} →</a>
+          <a class="profile-link-btn" href="{{ s.url }}" {{ s.url | new_tab }}>
+            <span class="profile-link-icon">
+              {% if s.logo %}
+                <img src="{{ s.logo }}" alt="" />
+              {% else %}
+                {{ s.name[0] }}
+              {% endif %}
+            </span>
+            <span class="profile-link-text">
+              <span class="profile-link-name">{{ s.name }}</span>
+              <span class="profile-link-sub">View profile →</span>
+            </span>
+          </a>
         {% endif %}
       {% endfor %}
     </div>
@@ -51,12 +63,12 @@
         {% if has_doi or has_url or has_links %}
           <ul class="link-row">
             {% if has_doi %}
-              <li><a href="https://doi.org/{{ p.doi }}" rel="noopener">DOI</a></li>
+              <li><a href="https://doi.org/{{ p.doi }}" target="_blank" rel="noopener noreferrer">DOI</a></li>
             {% elif has_url %}
-              <li><a href="{{ p.url }}" rel="noopener">Link</a></li>
+              <li><a href="{{ p.url }}" {{ p.url | new_tab }}>Link</a></li>
             {% endif %}
             {% for label, url in (p.links or {}).items() %}
-              <li><a href="{{ url }}" rel="noopener">{{ label }}</a></li>
+              <li><a href="{{ url }}" {{ url | new_tab }}>{{ label }}</a></li>
             {% endfor %}
           </ul>
         {% endif %}

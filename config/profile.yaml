@@ -24,6 +24,21 @@ blurb: >
 # "visit site" QR code on the contact page.
 site_url: "https://mayankdate.github.io"
 location: "Mumbai, IN"
+timezone: "Asia/Kolkata"   # IANA tz — pick the one matching your current city
+
+#America/New_York #US/Eastern
+#America/Los_Angeles #US/Pacific
+#America/Phoenix #US/Arizona
+#America/Toronto
+#America/Vancouver
+#Asia/Kolkata #Asia/Calcutta
+#Asia/Tokyo
+#Atlantic/Reykjavik
+#Europe/London
+#Europe/Amsterdam
+#Europe/Paris
+#Australia/Sydney
+#Australia/Brisbane
 
 photo: "assets/photo_noring.png"
 
@@ -52,19 +67,22 @@ phones:
 socials:
   - name: "LinkedIn"
     url: "https://linkedin.com/in/mayankdate"
-    icon: "linkedin"
+    logo: "assets/logos/linkedin.svg"
   - name: "GitHub"
     url: "https://github.com/mayankdate"
-    icon: "github"
+    logo: "assets/logos/github.svg"
   - name: "ORCID"
     url: "https://orcid.org/0009-0001-0863-5428"
-    icon: "orcid"
+    logo: "assets/logos/orcid.svg"
   - name: "ResearchGate"
     url: "https://www.researchgate.net/profile/Mayank-Date"
-    icon: "researchgate"
+    logo: "assets/logos/researchgate.svg"
   - name: "Google Scholar"
     url: "https://scholar.google.com/citations?user=mayankdate"
-    icon: "scholar"
+    logo: "assets/logos/scholar.svg"
+  - name: "Instagram"
+    url: "https://www.instagram.com/mayank.date"
+    logo: "assets/logos/instagram.svg"
 
 # ============================================================
 # ORCID  — publications are pulled from here at build time

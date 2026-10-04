@@ -15,7 +15,10 @@
       </div>
     {% endif %}
     <div class="hero-cta">
-      <a class="btn btn-primary" href="{{ profile.cvs[0].file }}" download>Download CV</a>
+      {% for cv in profile.cvs %}
+        <a class="btn {% if loop.first %}btn-primary{% else %}btn-ghost{% endif %}"
+           href="{{ cv.file }}" download>Download {{ cv.name }}</a>
+      {% endfor %}
       <a class="btn btn-ghost" href="/contact.html">Contact</a>
     </div>
   </div>
@@ -27,64 +30,66 @@
 <section class="section container">
   <h2 class="section-h">About</h2>
   <div class="rule-gold"></div>
-  <p class="prose">{{ profile.blurb }}</p>
+  <div class="about-box">
+    <div class="prose">{{ profile.blurb | md }}</div>
+  </div>
 </section>
 
-<section class="section container">
-  <h2 class="section-h">Experience</h2>
-  <div class="rule-gold"></div>
-  <ol class="timeline">
-    {% for job in profile.experience %}
-      <li class="timeline-item">
-        <span class="timeline-dot" aria-hidden="true"></span>
-        <div class="timeline-years">
-          {{ job.start }}{% if job.ongoing %}–present{% elif job.end %}–{{ job.end }}{% endif %}
-        </div>
-        <div class="timeline-body">
-          <div class="timeline-role">{{ job.role }}</div>
-          <div class="timeline-org">{{ job.org }}</div>
-          {% if job.org_sub %}
-            <div class="timeline-sub">{{ job.org_sub }}</div>
-          {% endif %}
-        </div>
-      </li>
-    {% endfor %}
-  </ol>
-</section>
+<section class="section container home-split">
+  <div class="home-split-main">
+    <h2 class="section-h">Experience</h2>
+    <div class="rule-gold"></div>
+    <ol class="timeline">
+      {% for job in profile.experience %}
+        <li class="timeline-item">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <div class="timeline-years">
+            {{ job.start }}{% if job.ongoing %}–present{% elif job.end %}–{{ job.end }}{% endif %}
+          </div>
+          <div class="timeline-body">
+            <div class="timeline-role">{{ job.role }}</div>
+            <div class="timeline-org">{{ job.org }}</div>
+            {% if job.org_sub %}
+              <div class="timeline-sub">{{ job.org_sub }}</div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
 
-<section class="section container">
-  <h2 class="section-h">Education</h2>
-  <div class="rule-gold"></div>
-  <ul class="cred-list">
-    {% for ed in profile.education %}
-      <li class="cred">
-        <div class="cred-logo{% if ed.logo_invert_on_dark %} invert-on-dark{% endif %}">
-          <img src="{{ ed.logo }}" alt="" />
-        </div>
-        <div class="cred-body">
-          <div class="cred-title">{{ ed.degree }}</div>
-          <div class="cred-inst">{{ ed.institution }}</div>
-        </div>
-        <div class="cred-year">{{ ed.year }}</div>
-      </li>
-    {% endfor %}
-  </ul>
-</section>
+  <aside class="home-split-side">
+    <h2 class="section-h">Education</h2>
+    <div class="rule-gold"></div>
+    <ul class="cred-list">
+      {% for ed in profile.education %}
+        <li class="cred">
+          <div class="cred-logo{% if ed.logo_invert_on_dark %} invert-on-dark{% endif %}">
+            <img src="{{ ed.logo }}" alt="" />
+          </div>
+          <div class="cred-body">
+            <div class="cred-title">{{ ed.degree }}</div>
+            <div class="cred-inst">{{ ed.institution }}</div>
+          </div>
+          <div class="cred-year">{{ ed.year }}</div>
+        </li>
+      {% endfor %}
+    </ul>
 
-<section class="section container">
-  <h2 class="section-h">Certifications</h2>
-  <div class="rule-gold"></div>
-  <ul class="cred-list cred-list-nologo">
-    {% for c in profile.certifications %}
-      <li class="cred">
-        <div class="cred-body">
-          <div class="cred-title">{{ c.name }}</div>
-          <div class="cred-inst">{{ c.institution }}</div>
-        </div>
-        <div class="cred-year">{{ c.year }}</div>
-      </li>
-    {% endfor %}
-  </ul>
+    <h2 class="section-h section-h-spaced">Certifications</h2>
+    <div class="rule-gold"></div>
+    <ul class="cred-list cred-list-nologo">
+      {% for c in profile.certifications %}
+        <li class="cred">
+          <div class="cred-body">
+            <div class="cred-title">{{ c.name }}</div>
+            <div class="cred-inst">{{ c.institution }}</div>
+          </div>
+          <div class="cred-year">{{ c.year }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+  </aside>
 </section>
 
 <section class="section container">
@@ -111,7 +116,7 @@
   <ul class="writing-list">
     {% for post in substack_posts %}
       <li>
-        <a class="writing-link" href="{{ post.url }}" rel="noopener">
+        <a class="writing-link" href="{{ post.url }}" target="_blank" rel="noopener noreferrer">
           <div class="writing-title">{{ post.title }}</div>
           {% if post.date %}<div class="writing-date">{{ post.date }}</div>{% endif %}
           <div class="writing-excerpt">{{ post.excerpt }}</div>

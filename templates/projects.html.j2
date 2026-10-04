@@ -5,7 +5,7 @@
 
 <section class="page-header container">
   <h1 class="display">Projects</h1>
-  <p class="lede">Research work, side projects, and silly ideas.</p>
+  <p class="lede">Research work, side projects, and ideas I've vibecoded with Claude.</p>
 </section>
 
 {% for group in project_groups %}
@@ -13,7 +13,7 @@
   <h2 class="section-h">{{ group.label }}</h2>
   <div class="rule-gold"></div>
   {% if group.description %}
-    <p class="group-desc">{{ group.description }}</p>
+    <p class="group-desc">{{ group.description | md_inline }}</p>
   {% endif %}
   <div class="card-grid">
     {% for p in group.projects %}
@@ -27,11 +27,11 @@
             <li class="chip chip-{{ t }}">{{ tag_labels[t] | default(t | title) }}</li>
           {% endfor %}
         </ul>
-        <p class="card-blurb">{{ p.blurb }}</p>
+        <div class="card-blurb">{{ p.blurb | md }}</div>
         {% if p.links %}
           <ul class="link-row">
             {% for label, url in p.links.items() %}
-              <li><a href="{{ url }}" rel="noopener">{{ label }}</a></li>
+              <li><a href="{{ url }}" {{ url | new_tab }}>{{ label }}</a></li>
             {% endfor %}
           </ul>
         {% endif %}

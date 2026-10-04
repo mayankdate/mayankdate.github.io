@@ -30,10 +30,10 @@ projects:
     year: 2025
     tags: [work, research]
     blurb: >
-      WORK IN PROGRESS. My professor at Hopkins, Dr. Diwakar Mohan built the sample size calculator.
-      The distribution explorer is inspired by Matt Bognar's probability applets. I've tried to bring those two together in
-      a single streamlined app that can be used by public health students and professionals to explore statistical concepts
-      and perform calculations.
+      **WORK IN PROGRESS.** My professor at Hopkins,
+      [Dr. Diwakar Mohan](https://publichealth.jhu.edu/faculty/4178/diwakar-mohan),
+      built the sample size calculator. The distribution explorer is inspired by
+      [Matt Bognar's probability applets](https://homepage.divms.uiowa.edu/~mbognar/).
     links:
       WebApp: "https://mayankdate.github.io/BioStatsApp/"
       Github Repo: "https://github.com/mayankdate/BioStatsApp"
@@ -44,8 +44,7 @@ projects:
     blurb: >
       WORK IN PROGRESS. Using LLMS to assist with title abstract screening for systematic reviews.
       The workflow uses Covidence extract to run multi-agent title abstract screening with human in the loop.
-    links:
-      Github Repo: ""
+    links: {}
 
   - title: "ML Quality-Assurance Pipeline"
     year: 2024
@@ -115,5 +114,4 @@ projects:
       pulls from ORCID and generates the business-card QR codes at build
       time.
     links:
-     Profile Page: "https://mayankdate.github.io"
      Github Repo: "https://github.com/mayankdate/mayankdate.github.io"

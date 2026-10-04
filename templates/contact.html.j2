@@ -29,9 +29,15 @@
           </li>
         {% endfor %}
         <li>
-          <span class="contact-label">Location</span>
+          <span class="contact-label">Current location</span>
           <span>{{ profile.location }}</span>
         </li>
+        {% if profile.timezone %}
+          <li>
+            <span class="contact-label">Local time</span>
+            <span class="live-clock" data-tz="{{ profile.timezone }}">—</span>
+          </li>
+        {% endif %}
       </ul>
     </div>
 
@@ -45,9 +51,17 @@
       <ul class="social-buttons">
         {% for s in profile.socials %}
           <li>
-            <a class="social-btn" href="{{ s.url }}" rel="noopener">
-              <span class="social-icon" data-icon="{{ s.icon }}">{{ s.name[0] }}</span>
-              <span class="social-name">{{ s.name }}</span>
+            <a class="profile-link-btn" href="{{ s.url }}" {{ s.url | new_tab }}>
+              <span class="profile-link-icon">
+                {% if s.logo %}
+                  <img src="{{ s.logo }}" alt="" />
+                {% else %}
+                  {{ s.name[0] }}
+                {% endif %}
+              </span>
+              <span class="profile-link-text">
+                <span class="profile-link-name">{{ s.name }}</span>
+              </span>
             </a>
           </li>
         {% endfor %}
@@ -115,6 +129,13 @@
   </div>
 
   <div class="container contact-mobile-actions">
+    {% if profile.timezone %}
+      <div class="mobile-location">
+        <span class="contact-label">Current location</span>
+        <span>{{ profile.location }}</span>
+        <span class="live-clock-inline live-clock" data-tz="{{ profile.timezone }}">—</span>
+      </div>
+    {% endif %}
     <a class="btn btn-primary btn-block" href="tel:{{ profile.phones[0].number }}">📱 Call ({{ profile.phones[0].label }})</a>
     <a class="btn btn-ghost btn-block" href="mailto:{{ profile.emails[0].address }}">✉ Email</a>
     <a class="btn btn-ghost btn-block" href="assets/qr/mayank-date.vcf" download>⇩ Save .vcf</a>
@@ -125,4 +146,5 @@
 
 {% block page_scripts %}
 <script src="/static/carousel.js"></script>
+<script src="/static/clock.js"></script>
 {% endblock %}
