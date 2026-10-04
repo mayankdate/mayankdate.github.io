@@ -14,17 +14,17 @@
 tag_order:
   - work
   - research
-  - idea
+  - personal
   - vibecoded
 
 tag_labels:
   work: "Work"
   research: "Research"
-  idea: "Idea"
+  personal: "Personal"
   vibecoded: "Vibecoded"
 
 tag_descriptions:
-  work: "Projects I've shipped as part of my role at Hopkins or elsewhere."
-  research: "Projects tied to published or in-progress research."
-  idea: "Experiments and prototypes exploring an idea."
-  vibecoded: "Projects built with Claude as the engineering partner. The code is Claude's, the problem framing and ideas are mine."
+  work: "Work-related projects."
+  research: "Projects tied to academic research."
+  personal: "Personal projects and experiments."
+  vibecoded: "Making Claude bring my ideas to life."
