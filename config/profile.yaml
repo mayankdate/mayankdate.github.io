@@ -68,21 +68,27 @@ socials:
   - name: "LinkedIn"
     url: "https://linkedin.com/in/mayankdate"
     logo: "assets/logos/linkedin.svg"
+    logo_invert_on_dark: true
   - name: "GitHub"
     url: "https://github.com/mayankdate"
     logo: "assets/logos/github.svg"
+    logo_invert_on_dark: true
   - name: "ORCID"
     url: "https://orcid.org/0009-0001-0863-5428"
     logo: "assets/logos/orcid.svg"
+    logo_invert_on_dark: true
   - name: "ResearchGate"
     url: "https://www.researchgate.net/profile/Mayank-Date"
     logo: "assets/logos/researchgate.svg"
+    logo_invert_on_dark: true
   - name: "Google Scholar"
     url: "https://scholar.google.com/citations?user=mayankdate"
     logo: "assets/logos/googlescholar.svg"
+    logo_invert_on_dark: true
   - name: "Instagram"
     url: "https://www.instagram.com/mayank.date"
     logo: "assets/logos/instagram.svg"
+    logo_invert_on_dark: true
 
 # ============================================================
 # ORCID  — publications are pulled from here at build time
@@ -137,7 +143,7 @@ education:
     institution: "Maharashtra University of Health Sciences"
     year: 2019
     logo: "assets/logos/muhs-black.png"
-    logo_invert_on_dark: false
+    logo_invert_on_dark: true
 
 # ============================================================
 # CERTIFICATIONS — no logos (per HBS's thin-skinned brand policy)
