@@ -12,6 +12,12 @@
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="{{ profile.site_url }}" />
 
+  <!-- Favicon: SVG preferred (crisp at any size), .ico fallback, Apple touch -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0D2545" />
+
   <!-- Fonts: Fraunces (serif) + Inter (sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,8 +43,8 @@
       <a class="brand" href="/">{{ profile.name }}</a>
       <nav class="nav" aria-label="Primary">
         <a href="/" {% if page == 'home' %}aria-current="page"{% endif %}>Home</a>
-        <a href="/research.html" {% if page == 'research' %}aria-current="page"{% endif %}>Research</a>
         <a href="/projects.html" {% if page == 'projects' %}aria-current="page"{% endif %}>Projects</a>
+        <a href="/research.html" {% if page == 'research' %}aria-current="page"{% endif %}>Research</a>
         {% if profile.substack and profile.substack.url and show_writing_tab %}
           <a href="/writing.html" {% if page == 'writing' %}aria-current="page"{% endif %}>Writing</a>
         {% endif %}
