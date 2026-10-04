@@ -409,11 +409,13 @@ main { min-height: 50vh; }
   max-height: 100%;
   object-fit: contain;
 }
-:root[data-theme="dark"] .cred-logo.invert-on-dark img {
+:root[data-theme="dark"] .cred-logo.invert-on-dark img,
+:root[data-theme="dark"] .profile-link-icon.invert-on-dark img {
   filter: invert(.95) hue-rotate(180deg) brightness(1.1);
 }
 @media (prefers-color-scheme: dark) {
-  :root[data-theme="auto"] .cred-logo.invert-on-dark img {
+  :root[data-theme="auto"] .cred-logo.invert-on-dark img,
+  :root[data-theme="auto"] .profile-link-icon.invert-on-dark img {
     filter: invert(.95) hue-rotate(180deg) brightness(1.1);
   }
 }

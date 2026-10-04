@@ -52,7 +52,7 @@
         {% for s in profile.socials %}
           <li>
             <a class="profile-link-btn" href="{{ s.url }}" {{ s.url | new_tab }}>
-              <span class="profile-link-icon">
+              <span class="profile-link-icon{% if s.logo_invert_on_dark %} invert-on-dark{% endif %}">
                 {% if s.logo %}
                   <img src="{{ s.logo }}" alt="" />
                 {% else %}
