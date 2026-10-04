@@ -62,7 +62,7 @@ manual:
     venue: "72nd Indian Dental Conference, Indore, India"
     award: "Best Paper Presentation"
     links:
-       Poster: "assets/presentations/astrodontics_poster.pdf"
+       Presentation: "assets/presentations/astrodontics_slides.pdf"
 
   - type: poster
     title: "Space-age dentistry — An insight into aeronautic dentistry"
@@ -72,7 +72,7 @@ manual:
     venue: "31st Annual International Conference, Indian Society for Dental Research, Mumbai, India"
     award: "Second Prize"
     links:
-       Presentation: "assets/presentations/astrodontics_paper.pdf"
+       Poster: "assets/presentations/astrodontics_poster.pdf"
 
   - type: poster
     title: "Trigger points in trigeminal neuralgia"
