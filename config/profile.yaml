@@ -51,7 +51,7 @@ emails:
     label: "Personal"
     primary: true           # shown in the footer and hero CTA
   - address: "mdate1@jhu.edu"
-    label: "Work"
+    label: "work-JHU"
 
 phones:
   - number: "+1-480-280-5530"
