@@ -38,15 +38,22 @@ def make_env(templates_dir: Path) -> Environment:
 # so they open in a new tab.
 # --------------------------------------------------------------------
 
-_EXT_LINK_RE = re.compile(r'<a\s+href="(https?://[^"]+|mailto:[^"]+)"')
+_LINK_RE = re.compile(r'<a\s+href="([^"]+)"(?![^>]*\btarget=)')
 
 
 def _add_new_tab(html: str) -> str:
-    """Add target="_blank" to any <a> whose href is http/https/mailto."""
-    return _EXT_LINK_RE.sub(
-        r'<a href="\1" target="_blank" rel="noopener noreferrer"',
-        html,
-    )
+    """
+    Add target="_blank" to any <a> tag that doesn't already have target=,
+    unless the href is a same-page anchor (starts with '#').
+
+    External URLs, local PDF/doc links, and anything else: open in a new tab.
+    """
+    def _repl(m: re.Match) -> str:
+        href = m.group(1)
+        if href.startswith("#"):
+            return m.group(0)
+        return f'<a href="{href}" target="_blank" rel="noopener noreferrer"'
+    return _LINK_RE.sub(_repl, html)
 
 
 def _md(text: Any) -> Markup:
@@ -74,15 +81,19 @@ def _md_inline(text: Any) -> Markup:
 
 
 def _new_tab(url: Any) -> str:
-    """Return 'target="_blank" rel="noopener noreferrer"' for external URLs,
-    empty string for same-site/relative links. Use in attribute position:
+    """
+    Return `target="_blank" rel="noopener noreferrer"` for any URL that
+    isn't a same-page anchor. Use in attribute position:
 
         <a href="{{ url }}" {{ url | new_tab }}>...</a>
+
+    This opens external URLs AND local repo files (PDFs, images, etc.) in
+    a new tab, so clicking a link never replaces the current page.
     """
     s = str(url) if url else ""
-    if s.startswith(("http://", "https://", "mailto:")):
-        return Markup('target="_blank" rel="noopener noreferrer"')
-    return Markup("")
+    if not s or s.startswith("#"):
+        return Markup("")
+    return Markup('target="_blank" rel="noopener noreferrer"')
 
 
 def render_page(env: Environment, template: str, out_path: Path, **ctx: Any) -> Path:
