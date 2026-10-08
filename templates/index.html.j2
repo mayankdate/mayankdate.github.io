@@ -8,6 +8,15 @@
     <p class="eyebrow">Hello, I'm</p>
     <h1 class="display">{{ profile.name }}</h1>
     <p class="lede">{{ profile.title }}</p>
+    <div class="hero-meta">
+      <span>Based in {{ profile.location }}</span>
+      <span class="dot">·</span>
+      <span>Hopkins · World Bank · ITU</span>
+      {% if profile.timezone %}
+        <span class="dot">·</span>
+        <span class="live-clock" data-tz="{{ profile.timezone }}">—</span>
+      {% endif %}
+    </div>
     {% if sparkline_svg %}
       <div class="sparkline" aria-label="Publications per year">
         {{ sparkline_svg | safe }}

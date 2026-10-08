@@ -18,10 +18,10 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
   <meta name="theme-color" content="#0D2545" />
 
-  <!-- Fonts: Fraunces (serif) + Inter (sans) -->
+  <!-- Fonts: Fraunces (serif) + Inter (sans) + JetBrains Mono (metadata) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/static/style.css" />
   <!-- Prevent light-mode flash on first paint -->
@@ -61,6 +61,13 @@
     <p class="eyebrow">Hello, I'm</p>
     <h1 class="display">Mayank Date</h1>
     <p class="lede">Public health researcher · Global digital health analytics</p>
+    <div class="hero-meta">
+      <span>Based in Mumbai, IN</span>
+      <span class="dot">·</span>
+      <span>Hopkins · World Bank · ITU</span>
+        <span class="dot">·</span>
+        <span class="live-clock" data-tz="Asia/Kolkata">—</span>
+    </div>
       <div class="sparkline" aria-label="Publications per year">
         <svg width="220" height="50" viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg"><title>Publications by year, 2017–2026</title><rect x="0.0" y="10.0" width="19.3" height="40.0" rx="1.5" fill="var(--gold)"/><rect x="22.3" y="40.0" width="19.3" height="10.0" rx="1.5" fill="var(--gold)"/><rect x="44.6" y="40.0" width="19.3" height="10.0" rx="1.5" fill="var(--gold)"/><rect x="66.9" y="48.0" width="19.3" height="2.0" rx="1.5" fill="var(--gold)"/><rect x="89.2" y="48.0" width="19.3" height="2.0" rx="1.5" fill="var(--gold)"/><rect x="111.5" y="40.0" width="19.3" height="10.0" rx="1.5" fill="var(--gold)"/><rect x="133.8" y="48.0" width="19.3" height="2.0" rx="1.5" fill="var(--gold)"/><rect x="156.1" y="30.0" width="19.3" height="20.0" rx="1.5" fill="var(--gold)"/><rect x="178.4" y="30.0" width="19.3" height="20.0" rx="1.5" fill="var(--gold)"/><rect x="200.7" y="10.0" width="19.3" height="40.0" rx="1.5" fill="var(--gold)"/><text x="0" y="61" font-size="9" fill="var(--text-muted)" font-family="Inter, sans-serif">2017</text><text x="220" y="61" text-anchor="end" font-size="9" fill="var(--text-muted)" font-family="Inter, sans-serif">2026</text></svg>
         <span class="sparkline-caption">Publications by year</span>
@@ -272,5 +279,19 @@
   </footer>
 
   <script src="/static/theme.js"></script>
+  <script src="/static/clock.js"></script>
+  <script>
+    // Scroll-aware header: adds a hairline border once scrolled past the top.
+    (function () {
+      var hdr = document.querySelector('.site-header');
+      if (!hdr) return;
+      function onScroll() {
+        if (window.scrollY > 8) hdr.classList.add('is-scrolled');
+        else hdr.classList.remove('is-scrolled');
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
 </body>
 </html>
