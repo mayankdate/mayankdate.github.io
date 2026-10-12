@@ -1,0 +1,16 @@
+# ---------------------------------------------------------------
+# Elsewhere · cats.yaml
+# ---------------------------------------------------------------
+# Wandering cat NPCs. The firefly can click to pet them.
+# zone is the tile-rectangle the cat drifts around in.
+# ---------------------------------------------------------------
+
+- id: apollo
+  sprite: cat_apollo
+  spawn: { x: 20, y: 11 }
+  zone:  { x: 17, y: 8, w: 6, h: 7 }
+  speed: 20
+  bio: |
+    **Apollo.** Brown tabby, loves sunbeams, suspicious of
+    doorways. He will tolerate roughly four pets before judging
+    you with his tail.

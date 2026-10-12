@@ -1,0 +1,17 @@
+# ---------------------------------------------------------------
+# Elsewhere · art.yaml
+# ---------------------------------------------------------------
+# Images live in Elsewhere/assets/art/ — drop pngs there and
+# reference them by filename.
+# ---------------------------------------------------------------
+
+title: Gallery
+intro: |
+  A small gallery of things I've drawn or painted. Mostly
+  watercolour at the moment, mostly places.
+
+pieces: []
+# Example:
+# - title: Baltimore from Druid Hill
+#   image: baltimore_druidhill.png
+#   note: Watercolour, A5, March 2025.

@@ -1,0 +1,20 @@
+# ---------------------------------------------------------------
+# Elsewhere · music.yaml
+# ---------------------------------------------------------------
+
+title: Listening lounge
+intro: |
+  What's on repeat lately. If you share a taste, say hi.
+
+tracks:
+  - title: Alone In Kyoto
+    artist: Air
+    note: Writing music since 2011. Non-negotiable.
+
+  - title: Night Owl
+    artist: Galimatias
+    note: For the 2am model-fitting hours.
+
+  - title: Flume
+    artist: Bon Iver
+    note: Still believe this album is a weather event, not a record.

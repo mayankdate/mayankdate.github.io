@@ -1,0 +1,42 @@
+# ---------------------------------------------------------------
+# Elsewhere · interactables.yaml
+# ---------------------------------------------------------------
+# Things the firefly can click on. Each one points at a modal
+# whose content lives in its own file. (type:) decides which
+# content list is pulled in.
+# ---------------------------------------------------------------
+
+- id: bookshelf_reading
+  sprite: bookshelf
+  tile: { x: 3, y: 4 }
+  room: reading_nook
+  label: Books
+  content: books          # loads config/books.yaml
+
+- id: record_player
+  sprite: bookshelf       # placeholder — replace sprite later
+  tile: { x: 11, y: 4 }
+  room: listening_lounge
+  label: Music
+  content: music          # loads config/music.yaml
+
+- id: game_shelf
+  sprite: bookshelf       # placeholder
+  tile: { x: 19, y: 4 }
+  room: game_corner
+  label: Games
+  content: games
+
+- id: gallery_wall
+  sprite: bookshelf       # placeholder
+  tile: { x: 3, y: 11 }
+  room: gallery
+  label: Art
+  content: art
+
+- id: mayank_npc
+  sprite: mayank_npc
+  tile: { x: 12, y: 11 }
+  room: hub
+  label: Mayank
+  content: mayank         # loads config/mayank.yaml

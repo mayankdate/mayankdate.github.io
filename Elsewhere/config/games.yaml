@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------
+# Elsewhere · games.yaml
+# ---------------------------------------------------------------
+
+title: Game corner
+intro: |
+  Games that stuck. Not a ranking — more a shelf of favourites.
+
+shelf:
+  - title: Outer Wilds
+    note: |
+      The best 22 hours a solo dev ever gave anyone. Go in
+      cold if you can.
+
+  - title: Hollow Knight
+    note: |
+      Still think about Deepnest when I can't sleep.
+
+  - title: Celeste
+    note: |
+      Platformer as therapy. The chapter cards alone.
