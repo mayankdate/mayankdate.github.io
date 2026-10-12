@@ -37,8 +37,10 @@ bioprinter dialog (**E / Space**) → you walk.
 Interactions wired now: books / games / music / art (modals);
 **coffee** (whirrs, brews a cup, "firewall blocked the espresso",
 cup vanishes); **sushi** (a random piece + a line); **fireplace**
-(on/off + crackle); **window** (cycles weather: clear → rain →
-birds → storm); four **cats** (pet with E).
+(on/off + crackle); **either window** (cycles the weather: clear →
+rain → storm → cloudy — the sky in every window *and* the whole
+backdrop change, with rain + thunder + lightning); four **cats**
+(pet with E).
 
 ---
 
@@ -65,6 +67,7 @@ Elsewhere/
     └── systems/
         ├── Sprites.js      sheet loader + per-entity Animator
         ├── Interactions.js effect runner (data → actions)
+        ├── Windows.js      live sky viewports (weather) + frame overlay
         ├── Ambience.js     Web Audio layers + screen overlays
         ├── Dialog.js       DOM dialog, E/Space advance
         ├── Modal.js        content popups
@@ -87,6 +90,8 @@ keeps animating. Layout is in `sprites.yaml`:
 | `sushi.png` | 6×1 | 28×28 | one piece per frame |
 | `flame.png` | 4×1 | 48×48 | fireplace fire, flicker loop |
 | `platter.png` | 4×1 | 32×32 | turntable vinyl, spin loop |
+| `sky.png` | 4×1 | 256×256 | weather backdrop + window view: clear/rain/storm/cloudy |
+| `window_<id>_frame.png` | — | per window | frame + ledge over the glass; transparent panes |
 
 Change a frame size? Update it in `sprites.yaml` and redraw at that
 size. Missing sheet? The engine falls back to the code-drawn shape,
@@ -177,6 +182,20 @@ side.
 `anim` to loop, and optionally `visibleWhen: fire` to tie it to the
 fireplace toggle. The flame and the spinning record are the two today;
 add a candle flicker, steam, a bubbling pot the same way.
+
+**The weather** is one sky sheet (`sky.png`, four frames) used in two
+places: the **full backdrop** behind the floating island (the void is
+transparent now, so the sky shows through) and the **interior of every
+window**. Tapping either window steps the weather clear → rain → storm
+→ cloudy; `Ambience.currentWeather()` is the single source of truth and
+both the backdrop (`bgSky()` in `main.js`) and `Windows.js` read it.
+Rain streaks and the lightning flash draw live on top — across the
+screen (`Ambience.drawOverlay`) and inside each window (`Windows.js`).
+A window is drawn in three layers: the sky frame, the live rain/flash,
+then its **frame + ledge** PNG (`assets/sprites/window_<id>_frame.png`)
+— paint that to redraw the woodwork; the glass stays a viewport. Add a
+weather by adding a `sky.png` frame + a `WEATHER` entry in `Ambience.js`
+and listing it in the windows' `cycle_weather`.
 
 **Ambience** layers (`rain`, `fire`, `birds`, `thunder`) are
 synthesized in `Ambience.js`. Each is a swap-point: drop in a real

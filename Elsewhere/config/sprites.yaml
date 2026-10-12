@@ -71,3 +71,13 @@ platter:
   draw: { w: 1.4, h: 1.4 }
   anims:
     spin: { row: 0, from: 0, to: 3, fps: 8 }
+
+# The weather sky — one sheet, four skies — used for BOTH the full
+# background (behind the floating island; the void is transparent) and
+# the window viewports. Rain + lightning draw on top, live. Paint over
+# the four frames, keep the order.
+sky:
+  sheet: assets/sprites/sky.png
+  frameW: 256
+  frameH: 256
+  frames: { clear: 0, rain: 1, storm: 2, cloudy: 3 }

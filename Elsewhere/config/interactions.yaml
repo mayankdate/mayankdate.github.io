@@ -40,8 +40,14 @@ fireplace:
   effects:
     - { toggle_fire: true }
 
-# The window beside the fireplace — cycles the weather outside.
+# Either window cycles the weather outside — the sky in every window,
+# plus its ambience, steps clear → rain → storm → cloudy.
 window_cafe:
   label: Window
   effects:
-    - { cycle_weather: [ clear, rain, birds, storm ] }
+    - { cycle_weather: [ clear, rain, storm, cloudy ] }
+
+window_library:
+  label: Window
+  effects:
+    - { cycle_weather: [ clear, rain, storm, cloudy ] }

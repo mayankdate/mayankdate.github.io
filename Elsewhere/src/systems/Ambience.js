@@ -17,7 +17,13 @@ let fireOn = false;
 let rainParticles = [];
 let flash = 0;
 let weather = 'clear';
-const WEATHER = { clear: [], rain: ['rain'], birds: ['birds'], storm: ['rain', 'thunder'] };
+// Four skies the windows cycle through. Each names the audio layers it mixes.
+const WEATHER = {
+  clear:  ['birds'],            // sunny, birdsong
+  rain:   ['rain'],             // overcast, raining
+  storm:  ['rain', 'thunder'],  // dark, lightning + thunder
+  cloudy: [],                   // calm overcast, quiet
+};
 
 function ac() {
   if (!actx) {
@@ -118,6 +124,9 @@ export function cycleWeather(list) {
   return weather;
 }
 export function currentWeather() { return weather; }
+export function flashLevel() { return flash; }        // lightning, 1 → 0, for the windows to mirror
+// start (or re-apply) the current weather's audio layers — called once audio is unlocked
+export function applyWeather() { for (const n of ['rain', 'birds', 'thunder']) set(n, (WEATHER[weather] || []).includes(n)); }
 
 export function toggleFire() { fireOn = !fireOn; set('fire', fireOn, 0.3); return fireOn; }
 export function isFireOn() { return fireOn; }

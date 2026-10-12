@@ -70,6 +70,8 @@
     }
     if(!end)return null;const path=[];for(let p=end;p;p=seen.get(key(p)))path.push(p);return path.reverse();
   }
+  // an Image is ready when loaded; a Canvas (live window sky) is always ready.
+  function rdy(x){return !!x&&(x.complete!==undefined?(x.complete&&x.naturalWidth>0):x.width>0);}
   function rect(ctx,r,color){ctx.fillStyle=color;ctx.fillRect(...r);}
   function polygon(ctx,points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();ctx.fill();}
   function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
@@ -100,10 +102,13 @@
     ctx.fillStyle='#eee7ce';ctx.beginPath();ctx.ellipse(x-.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.ellipse(x+.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   function drawScene(ctx,scene,view){
-    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null}=view;
-    ctx.save();ctx.imageSmoothingEnabled=false;rect(ctx,[0,0,64,64],scene.palette.void);
+    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,bg=null}=view;
+    ctx.save();ctx.imageSmoothingEnabled=false;
+    // Weather sky backdrop behind the island; falls back to the flat void color.
+    if(bg&&rdy(bg.img)){ctx.drawImage(bg.img,bg.sx,bg.sy,bg.sw,bg.sh,0,0,64,64);}
+    else rect(ctx,[0,0,64,64],scene.palette.void);
     // Hand-drawn ground layer replaces the whole terrain/floor/stairs block when present.
-    if(ground&&ground.complete&&ground.naturalWidth){ctx.drawImage(ground,0,0,64,64);}
+    if(rdy(ground)){ctx.drawImage(ground,0,0,64,64);}
     else{
       for(const t of scene.terrain.filter(t=>t.id!=='floor'))for(const r of t.rects)rect(ctx,r,t.color);
       // Inferred floor behind the artwork prevents holes when walls fade.
@@ -126,11 +131,11 @@
         const o=g.o;if(o.category==='wall'&&!showWalls)continue;
         ctx.save();const b=renderBounds(o);if(o.category==='wall'&&cutaway&&player.x>b[0]&&player.x<b[0]+b[2]&&player.y>b[1]&&player.y<o.sortY)ctx.globalAlpha=.25;
         const oi=images[o.id];
-        if(oi&&oi.complete&&oi.naturalWidth){const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}
+        if(rdy(oi)){const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}
         else for(const s of o.shapes)rect(ctx,s.rect,s.color);
         for(const child of scene.objects.filter(c=>c.parent===o.id)){
           const ci=images[child.id];
-          if(ci&&ci.complete&&ci.naturalWidth){const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}
+          if(rdy(ci)){const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}
           else for(const s of child.shapes)rect(ctx,s.rect,s.color);
         }
         if(details)for(const p of o.parts)drawPart(ctx,p,time);

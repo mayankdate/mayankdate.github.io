@@ -14,6 +14,7 @@ import * as Modal from './systems/Modal.js';
 import * as Ambience from './systems/Ambience.js';
 import * as Interactions from './systems/Interactions.js';
 import { Animator, loadImage } from './systems/Sprites.js';
+import { Windows } from './systems/Windows.js';
 
 const E = window.CabinEngine;
 const scene = window.CABIN_SCENE;
@@ -96,6 +97,20 @@ function buildMap(data) {
   if (data.map && data.map.ground) MAP.ground = loadImage(data.map.ground);
   const objs = (data.map && data.map.objects) || {};
   for (const id in objs) MAP.images[id] = loadImage(objs[id]);
+}
+
+// ================= weather windows + backdrop =================
+let windows = null;
+function buildWindows(data) {
+  if (!SPR.sky) return;
+  windows = new Windows(scene, Ambience, { img: SPR.sky.img, def: data.sprites.sky });
+  Object.assign(MAP.images, windows.images());   // engine draws each window's live canvas
+}
+// the sky frame for the current weather, drawn behind the island
+function bgSky() {
+  if (!SPR.sky) return null;
+  const S = data.sprites.sky, col = (S.frames && S.frames[Ambience.currentWeather()]) ?? 0;
+  return { img: SPR.sky.img, sx: col * S.frameW, sy: 0, sw: S.frameW, sh: S.frameH };
 }
 
 // ================= cats =================
@@ -249,6 +264,7 @@ async function interact(obj) {
 data = await loadAll();
 buildSprites(data);
 buildMap(data);
+buildWindows(data);
 buildAccents(data);
 env = makeEnv();
 
@@ -268,6 +284,7 @@ requestAnimationFrame(loop);
 
 btn.addEventListener('click', async () => {
   Ambience.resume();                       // audio needs a user gesture
+  Ambience.applyWeather();                  // start the default (clear) ambience
   btn.disabled = true; splash.classList.add('is-loading');
   const bar = splash.querySelector('#clone-bar-fill');
   bar.style.transition = 'width 1.8s cubic-bezier(.4,.1,.3,1)';
@@ -349,6 +366,7 @@ function loop(t) {
   for (const c of cats) c.update(dt, t);
   for (const id in spawned) { const p = spawned[id].parts[0]; if (p._anim) { const rr = p._anim.rect(t); p.sx = rr[0]; p.sy = rr[1]; p.sw = rr[2]; p.sh = rr[3]; } }
   for (const a of accents) if (a.visible) { const rr = a.anim.rect(t); a.part.sx = rr[0]; a.part.sy = rr[1]; a.part.sw = rr[2]; a.part.sh = rr[3]; }
+  if (windows) windows.update(t, dt);
 
   const tx = player.x, ty = player.y - 1.2;
   cam.x += (tx - cam.x) * Math.min(1, dt * 8);
@@ -373,7 +391,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images, bg: bgSky() });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);
