@@ -1,14 +1,14 @@
 # Elsewhere — cabin engine
 
-The pixel room beside the portfolio, rebuilt on the **CabinEngine**
+The pixel room beside the portfolio, built on the **CabinEngine**
 reconstruction of Mayank's Procreate sketch. Served at
 `mayankdate.github.io/Elsewhere/`, embedded into the site at
-`mayankdate.github.io/elsewhere.html` (unchanged wrapper).
+`mayankdate.github.io/elsewhere.html`.
 
-This replaces the earlier Phaser tilemap. The world is now a
-pre-projected 2.5D scene with per-object heights, narrow ground
-footprints, mounted overhang (monitors, chimney, steam), multiple
-floor levels + stairs, and foot-depth occlusion.
+Everything is **data-driven and modular** — new content and
+behaviour is config, not surgery. Three systems sit on top of the
+engine: Sprites (animation), Interactions (effect runner), Ambience
+(synth audio + overlays).
 
 ---
 
@@ -16,29 +16,29 @@ floor levels + stairs, and foot-depth occlusion.
 
 ```bash
 cd Elsewhere
-python -m http.server 8000     # then open http://localhost:8000
+python -m http.server 8000      # open http://localhost:8000
 ```
 
-Phaser is gone. The only CDN scripts are js-yaml and marked (for the
-content configs and modal markdown). The world itself needs no
-libraries and no image assets — it's drawn by `engine.js`.
+CDN scripts: js-yaml + marked only. No build step. The world is
+drawn by `engine.js`; animated things blit from sprite sheets.
 
 ---
 
 ## The experience
 
-Splash → **Load clone** → the blank clone drops onto the spawn tile →
-the bioprinter dialog (**E / Space** to advance) → you're walking.
+Splash → **Load clone** → the clone drops onto the spawn tile → the
+bioprinter dialog (**E / Space**) → you walk.
 
-- **WASD / arrows** move, using the engine's foot collision, floor
-  levels, and stair interpolation.
-- **E / Space** interacts with the nearest station (same key as
-  dialog). Walk up to a station and a `E <name>` prompt appears.
-  **There is no mouse interaction.**
+- **WASD / arrows** move (engine collision, floor levels, stairs).
+- **E / Space** interacts with the nearest thing — same key as
+  dialog. Walk up, a `E <name>` prompt appears. No mouse.
 - **+ / − / scroll** zoom.
 
-Stations → content: bookshelf → books, gaming desk → games, turntable
-→ music, gallery → art; coffee / fireplace / sushi speak a short line.
+Interactions wired now: books / games / music / art (modals);
+**coffee** (whirrs, brews a cup, "firewall blocked the espresso",
+cup vanishes); **sushi** (a random piece + a line); **fireplace**
+(on/off + crackle); **window** (cycles weather: clear → rain →
+birds → storm); four **cats** (pet with E).
 
 ---
 
@@ -46,75 +46,83 @@ Stations → content: bookshelf → books, gaming desk → games, turntable
 
 ```
 Elsewhere/
-├── index.html        Splash + <canvas id=game> + dialog/modal/HUD roots
-├── styles.css        All DOM chrome
-├── engine.js         CabinEngine — geometry, collision, levels, occlusion,
-│                       mounted parts, drawScene  (the reconstruction; unmodified)
-├── scene.js          window.CABIN_SCENE — the authored cabin map
-├── config/
-│   ├── intro.yaml         splash greeting + bioprinter dialog
-│   ├── interactions.yaml  scene station id → content modal or dialog
-│   ├── books.yaml, music.yaml, games.yaml, art.yaml
-├── assets/
-│   ├── covers/, art/      images shown inside the modals
-│   └── mayank_portrait.png  splash only
+├── engine.js          CabinEngine (geometry, collision, levels, occlusion).
+│                       Extended with a 'sprite' part kind + playerSprite.
+├── scene.js           window.CABIN_SCENE — the authored cabin map.
+├── index.html / styles.css
+├── config/            ← edit these
+│   ├── sprites.yaml        sheets + frame grids + animations
+│   ├── interactions.yaml   each station's effect sequence
+│   ├── cats.yaml           4 cats: sheet, zone, speed, personality
+│   ├── sushi.yaml          random sushi variants
+│   ├── intro.yaml          splash + bioprinter dialog
+│   └── books/music/games/art.yaml   modal content
+├── assets/sprites/    player, cat_*, cup, sushi  ← PLACEHOLDERS, paint over these
+├── assets/covers,art/ modal images
 └── src/
-    ├── main.js       game loop: camera, movement, proximity-E, splash/drop
+    ├── main.js        glue: camera, movement, player/cat animators, spawns, env
     └── systems/
-        ├── Config.js     loads the content YAML
-        ├── Dialog.js     DOM dialog box, E/Space advance (capture phase)
-        └── Modal.js      content popups (books/music/games/art, Spotify, covers, frames)
+        ├── Sprites.js      sheet loader + per-entity Animator
+        ├── Interactions.js effect runner (data → actions)
+        ├── Ambience.js     Web Audio layers + screen overlays
+        ├── Dialog.js       DOM dialog, E/Space advance
+        ├── Modal.js        content popups
+        └── Config.js       loads the YAML
 ```
 
-`main.js` is the only glue: it drives a follow-camera (`ctx` translate
-+ scale centred on the player), calls `CabinEngine.movePlayer`,
-`drawScene`, and `nearestInteraction`, and opens the right modal. The
-geometry contract lives entirely in `engine.js` + `scene.js` — don't
-fork them; edit the scene.
+---
+
+## Drawing the art (the whole point)
+
+The placeholders in `assets/sprites/` are **grids you paint over**.
+Keep the frame size, the grid, and the frame order and everything
+keeps animating. Layout is in `sprites.yaml`:
+
+| Sheet | Grid | Frame | Rows |
+|-------|------|-------|------|
+| `player.png` | 4×4 | 48×64 | down / left / right / up; col0 idle, col1-3 walk |
+| `cat_<name>.png` | 4×4 | 40×32 | idle / walk / sit / sleep |
+| `cup.png` | 4×1 | 24×28 | steam frames |
+| `sushi.png` | 6×1 | 28×28 | one piece per frame |
+
+Change a frame size? Update it in `sprites.yaml` and redraw at that
+size. Missing sheet? The engine falls back to the code-drawn shape,
+so nothing breaks while you work.
 
 ---
 
-## Editing the map
+## Adding / changing behaviour
 
-The map is `scene.js` (`window.CABIN_SCENE`) — authored 2D projected
-coordinates in 32 px tile units. See `CLAUDE_HANDOFF.md` from the
-reconstruction for the full contract. The source of truth is
-`scene.json`; regenerate `scene.js` with the reconstruction's
-`sync_scene.cjs`. Key points:
+**An interaction** is a list of effects in `interactions.yaml`, run
+in order on E:
 
-- A wall's tall face is **artwork**; its `collisionRect` is the narrow
-  strip at its foot. Don't widen the footprint to match the drawing.
-- Overhang (monitors, chimney, steam) are `parts` with
-  `collision:false` — they draw above the parent and add no collision.
-- `sortY` is the object's foot depth; the player sorts by feet. Front
-  walls ghost-fade while you're behind them (`cutaway`, on by default
-  in `drawScene`).
-- Floor `level` + `stairs` gate movement between heights.
+```yaml
+coffee:
+  label: Coffee
+  effects:
+    - { sound: whirr, duration: 1600 }
+    - { spawn: { ref: cup, id: _cup, at: [29.7, 19.9], anim: steam } }
+    - { wait: 350 }
+    - { dialog: [ "…your firewall blocked the espresso. Try harder." ] }
+    - { despawn: _cup }
+```
 
-To move a whole set piece (and its mounted children + collision)
-together, use `CabinEngine.relocateObject(scene, id, dx, dy)`.
+Effect types today: `modal`, `dialog`, `sound`, `spawn`, `despawn`,
+`wait`, `toggle_fire`, `cycle_weather`, `serve_sushi`. **A new
+effect = one case in `Interactions.js` + one handler in `main.js`'s
+`env`.** That's the extension point — the rest of the game never
+changes.
 
----
+**A cat's personality** lives in `cats.yaml`: `temperament`
+(`approach` — Apollo comes to you; `avoid` — Hope flees to a
+corner; `neutral`) plus `rest: { idle, sit, sleep }` weights, and
+speed / zone / sheet / bio. Interactions can't be triggered from
+behind an object (front + sides only); cats are pettable from any
+side.
 
-## Replacing the block-in with hand-drawn art
-
-Right now `drawScene` paints each object from its coloured `shapes`
-and primitive `parts`. To use finished Procreate art:
-
-1. Export each object (or layer) as a transparent PNG. The
-   reconstruction's `render_assets.cjs` already emits one template per
-   object plus a `manifest.json` with each one's **ground anchor**,
-   pixel size, collision rect, and parent — draw over those templates
-   so the anchors line up.
-2. In the renderer, swap the per-object shape loop for an image draw
-   keyed by object id, positioned at `visualBounds` (its top-left ×
-   32 px). Keep `collisionRect`, `sortY`, and the `parent` grouping
-   exactly as they are, so collision and occlusion don't change.
-3. Animated details (flames, steam, spinning record) stay as separate
-   `parts` so they can keep moving over the static art.
-
-That's the whole point of the layered model: you redraw the *look*
-without touching the *geometry*.
+**Ambience** layers (`rain`, `fire`, `birds`, `thunder`) are
+synthesized in `Ambience.js`. Each is a swap-point: drop in a real
+audio file later behind the same on/off call.
 
 ---
 

@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------
+# Elsewhere · cats.yaml
+# ---------------------------------------------------------------
+# The real cats. Each animates from its own sheet (shared layout
+# in sprites.yaml) and behaves by personality:
+#   temperament: approach | avoid | neutral
+#     approach → comes toward you when you're near (Apollo)
+#     avoid    → flees to the far corner of its zone (Hope)
+#     neutral  → wanders (Sophie, Artemis)
+#   rest = idle:sit:sleep weights when it pauses
+#   speed, zone, spawn, bio, colours (colours only matter for the
+#   code fallback — the sprite sheet is the real look).
+# ---------------------------------------------------------------
+
+- id: apollo
+  name: Apollo
+  sheet: assets/sprites/cat_apollo.png
+  color: "#8a6a46"
+  dark:  "#5f4830"
+  temperament: approach
+  spawn: { x: 29, y: 24 }
+  zone:  { x: 26, y: 22, w: 10, h: 6 }
+  level: 2
+  speed: 1.5
+  rest:  { idle: 4, sit: 1, sleep: 0 }
+  bio: "Apollo. Brown, one of the twins, the friendliest soul in the cabin. Already winding around your ankles."
+
+- id: artemis
+  name: Artemis
+  sheet: assets/sprites/cat_artemis.png
+  color: "#8a6a46"
+  dark:  "#5f4830"
+  temperament: neutral
+  spawn: { x: 29, y: 33 }
+  zone:  { x: 20, y: 27, w: 18, h: 10 }
+  level: 2
+  speed: 2.0
+  rest:  { idle: 5, sit: 0, sleep: 0 }
+  bio: "Artemis. Apollo's twin, equally brown, equally friendly, and a committed agent of chaos. You don't want to know what she just knocked off the counter."
+
+- id: sophie
+  name: Sophie
+  sheet: assets/sprites/cat_sophie.png
+  color: "#d2d4d8"
+  dark:  "#9aa0a8"
+  temperament: neutral
+  spawn: { x: 37, y: 33 }
+  zone:  { x: 33, y: 30, w: 8, h: 7 }
+  level: 2
+  speed: 1.1
+  rest:  { idle: 2, sit: 4, sleep: 1 }
+  bio: "Sophie. White and grey, reserved. On a good day — and only on a good day — she'll allow exactly one pet."
+
+- id: hope
+  name: Hope
+  sheet: assets/sprites/cat_hope.png
+  color: "#e8ddc8"
+  dark:  "#b08a60"
+  temperament: avoid
+  spawn: { x: 16, y: 36 }
+  zone:  { x: 14, y: 33, w: 5, h: 5 }
+  level: 2
+  speed: 1.6
+  rest:  { idle: 1, sit: 3, sleep: 3 }
+  bio: "Hope. White and brown, and she did not ask for company. *hiss.* Best admired from across the room."

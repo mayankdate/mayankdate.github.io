@@ -1,35 +1,47 @@
 # ---------------------------------------------------------------
 # Elsewhere · interactions.yaml
 # ---------------------------------------------------------------
-# Maps a scene station id (from scene.js) to what happens when you
-# walk up and press E / Space.
-#   content: <key>   → opens that modal (books / music / games / art)
-#   dialog:  [lines] → speaks a short line or two (E/Space advances)
-# Stations not listed fall back to their scene.json interaction text.
+# Each key is a scene-object id. `label` is the E-prompt. `effects`
+# is an ordered list run top-to-bottom when you press E / Space.
+#
+# Effect types (add more by adding a handler in Interactions.js):
+#   { modal: <key> }            open a content modal (books/music/…)
+#   { dialog: [lines] }         speak; E/Space advances
+#   { sound: <name>, duration } play a one-shot sound, then wait
+#   { spawn: {ref,id,at,...} }  place a sprite prop in the world
+#   { despawn: <id> }           remove it
+#   { wait: <ms> }              pause the sequence
+#   { toggle_fire: true }       fireplace on/off + crackle ambience
+#   { cycle_weather: [list] }   step weather/ambience presets
+#   { serve_sushi: true }       random sushi + eat + line
 # ---------------------------------------------------------------
 
-bookshelf:
-  content: books
-
-gaming:
-  content: games
-
-turntable:
-  content: music
-
-gallery:
-  content: art
+bookshelf:  { label: Books,  effects: [ { modal: books } ] }
+gaming:     { label: Games,  effects: [ { modal: games } ] }
+turntable:  { label: Music,  effects: [ { modal: music } ] }
+gallery:    { label: Art,    effects: [ { modal: art   } ] }
 
 coffee:
-  dialog:
-    - "The espresso machine runs on nothing and never stops. The cup never quite cools."
-    - "Pull up a stool. This is where most of the writing actually happens."
-
-fireplace:
-  dialog:
-    - "The fire's always going. I taught the flames to flicker — I never got around to teaching them to warm."
+  label: Coffee
+  effects:
+    - { sound: whirr, duration: 1600 }
+    - { spawn: { ref: cup, id: _cup, at: [29.7, 19.9], anim: steam } }
+    - { wait: 350 }
+    - { dialog: [ "Teleporting you to physical space…", "…your firewall blocked the espresso. Try harder." ] }
+    - { despawn: _cup }
 
 sushi:
-  dialog:
-    - "The sushi counter. One day this opens a little menu of the spots I miss."
-    - "For now: admire the plastic, respect the craft."
+  label: Sushi
+  effects:
+    - { serve_sushi: true }
+
+fireplace:
+  label: Fireplace
+  effects:
+    - { toggle_fire: true }
+
+# The window beside the fireplace — cycles the weather outside.
+window_cafe:
+  label: Window
+  effects:
+    - { cycle_weather: [ clear, rain, birds, storm ] }
