@@ -52,6 +52,7 @@ Elsewhere/
 ├── index.html / styles.css
 ├── config/            ← edit these
 │   ├── sprites.yaml        sheets + frame grids + animations
+│   ├── accents.yaml        looping sprites pinned on a station (flame, disc)
 │   ├── interactions.yaml   each station's effect sequence
 │   ├── cats.yaml           4 cats: sheet, zone, speed, personality
 │   ├── sushi.yaml          random sushi variants
@@ -84,10 +85,61 @@ keeps animating. Layout is in `sprites.yaml`:
 | `cat_<name>.png` | 4×4 | 40×32 | idle / walk / sit / sleep |
 | `cup.png` | 4×1 | 24×28 | steam frames |
 | `sushi.png` | 6×1 | 28×28 | one piece per frame |
+| `flame.png` | 4×1 | 48×48 | fireplace fire, flicker loop |
+| `platter.png` | 4×1 | 32×32 | turntable vinyl, spin loop |
 
 Change a frame size? Update it in `sprites.yaml` and redraw at that
 size. Missing sheet? The engine falls back to the code-drawn shape,
 so nothing breaks while you work.
+
+---
+
+## Drawing the map (layers)
+
+The static cabin — ground + every wall and furniture body — is also
+paintable, the same way, in layers.
+
+- **Templates** live in `assets/map/templates/`: `ground.png`
+  (the whole 2048×2048 terrain/floor/stairs) and one PNG per object
+  (`wall_cafe.png`, `fireplace.png`, …), each already the right size
+  and position. `templates/manifest.json` records every object's
+  pixel position, size, sort depth, and collision rect.
+- **To replace a layer:** paint over a template, keep its canvas
+  size, save it into `assets/map/`, and list it in `config/map.yaml`:
+
+  ```yaml
+  ground: assets/map/ground.png
+  objects:
+    wall_cafe: assets/map/wall_cafe.png
+    fireplace: assets/map/fireplace.png
+  ```
+
+- Anything **not listed stays code-drawn**, so you redraw the map one
+  piece at a time and nothing breaks. Drawn layers keep the original
+  occlusion and sort order — walls still hide you, you still walk in
+  front of the counter.
+- **A station template includes what sits on it.** The device a station
+  carries — the monitors on the gaming desk, the espresso machine on the
+  coffee counter, the record player on the turntable cabinet, the plates
+  on the sushi display — is part of that station's template, not a
+  separate layer. Each station card is drawn tall enough for it: paint
+  the table at the foot and the device in the headroom above (see the
+  contact sheet — the transparent space above the box is yours).
+- **Only genuinely moving things are separate sprites**, in
+  `assets/sprites/` not `assets/map/`: the **flame** and the **spinning
+  record**. They loop over their hand-drawn sheet (`flame.png`,
+  `platter.png`) and draw on top of the painted station. Everything else
+  that used to be code-drawn vector art is gone — paint it into the
+  station template.
+
+**Re-export templates** (after editing the scene) with the exporter
+in the project notes; it re-renders every template + the manifest
+from `scene.js`.
+
+**Decorations & seasons** slot in here later: a cherry-blossom tree
+behind the house or props on the satellite islands are just more
+entries (a sprite + a world position), and a "season" field can pick
+which decoration set loads — the systems are already shaped for it.
 
 ---
 
@@ -119,6 +171,12 @@ corner; `neutral`) plus `rest: { idle, sit, sleep }` weights, and
 speed / zone / sheet / bio. Interactions can't be triggered from
 behind an object (front + sides only); cats are pettable from any
 side.
+
+**An accent** (a looping sprite on top of a station) is one line in
+`accents.yaml` — a sheet `ref`, a foot anchor `at`, a `sortY`, the
+`anim` to loop, and optionally `visibleWhen: fire` to tie it to the
+fireplace toggle. The flame and the spinning record are the two today;
+add a candle flicker, steam, a bubbling pot the same way.
 
 **Ambience** layers (`rain`, `fire`, `birds`, `thunder`) are
 synthesized in `Ambience.js`. Each is a swap-point: drop in a real

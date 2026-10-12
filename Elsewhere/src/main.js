@@ -56,13 +56,46 @@ function findInteraction() {
 const SPR = {};
 let playerAnim = null, playerFacing = 'down';
 function buildSprites(data) {
-  for (const key of ['player', 'cup', 'sushi']) {
+  for (const key in data.sprites) {
     const d = data.sprites[key];
     if (d && d.sheet) SPR[key] = { def: d, img: loadImage(d.sheet) };
   }
   const catDef = data.sprites.cat;
   for (const c of data.cats) if (c.sheet) SPR['cat_' + c.id] = { def: catDef, img: loadImage(c.sheet) };
   if (SPR.player) playerAnim = new Animator(data.sprites.player);
+}
+
+// ================= animated accents =================
+// Looping sprites pinned on top of a station (flame, spinning record).
+// Same draw path as a spawned prop, but persistent and some are toggled.
+const accents = [];
+function buildAccents(data) {
+  for (const a of (data.accents || [])) {
+    const reg = SPR[a.ref]; if (!reg) continue;
+    const d = reg.def, [ax, ay] = a.at, w = d.draw.w, h = d.draw.h;
+    const part = { kind: 'sprite', img: reg.img, flip: false, collision: false,
+      rect: [ax - w / 2, ay - h, w, h], sx: 0, sy: 0, sw: d.frameW, sh: d.frameH };
+    const obj = { id: a.id, category: 'accent', visualBounds: [ax - w / 2, ay - h, w, h],
+      shapes: [], collisionRect: null, physicalHeight: 0, baseFloorLevel: 2,
+      sortY: a.sortY ?? ay, parent: null, parts: [part] };
+    const rec = { def: a, obj, part, anim: new Animator(d), visible: false };
+    accents.push(rec);
+    if (!a.visibleWhen) setAccent(a.id, true);   // always-on starts visible
+  }
+}
+function setAccent(id, on) {
+  const a = accents.find(x => x.def.id === id); if (!a || on === a.visible) return;
+  a.visible = on;
+  if (on) { a.anim.play(a.def.anim, performance.now()); scene.objects.push(a.obj); }
+  else { const i = scene.objects.indexOf(a.obj); if (i >= 0) scene.objects.splice(i, 1); }
+}
+
+// ================= hand-drawn map layers =================
+const MAP = { ground: null, images: {} };
+function buildMap(data) {
+  if (data.map && data.map.ground) MAP.ground = loadImage(data.map.ground);
+  const objs = (data.map && data.map.objects) || {};
+  for (const id in objs) MAP.images[id] = loadImage(objs[id]);
 }
 
 // ================= cats =================
@@ -185,7 +218,7 @@ function makeEnv() {
     dialog: (lines) => new Promise(res => Dialog.run(lines.map(t => typeof t === 'string' ? { text: t } : t), res)),
     ambience: Ambience,
     spawn, despawn,
-    toggleFire: () => { const on = Ambience.toggleFire(); const fp = byId('fireplace'); if (fp) fp.parts = on ? fp._flame : []; },
+    toggleFire: () => { const on = Ambience.toggleFire(); setAccent('fireplace_flame', on); },
     cycleWeather: (list) => Ambience.cycleWeather(list),
     serveSushi: async (envRef) => {
       const s = data.sushi[Math.floor(Math.random() * data.sushi.length)];
@@ -215,6 +248,8 @@ async function interact(obj) {
 // ================= boot =================
 data = await loadAll();
 buildSprites(data);
+buildMap(data);
+buildAccents(data);
 env = makeEnv();
 
 // attach / override interaction labels from the config (incl. the window)
@@ -222,10 +257,6 @@ for (const id in data.interactions) {
   const o = byId(id);
   if (o) { o.interaction = o.interaction || {}; o.interaction.label = data.interactions[id].label || o.interaction.label || id; }
 }
-// stash the fireplace flame so it can toggle, and start it cold
-const fp = byId('fireplace');
-if (fp) { fp._flame = fp.parts; fp.parts = []; }
-
 cats = data.cats.map(d => new CatNPC(d, data));
 
 const splash = document.getElementById('splash');
@@ -317,6 +348,7 @@ function loop(t) {
 
   for (const c of cats) c.update(dt, t);
   for (const id in spawned) { const p = spawned[id].parts[0]; if (p._anim) { const rr = p._anim.rect(t); p.sx = rr[0]; p.sy = rr[1]; p.sw = rr[2]; p.sh = rr[3]; } }
+  for (const a of accents) if (a.visible) { const rr = a.anim.rect(t); a.part.sx = rr[0]; a.part.sy = rr[1]; a.part.sw = rr[2]; a.part.sh = rr[3]; }
 
   const tx = player.x, ty = player.y - 1.2;
   cam.x += (tx - cam.x) * Math.min(1, dt * 8);
@@ -341,7 +373,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);

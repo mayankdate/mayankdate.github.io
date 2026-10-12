@@ -74,31 +74,7 @@
   function polygon(ctx,points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();ctx.fill();}
   function rounded(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
   function drawPart(ctx,p,time){const [x,y,w,h]=p.rect;ctx.save();
-    if(p.kind==='monitor'){
-      rect(ctx,[x,y,w,h*.76],'#342d43');rect(ctx,[x+.12,y+.12,w-.24,h*.76-.24],'#65948f');
-      ctx.globalAlpha=.25+.15*Math.sin(time/650);rect(ctx,[x+.2,y+.2,w-.4,.08],'#d4ffca');ctx.globalAlpha=1;
-      rect(ctx,[x+w*.43,y+h*.76,w*.14,h*.16],'#d1b8c8');rect(ctx,[x+w*.25,y+h*.92,w*.5,h*.08],'#342d43');
-    }else if(p.kind==='espresso'){
-      rect(ctx,[x,y,w,h],'#483c51');rect(ctx,[x+.14,y+.12,w-.28,h*.35],'#dbc7cc');
-      rect(ctx,[x+w*.18,y+h*.56,w*.64,h*.34],'#272632');rect(ctx,[x+w*.32,y+h*.58,.12,h*.14],'#dad0cb');
-      rect(ctx,[x+w*.48,y+h*.58,.12,h*.14],'#dad0cb');
-    }else if(p.kind==='cup'){
-      rect(ctx,[x,y,w*.72,h],'#ecdbc1');ctx.strokeStyle='#ecdbc1';ctx.lineWidth=.09;ctx.strokeRect(x+w*.65,y+.07,w*.35,h*.6);
-      ctx.strokeStyle='#ede2d0aa';ctx.lineWidth=.05;ctx.beginPath();ctx.moveTo(x+w*.3,y-.05);ctx.quadraticCurveTo(x+w*.3+Math.sin(time/400)*.2,y-.4,x+w*.3,y-.7);ctx.stroke();
-    }else if(p.kind==='turntable'){
-      rect(ctx,[x,y,w,h],'#4f4357');ctx.fillStyle='#252b32';ctx.beginPath();ctx.ellipse(x+w*.4,y+h*.5,w*.28,h*.4,0,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#c3b288';ctx.beginPath();ctx.ellipse(x+w*.4,y+h*.5,w*.065,h*.1,0,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#b6b8ac';ctx.lineWidth=.06;ctx.beginPath();ctx.moveTo(x+w*.87,y+.12);ctx.lineTo(x+w*.7,y+h*.7);ctx.lineTo(x+w*.56,y+h*.55);ctx.stroke();
-      ctx.fillStyle='#a2a796';const t=time/650;ctx.fillRect(x+w*.4+Math.cos(t)*w*.16,y+h*.5+Math.sin(t)*h*.24,.06,.06);
-    }else if(p.kind==='flame'){
-      ctx.fillStyle='#342c3c';rounded(ctx,x-.12,y-.12,w+.24,h+.2,.35);
-      const flick=.12*Math.sin(time/90);polygon(ctx,[[x,y+h],[x+w*.2,y+h*.4],[x+w*.38,y+.1+flick],[x+w*.57,y+h*.43],[x+w*.78,y],[x+w,y+h]],'#f18b46');
-      polygon(ctx,[[x+w*.25,y+h],[x+w*.52,y+h*.43+flick],[x+w*.75,y+h]],'#ffd08a');
-    }else if(p.kind==='sushi'){
-      ctx.strokeStyle='#b69dac';ctx.lineWidth=.12;for(let i=0;i<3;i++)ctx.strokeRect(x+.35+i*1.85,y+.15,1.35,1.35);
-      for(let i=0;i<4;i++){rect(ctx,[x+.7+i*.35,y+3.28,.25,.24],'#e1d2ae');rect(ctx,[x+.72+i*.35,y+3.27,.22,.07],'#77936a');}
-      rect(ctx,[x+4.3,y+3.22,.75,.38],'#d2c4a8');rect(ctx,[x+4.4,y+3.17,.55,.12],'#486357');
-    }else if(p.kind==='cat'){
+    if(p.kind==='cat'){
       const col=p.color||'#8a6a46',dk=p.dark||'#5f4830';
       if(p.flip){ctx.translate(2*x+w,0);ctx.scale(-1,1);}
       ctx.fillStyle='rgba(0,0,0,0.22)';ctx.beginPath();ctx.ellipse(x+w*.5,y+h-.04,w*.4,h*.1,0,0,Math.PI*2);ctx.fill();
@@ -124,16 +100,20 @@
     ctx.fillStyle='#eee7ce';ctx.beginPath();ctx.ellipse(x-.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.ellipse(x+.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   function drawScene(ctx,scene,view){
-    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null}=view;
+    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null}=view;
     ctx.save();ctx.imageSmoothingEnabled=false;rect(ctx,[0,0,64,64],scene.palette.void);
-    for(const t of scene.terrain.filter(t=>t.id!=='floor'))for(const r of t.rects)rect(ctx,r,t.color);
-    // Inferred floor behind the artwork prevents holes when walls fade.
-    for(const f of scene.floors)polygon(ctx,f.polygon,groundOnly?(f.level===4?'#daa566':'#b78053'):scene.palette.floor);
-    for(const r of scene.terrain.find(t=>t.id==='floor').rects)rect(ctx,r,scene.palette.floor);
-    for(const s of scene.stairs){for(const r of s.visualRects)rect(ctx,r,scene.palette.steps);
-      if(details||groundOnly){ctx.strokeStyle='#b77714';ctx.lineWidth=.07;const [x,y,w,h]=s.bounds;ctx.beginPath();
-        if(s.axis==='y'){for(let yy=y+.5;yy<y+h;yy+=.5){ctx.moveTo(x,yy);ctx.lineTo(x+w,yy);}}
-        else{for(let xx=x+.5;xx<x+w;xx+=.5){ctx.moveTo(xx,y);ctx.lineTo(xx,y+1);}}ctx.stroke();}
+    // Hand-drawn ground layer replaces the whole terrain/floor/stairs block when present.
+    if(ground&&ground.complete&&ground.naturalWidth){ctx.drawImage(ground,0,0,64,64);}
+    else{
+      for(const t of scene.terrain.filter(t=>t.id!=='floor'))for(const r of t.rects)rect(ctx,r,t.color);
+      // Inferred floor behind the artwork prevents holes when walls fade.
+      for(const f of scene.floors)polygon(ctx,f.polygon,groundOnly?(f.level===4?'#daa566':'#b78053'):scene.palette.floor);
+      for(const r of scene.terrain.find(t=>t.id==='floor').rects)rect(ctx,r,scene.palette.floor);
+      for(const s of scene.stairs){for(const r of s.visualRects)rect(ctx,r,scene.palette.steps);
+        if(details||groundOnly){ctx.strokeStyle='#b77714';ctx.lineWidth=.07;const [x,y,w,h]=s.bounds;ctx.beginPath();
+          if(s.axis==='y'){for(let yy=y+.5;yy<y+h;yy+=.5){ctx.moveTo(x,yy);ctx.lineTo(x+w,yy);}}
+          else{for(let xx=x+.5;xx<x+w;xx+=.5){ctx.moveTo(xx,y);ctx.lineTo(xx,y+1);}}ctx.stroke();}
+      }
     }
     if(grid){ctx.strokeStyle='#24252c25';ctx.lineWidth=.025;ctx.beginPath();for(let n=0;n<=64;n++){ctx.moveTo(n,0);ctx.lineTo(n,64);ctx.moveTo(0,n);ctx.lineTo(64,n);}ctx.stroke();}
     if(!groundOnly){const groups=scene.objects.filter(o=>!o.parent).map((o,i)=>({o,sort:o.sortY,i}));
@@ -145,8 +125,14 @@
         continue;}
         const o=g.o;if(o.category==='wall'&&!showWalls)continue;
         ctx.save();const b=renderBounds(o);if(o.category==='wall'&&cutaway&&player.x>b[0]&&player.x<b[0]+b[2]&&player.y>b[1]&&player.y<o.sortY)ctx.globalAlpha=.25;
-        for(const s of o.shapes)rect(ctx,s.rect,s.color);
-        for(const child of scene.objects.filter(c=>c.parent===o.id))for(const s of child.shapes)rect(ctx,s.rect,s.color);
+        const oi=images[o.id];
+        if(oi&&oi.complete&&oi.naturalWidth){const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}
+        else for(const s of o.shapes)rect(ctx,s.rect,s.color);
+        for(const child of scene.objects.filter(c=>c.parent===o.id)){
+          const ci=images[child.id];
+          if(ci&&ci.complete&&ci.naturalWidth){const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}
+          else for(const s of child.shapes)rect(ctx,s.rect,s.color);
+        }
         if(details)for(const p of o.parts)drawPart(ctx,p,time);
         ctx.restore();
       }

@@ -52,3 +52,22 @@ sushi:
   frameH: 28
   draw: { w: 0.95, h: 0.95 }
   variants: 6      # six single-frame sushi in row 0
+
+# --- animated accents: looping sprites that sit on top of a station ---
+# (placed in accents.yaml). Paint over the placeholder sheets; keep the
+# grid and frame order.
+flame:
+  sheet: assets/sprites/flame.png
+  frameW: 48
+  frameH: 48
+  draw: { w: 1.9, h: 1.9 }
+  anims:
+    loop: { row: 0, from: 0, to: 3, fps: 10 }
+
+platter:
+  sheet: assets/sprites/platter.png
+  frameW: 32
+  frameH: 32
+  draw: { w: 1.4, h: 1.4 }
+  anims:
+    spin: { row: 0, from: 0, to: 3, fps: 8 }

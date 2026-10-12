@@ -1,0 +1,501 @@
+{
+  "tile": 32,
+  "ground": {
+    "file": "ground.png",
+    "sizePx": [
+      2048,
+      2048
+    ]
+  },
+  "objects": [
+    {
+      "id": "wall_library",
+      "file": "wall_library.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        736,
+        192
+      ],
+      "sizePx": [
+        416,
+        192
+      ],
+      "sortY": 12,
+      "collisionRect": [
+        23,
+        11,
+        13,
+        1
+      ]
+    },
+    {
+      "id": "wall_cafe",
+      "file": "wall_cafe.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        576,
+        480
+      ],
+      "sizePx": [
+        448,
+        192
+      ],
+      "sortY": 21,
+      "collisionRect": [
+        18,
+        20,
+        14,
+        1
+      ]
+    },
+    {
+      "id": "wall_music",
+      "file": "wall_music.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        448,
+        736
+      ],
+      "sizePx": [
+        320,
+        192
+      ],
+      "sortY": 29,
+      "collisionRect": [
+        14,
+        28,
+        10,
+        1
+      ]
+    },
+    {
+      "id": "wall_gallery",
+      "file": "wall_gallery.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1024,
+        736
+      ],
+      "sizePx": [
+        320,
+        192
+      ],
+      "sortY": 29,
+      "collisionRect": [
+        32,
+        28,
+        10,
+        1
+      ]
+    },
+    {
+      "id": "wall_south_east",
+      "file": "wall_south_east.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1024,
+        1024
+      ],
+      "sizePx": [
+        352,
+        192
+      ],
+      "sortY": 38,
+      "collisionRect": [
+        32,
+        37,
+        11,
+        1
+      ]
+    },
+    {
+      "id": "wall_south_west_a",
+      "file": "wall_south_west_a.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        448,
+        1056
+      ],
+      "sizePx": [
+        96,
+        192
+      ],
+      "sortY": 39,
+      "collisionRect": [
+        14,
+        38,
+        3,
+        1
+      ]
+    },
+    {
+      "id": "wall_south_west_b",
+      "file": "wall_south_west_b.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        672,
+        1056
+      ],
+      "sizePx": [
+        192,
+        192
+      ],
+      "sortY": 39,
+      "collisionRect": [
+        21,
+        38,
+        6,
+        1
+      ]
+    },
+    {
+      "id": "wall_sushi",
+      "file": "wall_sushi.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1152,
+        416
+      ],
+      "sizePx": [
+        192,
+        256
+      ],
+      "sortY": 21,
+      "collisionRect": [
+        36,
+        18,
+        6,
+        3
+      ]
+    },
+    {
+      "id": "side_library_w",
+      "file": "side_library_w.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        736,
+        224
+      ],
+      "sizePx": [
+        32,
+        256
+      ],
+      "sortY": 20,
+      "collisionRect": [
+        23,
+        12,
+        1,
+        8
+      ]
+    },
+    {
+      "id": "side_library_e",
+      "file": "side_library_e.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1120,
+        224
+      ],
+      "sizePx": [
+        32,
+        480
+      ],
+      "sortY": 22,
+      "collisionRect": [
+        35,
+        12,
+        1,
+        10
+      ]
+    },
+    {
+      "id": "side_cafe_w",
+      "file": "side_cafe_w.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        576,
+        512
+      ],
+      "sizePx": [
+        32,
+        224
+      ],
+      "sortY": 28,
+      "collisionRect": [
+        18,
+        21,
+        1,
+        7
+      ]
+    },
+    {
+      "id": "side_music_w",
+      "file": "side_music_w.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        448,
+        768
+      ],
+      "sizePx": [
+        32,
+        288
+      ],
+      "sortY": 38,
+      "collisionRect": [
+        14,
+        29,
+        1,
+        9
+      ]
+    },
+    {
+      "id": "side_music_e",
+      "file": "side_music_e.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        768,
+        736
+      ],
+      "sizePx": [
+        32,
+        224
+      ],
+      "sortY": 30,
+      "collisionRect": [
+        24,
+        28,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "side_east",
+      "file": "side_east.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1344,
+        416
+      ],
+      "sizePx": [
+        32,
+        544
+      ],
+      "sortY": 30,
+      "collisionRect": [
+        42,
+        18,
+        1,
+        12
+      ]
+    },
+    {
+      "id": "side_east_stub",
+      "file": "side_east_stub.png",
+      "category": "wall",
+      "parent": null,
+      "posPx": [
+        1344,
+        992
+      ],
+      "sizePx": [
+        32,
+        32
+      ],
+      "sortY": 37,
+      "collisionRect": [
+        42,
+        36,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "bookshelf",
+      "file": "bookshelf.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        768,
+        256
+      ],
+      "sizePx": [
+        96,
+        160
+      ],
+      "sortY": 13,
+      "collisionRect": [
+        24,
+        12,
+        3,
+        1
+      ]
+    },
+    {
+      "id": "gaming",
+      "file": "gaming.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        992,
+        288
+      ],
+      "sizePx": [
+        128,
+        128
+      ],
+      "sortY": 13,
+      "collisionRect": [
+        31,
+        12,
+        4,
+        1
+      ]
+    },
+    {
+      "id": "window_library",
+      "file": "window_library.png",
+      "category": "mounted",
+      "parent": "wall_library",
+      "posPx": [
+        896,
+        256
+      ],
+      "sizePx": [
+        64,
+        96
+      ],
+      "sortY": 11,
+      "collisionRect": null
+    },
+    {
+      "id": "window_cafe",
+      "file": "window_cafe.png",
+      "category": "mounted",
+      "parent": "wall_cafe",
+      "posPx": [
+        624,
+        528
+      ],
+      "sizePx": [
+        96,
+        128
+      ],
+      "sortY": 20.5,
+      "collisionRect": null
+    },
+    {
+      "id": "fireplace",
+      "file": "fireplace.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        736,
+        512
+      ],
+      "sizePx": [
+        96,
+        192
+      ],
+      "sortY": 22,
+      "collisionRect": [
+        23,
+        21,
+        3,
+        1
+      ]
+    },
+    {
+      "id": "coffee",
+      "file": "coffee.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        864,
+        576
+      ],
+      "sizePx": [
+        128,
+        128
+      ],
+      "sortY": 22,
+      "collisionRect": [
+        27,
+        21,
+        4,
+        1
+      ]
+    },
+    {
+      "id": "sushi",
+      "file": "sushi.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        1152,
+        544
+      ],
+      "sizePx": [
+        192,
+        160
+      ],
+      "sortY": 22,
+      "collisionRect": [
+        36,
+        21,
+        6,
+        1
+      ]
+    },
+    {
+      "id": "turntable",
+      "file": "turntable.png",
+      "category": "station",
+      "parent": null,
+      "posPx": [
+        672,
+        832
+      ],
+      "sizePx": [
+        96,
+        128
+      ],
+      "sortY": 30,
+      "collisionRect": [
+        21,
+        29,
+        3,
+        1
+      ]
+    },
+    {
+      "id": "gallery",
+      "file": "gallery.png",
+      "category": "mounted",
+      "parent": "wall_gallery",
+      "posPx": [
+        1056,
+        800
+      ],
+      "sizePx": [
+        256,
+        96
+      ],
+      "sortY": 28,
+      "collisionRect": null
+    }
+  ]
+}

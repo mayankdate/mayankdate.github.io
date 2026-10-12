@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------
+# Elsewhere · map.yaml
+# ---------------------------------------------------------------
+# Hand-drawn map layers. Workflow:
+#   1. Open a template in assets/map/templates/ (ground.png or an
+#      object like wall_cafe.png). They're sized + positioned to
+#      match the world exactly (see templates/manifest.json).
+#   2. Paint over it. Keep the canvas size.
+#   3. Save the finished PNG into assets/map/ and point to it here.
+# Anything not listed stays code-drawn, so you can replace the map
+# one layer at a time and nothing breaks.
+#
+# `ground` is the whole terrain/floor/stairs as one 2048×2048
+# layer. `objects` maps a scene-object id to its PNG (drawn at the
+# object's exact position, sorted/occluded like the original).
+# ---------------------------------------------------------------
+
+ground: assets/map/ground.png
+
+objects: {}
+  # wall_cafe:   assets/map/wall_cafe.png
+  # fireplace:   assets/map/fireplace.png
+  # turntable:   assets/map/turntable.png

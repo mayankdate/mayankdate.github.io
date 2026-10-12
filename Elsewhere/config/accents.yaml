@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------
+# Elsewhere · accents.yaml
+# ---------------------------------------------------------------
+# Animated accents are looping sprites pinned on top of a station and
+# drawn over its hand-painted base — the only moving parts the engine
+# draws, now that every static device is baked into its station
+# template.
+#
+#   ref         a sprite in sprites.yaml (its sheet + animation)
+#   at          world foot-anchor [x, y] in tiles (bottom-centre)
+#   sortY       render depth — a hair past the station it sits on, so
+#               it draws on top; the player still passes in front.
+#   anim        which animation from the sprite to loop
+#   visibleWhen `fire` = shown only while the fireplace is lit; omit
+#               for always-on.
+#
+# Add another the same way: a sheet in sprites.yaml + one line here.
+# ---------------------------------------------------------------
+
+- { id: fireplace_flame, ref: flame,   at: [24.5, 21.8], sortY: 22.2, anim: loop, visibleWhen: fire }
+- { id: turntable_disc,  ref: platter, at: [22.5, 28.7], sortY: 30.2, anim: spin }
