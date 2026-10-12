@@ -1,25 +1,22 @@
 // ---------------------------------------------------------------
 // Elsewhere · Player.js
 // ---------------------------------------------------------------
-// WASD / arrow-key player. 24×32 sprite with a 4-direction walk
-// cycle. Collides with the walkable grid tile-by-tile.
+// WASD / arrow movement with a 4-direction walk cycle. The
+// sprite's origin is at its feet so depth-sorting and collision
+// both key off the same point. Movement is locked while the
+// intro dialog is up (scene.inputLocked).
 // ---------------------------------------------------------------
 
-import { isWalkable } from '../systems/Walkable.js';
-
-const SPEED = 120;   // px / sec
+const SPEED = 125;   // px / sec
 
 export class Player {
-  constructor(scene, x, y, walkable, tileSize) {
+  constructor(scene, feetX, feetY, tilemap) {
     this.scene = scene;
-    this.walkable = walkable;
-    this.tileSize = tileSize;
+    this.map = tilemap;
+    this.T = tilemap.T;
 
-    this.sprite = scene.physics
-      ? scene.physics.add.sprite(x, y, 'player', 1)
-      : scene.add.sprite(x, y, 'player', 1);
-    this.sprite.setDepth(1000);
-
+    this.sprite = scene.add.sprite(feetX, feetY, 'player', 1)
+      .setOrigin(0.5, 1);
     this.facing = 'down';
     this.makeAnims();
     this.sprite.anims.play('idle_down');
@@ -31,34 +28,33 @@ export class Player {
   }
 
   makeAnims() {
-    const anims = this.scene.anims;
-    const defs = [
-      ['down',  0],
-      ['left',  3],
-      ['right', 6],
-      ['up',    9],
-    ];
-    for (const [dir, start] of defs) {
-      if (!anims.exists(`walk_${dir}`)) {
-        anims.create({
+    const a = this.scene.anims;
+    const rows = [['down', 0], ['left', 3], ['right', 6], ['up', 9]];
+    for (const [dir, start] of rows) {
+      if (!a.exists(`walk_${dir}`)) {
+        a.create({
           key: `walk_${dir}`,
-          frames: anims.generateFrameNumbers('player',
-                    { start, end: start + 2 }),
-          frameRate: 8,
-          repeat: -1,
+          frames: a.generateFrameNumbers('player', { start, end: start + 2 }),
+          frameRate: 8, repeat: -1,
         });
       }
-      if (!anims.exists(`idle_${dir}`)) {
-        anims.create({
+      if (!a.exists(`idle_${dir}`)) {
+        a.create({
           key: `idle_${dir}`,
           frames: [{ key: 'player', frame: start + 1 }],
-          frameRate: 1,
         });
       }
     }
   }
 
   update(dt) {
+    this.sprite.setDepth(this.sprite.y);
+
+    if (this.scene.inputLocked) {
+      this.sprite.anims.play(`idle_${this.facing}`, true);
+      return;
+    }
+
     const k = this.keys;
     let dx = 0, dy = 0;
     if (k.left.isDown  || k.left2.isDown)  dx -= 1;
@@ -71,16 +67,11 @@ export class Player {
       return;
     }
 
-    // Normalise so diagonal isn't faster
     const mag = Math.hypot(dx, dy);
     dx /= mag; dy /= mag;
 
-    // Pick facing from dominant axis
-    if (Math.abs(dx) > Math.abs(dy)) {
-      this.facing = dx < 0 ? 'left' : 'right';
-    } else {
-      this.facing = dy < 0 ? 'up' : 'down';
-    }
+    if (Math.abs(dx) > Math.abs(dy)) this.facing = dx < 0 ? 'left' : 'right';
+    else                             this.facing = dy < 0 ? 'up' : 'down';
     this.sprite.anims.play(`walk_${this.facing}`, true);
 
     const step = (SPEED * dt) / 1000;
@@ -88,19 +79,16 @@ export class Player {
     this.moveAxis(0, dy * step);
   }
 
-  // Move along one axis; refuse the move if the target tile isn't walkable.
-  // Treating axes independently gives you "slide along walls" behaviour.
+  // Move on one axis; reject the move if the foot tile isn't walkable.
+  // Per-axis probing lets you slide along walls.
   moveAxis(mx, my) {
-    const newX = this.sprite.x + mx;
-    const newY = this.sprite.y + my;
-    // Probe the player's "feet" (lower-centre of the sprite)
-    const probeX = newX;
-    const probeY = newY + 10;
-    const tx = Math.floor(probeX / this.tileSize);
-    const ty = Math.floor(probeY / this.tileSize);
-    if (isWalkable(this.walkable, tx, ty)) {
-      this.sprite.x = newX;
-      this.sprite.y = newY;
+    const nx = this.sprite.x + mx;
+    const ny = this.sprite.y + my;
+    const tx = Math.floor(nx / this.T);
+    const ty = Math.floor((ny - 2) / this.T);
+    if (this.map.isWalkable(tx, ty)) {
+      this.sprite.x = nx;
+      this.sprite.y = ny;
     }
   }
 }

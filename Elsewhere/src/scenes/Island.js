@@ -1,108 +1,122 @@
 // ---------------------------------------------------------------
 // Elsewhere · Island.js
 // ---------------------------------------------------------------
-// Paints floor tiles, drops walls, spawns cats and clickable
-// shelves, places the player, hooks up camera and zoom.
+// Builds the world, places everything, runs the camera + zoom,
+// and plays the "clone falls in" intro. Player control is locked
+// until the intro dialog is dismissed (E / Space).
 // ---------------------------------------------------------------
 
+import { TileMap } from '../systems/TileMap.js';
 import { Player } from '../entities/Player.js';
 import { Cat } from '../entities/Cat.js';
 import { Interactable } from '../entities/Interactable.js';
-import { buildWalkable } from '../systems/Walkable.js';
+import * as Dialog from '../systems/Dialog.js';
 
-const WALL_KEY = {
-  h: 'wall_h',
-  v: 'wall_v',
-  corner_tl: 'wall_corner_tl',
-  doorway: 'wall_doorway',
-};
-
-const MIN_ZOOM = 1.5;
+const MIN_ZOOM = 1.6;
 const MAX_ZOOM = 4.0;
-const ZOOM_STEP = 0.25;
+const ZOOM_STEP = 0.3;
 
 export class Island extends Phaser.Scene {
   constructor() { super('Island'); }
 
   create() {
     const data = this.registry.get('data');
-    const { world, interactables, cats, content } = data;
-    const tile = world.grid.tile;
-    const W = world.grid.width * tile;
-    const H = world.grid.height * tile;
+    this.data = data;
+    this.inputLocked = true;        // locked until intro dialog is dismissed
 
-    this.cameras.main.setBackgroundColor('#1a1f2e');
+    // --- world
+    this.map = new TileMap(this, data.world);
+    this.map.build();
+    const W = this.map.pixelWidth, H = this.map.pixelHeight;
     this.cameras.main.setBounds(0, 0, W, H);
-
-    // --- floor
-    for (const room of world.rooms) {
-      const { x, y, w, h } = room.bounds;
-      for (let ty = y; ty < y + h; ty++) {
-        for (let tx = x; tx < x + w; tx++) {
-          this.add.image(
-            (tx + 0.5) * tile,
-            (ty + 0.5) * tile,
-            room.floor,
-          ).setDepth(0);
-        }
-      }
-    }
-
-    // --- walls
-    for (const wall of world.walls) {
-      const key = WALL_KEY[wall.type];
-      const px = (wall.x + 0.5) * tile;
-      const py = (wall.y + 0.5) * tile - 8;   // capstone nudge
-      this.add.image(px, py, key).setDepth(100 + wall.y);
-    }
-
-    const walkable = buildWalkable(world);
+    this.cameras.main.setBackgroundColor('#13263f');
 
     // --- cats
-    this.cats = cats.map(c => new Cat(this, c, walkable, tile));
+    this.cats = data.cats.map(c => new Cat(this, c, this.map));
 
     // --- interactables
-    const contentFor = (key) => content[key];
-    for (const def of interactables) {
-      new Interactable(this, def, tile, contentFor);
+    const contentFor = (key) => data.content[key];
+    for (const def of data.interactables) {
+      new Interactable(this, def, this.map, contentFor);
     }
 
-    // --- player
-    const sx = (world.spawn.x + 0.5) * tile;
-    const sy = (world.spawn.y + 0.5) * tile;
-    this.player = new Player(this, sx, sy, walkable, tile);
+    // --- player (created at spawn, repositioned for the drop)
+    const T = this.map.T;
+    this.spawnX = (data.world.spawn.x + 0.5) * T;
+    this.spawnY = (data.world.spawn.y + 1) * T;
+    this.player = new Player(this, this.spawnX, this.spawnY, this.map);
+    this.player.sprite.setVisible(false);
 
-    // --- camera
-    this.cameras.main.startFollow(this.player.sprite, true, 0.1, 0.1);
-    this.zoom = clamp(computeFitZoom(this.scale, W, H), MIN_ZOOM, MAX_ZOOM);
+    // --- camera: centre on spawn for the intro
+    this.zoom = Phaser.Math.Clamp(2.4, MIN_ZOOM, MAX_ZOOM);
     this.cameras.main.setZoom(this.zoom);
+    this.cameras.main.centerOn(this.spawnX, this.spawnY - 40);
 
-    // Keyboard zoom (`=`/`+`/`-`)
+    this.setupZoom();
+
+    // --- expose to the splash so it can trigger the reveal
+    window.Elsewhere = window.Elsewhere || {};
+    window.Elsewhere.playIntro = () => this.playIntro();
+    if (window.Elsewhere._onReady) window.Elsewhere._onReady();
+  }
+
+  // Called by the splash once the "Load clone" progress finishes.
+  playIntro() {
+    const p = this.player.sprite;
+    p.setVisible(true).setAlpha(1);
+    p.y = this.spawnY - 340;
+    p.setDepth(99999);
+
+    // Shadow that grows as the clone nears the ground.
+    const shadow = this.add.ellipse(this.spawnX, this.spawnY - 2, 6, 3, 0x000000, 0.35)
+      .setDepth(this.spawnY - 1);
+
+    this.tweens.add({
+      targets: shadow, scaleX: 3, scaleY: 3,
+      duration: 1000, ease: 'Quad.easeIn',
+    });
+    this.tweens.add({
+      targets: p, y: this.spawnY,
+      duration: 1000, ease: 'Bounce.easeOut',
+      onComplete: () => {
+        this.tweens.add({
+          targets: p, scaleY: { from: 1, to: 0.78 },
+          duration: 130, yoyo: true, ease: 'Sine.easeInOut',
+        });
+        this.tweens.add({
+          targets: shadow, alpha: 0, duration: 250,
+          onComplete: () => shadow.destroy(),
+        });
+        this.cameras.main.startFollow(this.player.sprite, true, 0.1, 0.1);
+        this.time.delayedCall(350, () => this.runIntroDialog());
+      },
+    });
+  }
+
+  runIntroDialog() {
+    const lines = this.data.intro.dialog;
+    Dialog.run(lines, () => {
+      this.inputLocked = false;
+      document.getElementById('zoom-hud').classList.add('is-visible');
+    });
+  }
+
+  setupZoom() {
     this.input.keyboard.on('keydown-PLUS',   () => this.setZoom(this.zoom + ZOOM_STEP));
     this.input.keyboard.on('keydown-EQUALS', () => this.setZoom(this.zoom + ZOOM_STEP));
     this.input.keyboard.on('keydown-MINUS',  () => this.setZoom(this.zoom - ZOOM_STEP));
-
-    // Mouse-wheel zoom
     this.input.on('wheel', (_p, _o, _dx, dy) => {
       this.setZoom(this.zoom + (dy < 0 ? ZOOM_STEP : -ZOOM_STEP));
     });
 
-    // DOM zoom HUD (declared in index.html)
     const hud = document.getElementById('zoom-hud');
-    hud.classList.add('is-visible');
     hud.querySelector('[data-zoom="in"]').onclick  = () => this.setZoom(this.zoom + ZOOM_STEP);
     hud.querySelector('[data-zoom="out"]').onclick = () => this.setZoom(this.zoom - ZOOM_STEP);
-
-    this.scale.on('resize', () => {
-      // Keep zoom in bounds on viewport change but don't yank the user
-      this.setZoom(this.zoom);
-    });
-
     this.events.once('shutdown', () => hud.classList.remove('is-visible'));
   }
 
   setZoom(z) {
-    this.zoom = clamp(z, MIN_ZOOM, MAX_ZOOM);
+    this.zoom = Phaser.Math.Clamp(z, MIN_ZOOM, MAX_ZOOM);
     this.cameras.main.setZoom(this.zoom);
   }
 
@@ -111,14 +125,4 @@ export class Island extends Phaser.Scene {
     const now = this.time.now;
     for (const c of this.cats) c.update(now, dt);
   }
-}
-
-function clamp(v, lo, hi) {
-  return Math.max(lo, Math.min(hi, v));
-}
-
-function computeFitZoom(scale, W, H) {
-  const zx = scale.width / W;
-  const zy = scale.height / H;
-  return Math.max(1, Math.min(zx, zy) * 1.8);
 }

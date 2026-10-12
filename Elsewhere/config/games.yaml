@@ -1,21 +1,23 @@
 # ---------------------------------------------------------------
 # Elsewhere · games.yaml
 # ---------------------------------------------------------------
+# The game shelf opens this. Drop cover art into
+# Elsewhere/assets/covers/ and reference it by filename.
+# ---------------------------------------------------------------
 
 title: Game corner
 intro: |
-  Games that stuck. Not a ranking — more a shelf of favourites.
+  Games that stuck — not a ranking, just a shelf of favourites.
 
-shelf:
+games:
   - title: Outer Wilds
-    note: |
-      The best 22 hours a solo dev ever gave anyone. Go in
-      cold if you can.
+    cover: placeholder_1.png
+    note: The best 22 hours a solo dev ever gave anyone. Go in cold.
 
   - title: Hollow Knight
-    note: |
-      Still think about Deepnest when I can't sleep.
+    cover: placeholder_2.png
+    note: Still think about Deepnest when I can't sleep.
 
   - title: Celeste
-    note: |
-      Platformer as therapy. The chapter cards alone.
+    cover: placeholder_3.png
+    note: Platformer as therapy. The chapter cards alone.

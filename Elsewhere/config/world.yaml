@@ -1,180 +1,108 @@
 # ---------------------------------------------------------------
-# Elsewhere · world.yaml
-# ---------------------------------------------------------------
-# Everything spatial. Edit this to redecorate the island.
-# Tile size is 32x32. Grid is 24 wide x 16 tall.
-# Walls stack on top of the floor; they are 32x48 sprites whose
-# bottom-right 32x32 occupies the tile.
+# Elsewhere  world.yaml  (generated; edit the grids freely)
+# Two character grids. `floor` is the ground you stand on,
+# `objects` is what sits on top (walls, windows, trees).
+# `legend` maps each char to a tile/sprite + walkability.
+# A door is simply a blank in `objects` over a walkable floor.
 # ---------------------------------------------------------------
 
 grid:
-  width: 24
-  height: 16
+  width: 44
+  height: 32
   tile: 32
-
-# Where the firefly starts.
-spawn: { x: 12, y: 14 }
-
-# Rooms are rectangular floor zones. Each one gets a flat tile
-# type painted edge-to-edge.
-rooms:
-  - name: reading_nook
-    bounds: { x: 1,  y: 1, w: 7, h: 6 }
-    floor: floor_wood_dark
-
-  - name: listening_lounge
-    bounds: { x: 9,  y: 1, w: 7, h: 6 }
-    floor: floor_rug
-
-  - name: game_corner
-    bounds: { x: 17, y: 1, w: 6, h: 6 }
-    floor: floor_wood_light
-
-  - name: gallery
-    bounds: { x: 1,  y: 8, w: 7, h: 7 }
-    floor: floor_stone
-
-  - name: hub
-    bounds: { x: 9,  y: 8, w: 7, h: 7 }
-    floor: floor_wood_light
-
-  - name: garden
-    bounds: { x: 17, y: 8, w: 6, h: 7 }
-    floor: floor_grass
-
-# Walls follow the room perimeters. Each entry is one sprite
-# dropped at a tile. type ∈ { h, v, corner_tl, doorway }.
-# h = horizontal, v = vertical.
-# This list is dumb and explicit so you can swap tiles freely.
-walls:
-  # Outer perimeter top
-  - { x: 0,  y: 0, type: corner_tl }
-  - { x: 1,  y: 0, type: h }
-  - { x: 2,  y: 0, type: h }
-  - { x: 3,  y: 0, type: h }
-  - { x: 4,  y: 0, type: h }
-  - { x: 5,  y: 0, type: h }
-  - { x: 6,  y: 0, type: h }
-  - { x: 7,  y: 0, type: h }
-  - { x: 8,  y: 0, type: h }
-  - { x: 9,  y: 0, type: h }
-  - { x: 10, y: 0, type: h }
-  - { x: 11, y: 0, type: h }
-  - { x: 12, y: 0, type: h }
-  - { x: 13, y: 0, type: h }
-  - { x: 14, y: 0, type: h }
-  - { x: 15, y: 0, type: h }
-  - { x: 16, y: 0, type: h }
-  - { x: 17, y: 0, type: h }
-  - { x: 18, y: 0, type: h }
-  - { x: 19, y: 0, type: h }
-  - { x: 20, y: 0, type: h }
-  - { x: 21, y: 0, type: h }
-  - { x: 22, y: 0, type: h }
-  - { x: 23, y: 0, type: h }
-  # Outer perimeter sides
-  - { x: 0,  y: 1,  type: v }
-  - { x: 0,  y: 2,  type: v }
-  - { x: 0,  y: 3,  type: v }
-  - { x: 0,  y: 4,  type: v }
-  - { x: 0,  y: 5,  type: v }
-  - { x: 0,  y: 6,  type: v }
-  - { x: 0,  y: 7,  type: v }
-  - { x: 0,  y: 8,  type: v }
-  - { x: 0,  y: 9,  type: v }
-  - { x: 0,  y: 10, type: v }
-  - { x: 0,  y: 11, type: v }
-  - { x: 0,  y: 12, type: v }
-  - { x: 0,  y: 13, type: v }
-  - { x: 0,  y: 14, type: v }
-  - { x: 23, y: 1,  type: v }
-  - { x: 23, y: 2,  type: v }
-  - { x: 23, y: 3,  type: v }
-  - { x: 23, y: 4,  type: v }
-  - { x: 23, y: 5,  type: v }
-  - { x: 23, y: 6,  type: v }
-  - { x: 23, y: 7,  type: v }
-  - { x: 23, y: 8,  type: v }
-  - { x: 23, y: 9,  type: v }
-  - { x: 23, y: 10, type: v }
-  - { x: 23, y: 11, type: v }
-  - { x: 23, y: 12, type: v }
-  - { x: 23, y: 13, type: v }
-  - { x: 23, y: 14, type: v }
-  # Interior partition between reading & listening (vertical at x=8)
-  - { x: 8,  y: 1, type: v }
-  - { x: 8,  y: 2, type: v }
-  - { x: 8,  y: 3, type: doorway }
-  - { x: 8,  y: 4, type: v }
-  - { x: 8,  y: 5, type: v }
-  - { x: 8,  y: 6, type: v }
-  # Interior partition between listening & game (vertical at x=16)
-  - { x: 16, y: 1, type: v }
-  - { x: 16, y: 2, type: v }
-  - { x: 16, y: 3, type: doorway }
-  - { x: 16, y: 4, type: v }
-  - { x: 16, y: 5, type: v }
-  - { x: 16, y: 6, type: v }
-  # Horizontal partition between top row & bottom row (y=7)
-  - { x: 1,  y: 7, type: h }
-  - { x: 2,  y: 7, type: h }
-  - { x: 3,  y: 7, type: doorway }
-  - { x: 4,  y: 7, type: h }
-  - { x: 5,  y: 7, type: h }
-  - { x: 6,  y: 7, type: h }
-  - { x: 7,  y: 7, type: h }
-  - { x: 8,  y: 7, type: h }
-  - { x: 9,  y: 7, type: h }
-  - { x: 10, y: 7, type: h }
-  - { x: 11, y: 7, type: h }
-  - { x: 12, y: 7, type: doorway }
-  - { x: 13, y: 7, type: h }
-  - { x: 14, y: 7, type: h }
-  - { x: 15, y: 7, type: h }
-  - { x: 16, y: 7, type: h }
-  - { x: 17, y: 7, type: h }
-  - { x: 18, y: 7, type: h }
-  - { x: 19, y: 7, type: h }
-  - { x: 20, y: 7, type: doorway }
-  - { x: 21, y: 7, type: h }
-  - { x: 22, y: 7, type: h }
-  # Interior partition between gallery & hub (vertical at x=8, lower)
-  - { x: 8,  y: 8,  type: v }
-  - { x: 8,  y: 9,  type: v }
-  - { x: 8,  y: 10, type: doorway }
-  - { x: 8,  y: 11, type: v }
-  - { x: 8,  y: 12, type: v }
-  - { x: 8,  y: 13, type: v }
-  - { x: 8,  y: 14, type: v }
-  # Interior partition between hub & garden (vertical at x=16, lower)
-  - { x: 16, y: 8,  type: v }
-  - { x: 16, y: 9,  type: v }
-  - { x: 16, y: 10, type: doorway }
-  - { x: 16, y: 11, type: v }
-  - { x: 16, y: 12, type: v }
-  - { x: 16, y: 13, type: v }
-  - { x: 16, y: 14, type: v }
-  # Outer perimeter bottom
-  - { x: 1,  y: 15, type: h }
-  - { x: 2,  y: 15, type: h }
-  - { x: 3,  y: 15, type: h }
-  - { x: 4,  y: 15, type: h }
-  - { x: 5,  y: 15, type: h }
-  - { x: 6,  y: 15, type: h }
-  - { x: 7,  y: 15, type: h }
-  - { x: 8,  y: 15, type: h }
-  - { x: 9,  y: 15, type: h }
-  - { x: 10, y: 15, type: h }
-  - { x: 11, y: 15, type: h }
-  - { x: 12, y: 15, type: h }
-  - { x: 13, y: 15, type: h }
-  - { x: 14, y: 15, type: h }
-  - { x: 15, y: 15, type: h }
-  - { x: 16, y: 15, type: h }
-  - { x: 17, y: 15, type: h }
-  - { x: 18, y: 15, type: h }
-  - { x: 19, y: 15, type: h }
-  - { x: 20, y: 15, type: h }
-  - { x: 21, y: 15, type: h }
-  - { x: 22, y: 15, type: h }
-  - { x: 23, y: 15, type: h }
+spawn:
+  x: 22
+  y: 14
+legend:
+  floor:
+    '~':
+      tile: water
+      walk: false
+    .:
+      tile: grass
+      walk: true
+    f:
+      tile: grass_flowers
+      walk: true
+    ',':
+      tile: sand
+      walk: true
+    p:
+      tile: path
+      walk: true
+    d:
+      tile: dock
+      walk: true
+    R:
+      tile: floor_wood_dark
+      walk: true
+    M:
+      tile: floor_rug
+      walk: true
+    G:
+      tile: floor_wood_light
+      walk: true
+    A:
+      tile: floor_stone
+      walk: true
+    H:
+      tile: floor_hub
+      walk: true
+  objects:
+    '#':
+      sprite: wall_stone
+      walk: false
+      tall: true
+    '=':
+      sprite: wall_wood
+      walk: false
+      tall: true
+    O:
+      sprite: wall_window
+      walk: false
+      tall: true
+    T:
+      sprite: tree
+      walk: false
+      tall: true
+floor: |
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~..........~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~..................~~~~~~~~~~~~~
+  ~~~~~~~~~~~,..RRRRRRRRHHMMMMMMMM.~~~~~~~~~~~
+  ~~~~~~~~~,,...RRRRRRRRHHMMMMMMMM..,~~~~~~~~~
+  ~~~~~~~~,.....RRRRRRRRHHMMMMMMMM...,~~~~~~~~
+  ~~~~~~,,......RRRRRRRRHHMMMMMMMM....,,~~~~~~
+  ~~~~~~,.......RRRRRRRRHHMMMMMMMM.....,~~~~~~
+  ~~~~~,.......fHHHHHHHHHHHHHHHHHH......,~~~~~
+  ~~~~,.........HHHHHHHHHHHHHHHHHH.f.....,~~~~
+  ~~~~,.........AAAAAAAAHHGGGGGGGG....f..,~~~~
+  ~~~,.f........AAAAAAAAHHGGGGGGGG.......f,~~~
+  ~~~,....f.....AAAAAAAAHHGGGGGGGG........,~~~
+  ~~~,.......f..AAAAAAAAHHGGGGGGGG........,~~~
+  ~~~,..........AAAAAAAAHHGGGGGGGG........,~~~
+  ~~~,..........AAAAAAAAHHGGGGGGGG..f.....,~~~
+  ~~~,................f.pp.............f..,~~~
+  ~~~~,.f...............pp...............,~~~~
+  ~~~~,....f............pp..f............,~~~~
+  ~~~~~,..~~~~f.........pp.....f........,~~~~~
+  ~~~~~~,~~~~~~..f......pp........f....,~~~~~~
+  ~~~~~~,~~~~~~.....f...pp...........f,,~~~~~~
+  ~~~~~~~~~~~~.........fpp...........,~~~~~~~~
+  ~~~~~~~~~,,...........ppf........,,~~~~~~~~~
+  ~~~~~~~~~~~,,.........pp...f...,,~~~~~~~~~~~
+  ~~~~~~~~~~~~~,,,,.....pp...,,,,~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~,,,,,pp,,,~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~dd~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~dd~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~dd~~~~~~~~~~~~~~~~~~~~
+objects: "                                            \n                                            \n                                            \n                                            \n       \
+  \      ###O##O######O##O###           \n             #       =  =       #           \n             O       =  =       O           \n             #                  #           \n             O       =\
+  \  =       O           \n          T  #=== ====  ==== ===#           \n             #                  #           \n             #                  #    T      \n             #=== ====  ==== ===#   \
+  \        \n             #       =  =       #           \n             O                  O           \n      T      #       =  =       #           \n             O       =  =       O           \n    \
+  \         #       =  =       #      T    \n             #########  #########           \n                                            \n                                            \n                  \
+  \                          \n                                            \n                                            \n                                  T         \n                T               \
+  \            \n                             T              \n                                            \n                                            \n                                            \n\
+  \                                            \n                                            \n"
