@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------
+# Elsewhere · music.yaml
+# ---------------------------------------------------------------
+# The record player opens this. `embeds` are Spotify embed URLs.
+#
+# To get one: open a playlist/album/track in Spotify →
+# Share → Embed → copy the src="..." from the iframe. It looks
+# like  https://open.spotify.com/embed/playlist/<id>?utm_source=generator
+# Paste that as `url`. Add as many as you like.
+# ---------------------------------------------------------------
+
+title: Listening lounge
+intro: |
+  What's on while I work, cook, or pretend to tidy. Hit play.
+  (Swap these for your own — the how-to is in `music.yaml`.)
+
+embeds:
+  - label: Writing hours
+    url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO?utm_source=generator"
+  - label: Late-night model-fitting
+    url: "https://open.spotify.com/embed/playlist/37i9dQZF1DWTkxQvqMy4WW?utm_source=generator"

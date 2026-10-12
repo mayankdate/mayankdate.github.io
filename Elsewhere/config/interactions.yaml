@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------
+# Elsewhere · interactions.yaml
+# ---------------------------------------------------------------
+# Maps a scene station id (from scene.js) to what happens when you
+# walk up and press E / Space.
+#   content: <key>   → opens that modal (books / music / games / art)
+#   dialog:  [lines] → speaks a short line or two (E/Space advances)
+# Stations not listed fall back to their scene.json interaction text.
+# ---------------------------------------------------------------
+
+bookshelf:
+  content: books
+
+gaming:
+  content: games
+
+turntable:
+  content: music
+
+gallery:
+  content: art
+
+coffee:
+  dialog:
+    - "The espresso machine runs on nothing and never stops. The cup never quite cools."
+    - "Pull up a stool. This is where most of the writing actually happens."
+
+fireplace:
+  dialog:
+    - "The fire's always going. I taught the flames to flicker — I never got around to teaching them to warm."
+
+sushi:
+  dialog:
+    - "The sushi counter. One day this opens a little menu of the spots I miss."
+    - "For now: admire the plastic, respect the craft."

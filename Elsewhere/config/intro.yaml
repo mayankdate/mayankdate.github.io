@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------
+# Elsewhere · intro.yaml
+# ---------------------------------------------------------------
+# The splash greeting (shown before the game loads) and the
+# dialog the clone hears the moment it drops in.
+# ---------------------------------------------------------------
+
+splash:
+  greeting:
+    - "Oh hey! Thanks for reading my profile."
+    - "Now you can get to know me beyond the resume — who I am as a person. Hang out a bit, explore my interests, meet my cats."
+    - "Let me spin up a digital clone for you real quick."
+  button: "Load clone"
+
+# Spoken right after the clone lands. E / Space advances.
+dialog:
+  - speaker: "Mayank"
+    text: "Oops — the bioprinter ran out of ink, so we couldn't colour yours in. But hey, it's perfectly functional!"
+  - text: "WASD or the arrow keys to move. Walk up to the shelves, the record player, the frames on the wall — then click to take a look. Say hi to the cats on your way."
