@@ -219,10 +219,6 @@ def render_all(root: Path, cfg: dict) -> None:
         env, "contact.html.j2", root / "contact.html",
         **base_ctx,
     )
-    render_mod.render_page(
-        env, "elsewhere.html.j2", root / "elsewhere.html",
-        **base_ctx,
-    )
 
     print("Build complete.")
 
