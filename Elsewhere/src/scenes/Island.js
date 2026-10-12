@@ -1,12 +1,11 @@
 // ---------------------------------------------------------------
 // Elsewhere · Island.js
 // ---------------------------------------------------------------
-// The explorable room. Paints floor tiles, drops walls on top,
-// spawns cats, places interactables, follows the mouse with a
-// firefly.
+// Paints floor tiles, drops walls, spawns cats and clickable
+// shelves, places the player, hooks up camera and zoom.
 // ---------------------------------------------------------------
 
-import { Firefly } from '../entities/Firefly.js';
+import { Player } from '../entities/Player.js';
 import { Cat } from '../entities/Cat.js';
 import { Interactable } from '../entities/Interactable.js';
 import { buildWalkable } from '../systems/Walkable.js';
@@ -17,6 +16,10 @@ const WALL_KEY = {
   corner_tl: 'wall_corner_tl',
   doorway: 'wall_doorway',
 };
+
+const MIN_ZOOM = 1.5;
+const MAX_ZOOM = 4.0;
+const ZOOM_STEP = 0.25;
 
 export class Island extends Phaser.Scene {
   constructor() { super('Island'); }
@@ -45,18 +48,14 @@ export class Island extends Phaser.Scene {
       }
     }
 
-    // --- walls. 32x48 sprites: bottom 32 occupies the tile,
-    //      top 16 pokes above into the row before. Depth comes
-    //      from the wall's row so lower walls draw over higher
-    //      ones for a hint of parallax.
+    // --- walls
     for (const wall of world.walls) {
       const key = WALL_KEY[wall.type];
       const px = (wall.x + 0.5) * tile;
-      const py = (wall.y + 0.5) * tile - 8;   // nudge up for capstone
+      const py = (wall.y + 0.5) * tile - 8;   // capstone nudge
       this.add.image(px, py, key).setDepth(100 + wall.y);
     }
 
-    // --- walkable grid
     const walkable = buildWalkable(world);
 
     // --- cats
@@ -68,44 +67,58 @@ export class Island extends Phaser.Scene {
       new Interactable(this, def, tile, contentFor);
     }
 
-    // --- firefly cursor
+    // --- player
     const sx = (world.spawn.x + 0.5) * tile;
     const sy = (world.spawn.y + 0.5) * tile;
-    this.firefly = new Firefly(this, sx, sy, walkable, tile);
-    this.firefly.sprite.setDepth(1000);
+    this.player = new Player(this, sx, sy, walkable, tile);
 
-    this.cameras.main.startFollow(this.firefly.sprite, true, 0.08, 0.08);
-    this.cameras.main.setZoom(computeZoom(this.scale, W, H));
+    // --- camera
+    this.cameras.main.startFollow(this.player.sprite, true, 0.1, 0.1);
+    this.zoom = clamp(computeFitZoom(this.scale, W, H), MIN_ZOOM, MAX_ZOOM);
+    this.cameras.main.setZoom(this.zoom);
 
-    this.input.on('pointermove', (p) => {
-      this.firefly.setTarget(p.worldX, p.worldY);
+    // Keyboard zoom (`=`/`+`/`-`)
+    this.input.keyboard.on('keydown-PLUS',   () => this.setZoom(this.zoom + ZOOM_STEP));
+    this.input.keyboard.on('keydown-EQUALS', () => this.setZoom(this.zoom + ZOOM_STEP));
+    this.input.keyboard.on('keydown-MINUS',  () => this.setZoom(this.zoom - ZOOM_STEP));
+
+    // Mouse-wheel zoom
+    this.input.on('wheel', (_p, _o, _dx, dy) => {
+      this.setZoom(this.zoom + (dy < 0 ? ZOOM_STEP : -ZOOM_STEP));
     });
-    this.input.on('pointerdown', (p) => {
-      this.firefly.setTarget(p.worldX, p.worldY);
-    });
+
+    // DOM zoom HUD (declared in index.html)
+    const hud = document.getElementById('zoom-hud');
+    hud.classList.add('is-visible');
+    hud.querySelector('[data-zoom="in"]').onclick  = () => this.setZoom(this.zoom + ZOOM_STEP);
+    hud.querySelector('[data-zoom="out"]').onclick = () => this.setZoom(this.zoom - ZOOM_STEP);
 
     this.scale.on('resize', () => {
-      this.cameras.main.setZoom(computeZoom(this.scale, W, H));
+      // Keep zoom in bounds on viewport change but don't yank the user
+      this.setZoom(this.zoom);
     });
 
-    this.add.text(16, 16,
-      'Drag with your cursor. Click the cat, the shelves, or me.', {
-      fontFamily: 'JetBrains Mono, monospace',
-      fontSize: '11px',
-      color: '#F5EBD6',
-      backgroundColor: '#0D2545',
-      padding: { x: 6, y: 4 },
-    }).setScrollFactor(0).setDepth(10000).setAlpha(0.75);
+    this.events.once('shutdown', () => hud.classList.remove('is-visible'));
   }
 
-  update(now, dt) {
-    this.firefly.update(dt);
+  setZoom(z) {
+    this.zoom = clamp(z, MIN_ZOOM, MAX_ZOOM);
+    this.cameras.main.setZoom(this.zoom);
+  }
+
+  update(_now, dt) {
+    this.player.update(dt);
+    const now = this.time.now;
     for (const c of this.cats) c.update(now, dt);
   }
 }
 
-function computeZoom(scale, W, H) {
+function clamp(v, lo, hi) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+function computeFitZoom(scale, W, H) {
   const zx = scale.width / W;
   const zy = scale.height / H;
-  return Math.max(1, Math.min(zx, zy) * 1.6);
+  return Math.max(1, Math.min(zx, zy) * 1.8);
 }

@@ -12,7 +12,7 @@ export async function loadYaml(path) {
 }
 
 export async function loadAll() {
-  const [world, interactables, cats, books, music, games, art, mayank] =
+  const [world, interactables, cats, books, music, games, art] =
     await Promise.all([
       loadYaml('config/world.yaml'),
       loadYaml('config/interactables.yaml'),
@@ -21,12 +21,11 @@ export async function loadAll() {
       loadYaml('config/music.yaml'),
       loadYaml('config/games.yaml'),
       loadYaml('config/art.yaml'),
-      loadYaml('config/mayank.yaml'),
     ]);
   return {
     world,
     interactables,
     cats,
-    content: { books, music, games, art, mayank },
+    content: { books, music, games, art },
   };
 }

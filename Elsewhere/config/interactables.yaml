@@ -1,9 +1,8 @@
 # ---------------------------------------------------------------
 # Elsewhere · interactables.yaml
 # ---------------------------------------------------------------
-# Things the firefly can click on. Each one points at a modal
-# whose content lives in its own file. (type:) decides which
-# content list is pulled in.
+# Clickable sprites. Each one points at a modal whose content
+# lives in its own YAML file in config/.
 # ---------------------------------------------------------------
 
 - id: bookshelf_reading
@@ -33,10 +32,3 @@
   room: gallery
   label: Art
   content: art
-
-- id: mayank_npc
-  sprite: mayank_npc
-  tile: { x: 12, y: 11 }
-  room: hub
-  label: Mayank
-  content: mayank         # loads config/mayank.yaml

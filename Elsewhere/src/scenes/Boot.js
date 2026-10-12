@@ -22,10 +22,11 @@ export class Boot extends Phaser.Scene {
     this.load.image('wall_v',           `${t}/wall_vertical.png`);
     this.load.image('wall_corner_tl',   `${t}/wall_corner_tl.png`);
     this.load.image('wall_doorway',     `${t}/wall_doorway.png`);
-    this.load.image('firefly',          `${s}/firefly.png`);
     this.load.image('cat_apollo',       `${s}/cat_apollo.png`);
     this.load.image('bookshelf',        `${s}/bookshelf.png`);
     this.load.image('mayank_npc',       `${s}/mayank_npc.png`);
+    this.load.spritesheet('player',     `${s}/player.png`,
+      { frameWidth: 24, frameHeight: 32 });
   }
 
   async create() {

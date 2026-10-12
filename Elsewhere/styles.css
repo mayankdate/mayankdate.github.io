@@ -1,8 +1,8 @@
 /* ---------------------------------------------------------------
    Elsewhere · styles.css
    ---------------------------------------------------------------
-   Only the chrome around Phaser: the modal overlay and the page
-   backdrop. The game itself paints inside #game-root.
+   Chrome around the Phaser canvas: the modal overlay, the zoom
+   HUD, and the page backdrop. The game paints inside #game-root.
    --------------------------------------------------------------- */
 
 :root {
@@ -35,6 +35,45 @@ canvas {
   display: block;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+}
+
+/* --- zoom HUD -------------------------------------------------- */
+
+#zoom-hud {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 500;
+}
+
+#zoom-hud.is-visible {
+  display: flex;
+}
+
+#zoom-hud button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--gold);
+  background: rgba(13, 37, 69, 0.78);
+  color: var(--cream);
+  font-family: JetBrains Mono, monospace;
+  font-size: 20px;
+  line-height: 1;
+  border-radius: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.12s, transform 0.08s;
+}
+
+#zoom-hud button:hover {
+  background: rgba(184, 137, 62, 0.3);
+}
+
+#zoom-hud button:active {
+  transform: scale(0.94);
 }
 
 /* --- modal ---------------------------------------------------- */
@@ -133,9 +172,7 @@ canvas {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-.modal-gallery figure {
-  margin: 0;
-}
+.modal-gallery figure { margin: 0; }
 .modal-gallery img {
   width: 100%;
   height: auto;
