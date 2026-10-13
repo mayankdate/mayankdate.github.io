@@ -102,7 +102,7 @@
     ctx.fillStyle='#eee7ce';ctx.beginPath();ctx.ellipse(x-.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.ellipse(x+.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   function drawScene(ctx,scene,view){
-    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,sky=null,hidePlayer=false}=view;
+    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,sky=null,hidePlayer=false,slices=[]}=view;
     ctx.save();ctx.imageSmoothingEnabled=false;
     // With a screen-space sky backdrop the void stays unpainted (the sky shows
     // through the transparent-void ground); otherwise fill the flat void color.
@@ -121,33 +121,56 @@
       }
     }
     if(grid){ctx.strokeStyle='#24252c25';ctx.lineWidth=.025;ctx.beginPath();for(let n=0;n<=64;n++){ctx.moveTo(n,0);ctx.lineTo(n,64);ctx.moveTo(0,n);ctx.lineTo(64,n);}ctx.stroke();}
-    if(!groundOnly){const groups=scene.objects.filter(o=>!o.parent).map((o,i)=>({o,sort:o.sortY,i}));
+    if(!groundOnly){
+      // A "slice" is a full-canvas painted layer (tileCount×32 square, e.g.
+      // 2048²) drawn at (0,0,64,64) instead of cropped to one object's bounds.
+      // Objects can point straight at one (auto-detected by its natural size),
+      // or a map.yaml `slices:` entry groups several under one PNG + sortY.
+      // Either way each slice image is drawn at most once per sortY tier
+      // (deduped by image reference), and the objects it covers skip their own
+      // body (the slice already paints them) while their children still draw.
+      const TILES=(scene.grid&&scene.grid.columns)||64,FULL=TILES*32;
+      const isFull=im=>rdy(im)&&im.naturalWidth===FULL&&im.naturalHeight===FULL;
+      const covered=new Set();for(const s of slices)for(const id of (s.objectIds||s.objects||[]))covered.add(id);
+      const groups=scene.objects.filter(o=>!o.parent).map((o,i)=>({o,sort:o.sortY,i}));
+      slices.forEach((s,k)=>{if(rdy(s.img))groups.push({slice:s,sort:s.sortY,i:1000+k});});
       groups.push({o:null,sort:player.y,i:999});groups.sort((a,b)=>a.sort-b.sort||a.i-b.i);
-      for(const g of groups){if(!g.o){if(hidePlayer)continue;
-        const ps=playerSprite;
-        if(ps&&ps.img&&ps.img.complete&&ps.img.naturalWidth){const _dx=player.x-ps.w/2,_dy=player.y-ps.h;ctx.save();if(ps.flip){ctx.translate(2*_dx+ps.w,0);ctx.scale(-1,1);}ctx.drawImage(ps.img,ps.sx,ps.sy,ps.sw,ps.sh,_dx,_dy,ps.w,ps.h);ctx.restore();}
-        else drawPlayer(ctx,player,time,walking);
-        continue;}
+      let tier=NaN,drawn=new Set();
+      const slice=im=>{if(drawn.has(im))return;drawn.add(im);ctx.drawImage(im,0,0,64,64);};
+      for(const g of groups){
+        if(g.sort!==tier){tier=g.sort;drawn=new Set();}
+        if(g.slice){slice(g.slice.img);continue;}
+        if(!g.o){if(hidePlayer)continue;
+          const ps=playerSprite;
+          if(ps&&ps.img&&ps.img.complete&&ps.img.naturalWidth){const _dx=player.x-ps.w/2,_dy=player.y-ps.h;ctx.save();if(ps.flip){ctx.translate(2*_dx+ps.w,0);ctx.scale(-1,1);}ctx.drawImage(ps.img,ps.sx,ps.sy,ps.sw,ps.sh,_dx,_dy,ps.w,ps.h);ctx.restore();}
+          else drawPlayer(ctx,player,time,walking);
+          continue;}
         const o=g.o;if(o.category==='wall'&&!showWalls)continue;
-        ctx.save();const b=renderBounds(o);if(o.category==='wall'&&cutaway&&player.x>b[0]&&player.x<b[0]+b[2]&&player.y>b[1]&&player.y<o.sortY)ctx.globalAlpha=.25;
-        const oi=images[o.id];
-        if(rdy(oi)){const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}
-        else for(const s of o.shapes)rect(ctx,s.rect,s.color);
+        ctx.save();const b=renderBounds(o);const oi=images[o.id],ownFull=isFull(oi);
+        // per-object cutaway fade only applies to a tight-cropped wall body —
+        // a slice is a shared layer, so it can't fade one wall at a time.
+        if(o.category==='wall'&&cutaway&&!ownFull&&!covered.has(o.id)&&player.x>b[0]&&player.x<b[0]+b[2]&&player.y>b[1]&&player.y<o.sortY)ctx.globalAlpha=.25;
+        if(!covered.has(o.id)){
+          if(rdy(oi)){if(ownFull)slice(oi);else{const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}}
+          else for(const s of o.shapes)rect(ctx,s.rect,s.color);
+        }
         for(const child of scene.objects.filter(c=>c.parent===o.id)){
           if(sky&&child.category==='mounted'&&/window/.test(child.id)){
             // the glass is a cutout onto the one shared sky backdrop (aligned,
             // screen-space) — not a copy; then the frame + ledge PNG over it.
+            // The glass viewport always draws; only the frame can be sliced.
             const gs=(child.shapes.find(s=>s.role==='glass')||child.shapes[0]).rect;
             ctx.save();ctx.beginPath();ctx.rect(gs[0],gs[1],gs[2],gs[3]);ctx.clip();
             if(rdy(sky.img)){ctx.setTransform(sky.dpr,0,0,sky.dpr,0,0);ctx.drawImage(sky.img,sky.sx,sky.sy,sky.sw,sky.sh,0,0,sky.screenW,sky.screenH);}
             ctx.restore();
-            const fr=images[child.id];
-            if(rdy(fr)){const cb=child.visualBounds;ctx.drawImage(fr,cb[0],cb[1],cb[2],cb[3]);}
-            else for(const s of child.shapes)rect(ctx,s.rect,s.color);
+            if(!covered.has(child.id)){const fr=images[child.id];
+              if(rdy(fr)){if(isFull(fr))slice(fr);else{const cb=child.visualBounds;ctx.drawImage(fr,cb[0],cb[1],cb[2],cb[3]);}}
+              else for(const s of child.shapes)rect(ctx,s.rect,s.color);}
             continue;
           }
+          if(covered.has(child.id))continue;
           const ci=images[child.id];
-          if(rdy(ci)){const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}
+          if(rdy(ci)){if(isFull(ci))slice(ci);else{const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}}
           else for(const s of child.shapes)rect(ctx,s.rect,s.color);
         }
         if(details)for(const p of o.parts)drawPart(ctx,p,time);

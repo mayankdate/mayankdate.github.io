@@ -92,11 +92,15 @@ function setAccent(id, on) {
 }
 
 // ================= hand-drawn map layers =================
-const MAP = { ground: null, images: {} };
+const MAP = { ground: null, images: {}, slices: [] };
 function buildMap(data) {
   if (data.map && data.map.ground) MAP.ground = loadImage(data.map.ground);
   const objs = (data.map && data.map.objects) || {};
   for (const id in objs) MAP.images[id] = loadImage(objs[id]);
+  // Full-canvas "slices": one painted PNG covering several objects, drawn at
+  // its own sortY. Objects it covers are skipped in the per-object pass.
+  MAP.slices = ((data.map && data.map.slices) || [])
+    .map(s => ({ img: loadImage(s.path), sortY: s.sortY, objectIds: s.objects || [] }));
 }
 
 // ================= weather sky (one shared animated layer) =================
@@ -485,7 +489,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, hidePlayer: !cloneShown, ground: MAP.ground, images: MAP.images, sky });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, hidePlayer: !cloneShown, ground: MAP.ground, images: MAP.images, slices: MAP.slices, sky });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);
