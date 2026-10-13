@@ -33,6 +33,10 @@ bioprinter dialog (**E / Space**) → you walk.
 - **E / Space** interacts with the nearest thing — same key as
   dialog. Walk up, a `E <name>` prompt appears. No mouse.
 - **+ / − / scroll** zoom.
+- **On touch devices** a floating joystick (drag the left side) moves
+  you and a right-hand **E** button interacts; it just synthesizes an
+  E press, so every control path is shared. Detected by
+  `pointer: coarse`; the page sizes to the viewport with `100dvh`.
 
 Interactions wired now: books / games / music / art (modals);
 **coffee** (whirrs, brews a cup, "firewall blocked the espresso",

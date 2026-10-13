@@ -25,6 +25,7 @@ body {
 #game {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
+  height: 100dvh;                 /* track the visible viewport on mobile */
   display: block;
   image-rendering: pixelated;
   touch-action: none;
@@ -166,4 +167,46 @@ body {
   .modal-covers { grid-template-columns: 1fr 1fr; }
   .modal-gallery { grid-template-columns: 1fr; }
   #hint { font-size: 10px; }
+  .modal-panel { padding: 24px 20px; }
+  .dialog-text { font-size: 16px; }
 }
+
+/* --- touch controls (joystick + interact button) -------------- */
+#touch-controls {
+  position: fixed; inset: 0; z-index: 500; pointer-events: none;
+  display: none;
+}
+body.is-touch #touch-controls.is-live { display: block; }
+/* on touch, the keyboard hint is noise; the zoom HUD moves out of thumb range */
+body.is-touch #hint { display: none !important; }
+body.is-touch #zoom-hud { top: 14px; right: 14px; bottom: auto; flex-direction: row; }
+body.is-touch #zoom-hud button { width: 44px; height: 44px; font-size: 22px; }
+
+#joystick {
+  position: absolute; width: 132px; height: 132px; border-radius: 50%;
+  background: rgba(13,37,69,0.28); border: 2px solid rgba(245,235,214,0.35);
+  pointer-events: none; opacity: 0; transition: opacity 0.12s;
+  transform: translate(-50%, -50%);
+}
+#joystick.is-active { opacity: 1; }
+#joystick-thumb {
+  position: absolute; left: 50%; top: 50%; width: 58px; height: 58px;
+  margin: -29px 0 0 -29px; border-radius: 50%;
+  background: rgba(184,137,62,0.7); border: 2px solid rgba(245,235,214,0.6);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+#btn-a {
+  position: absolute; right: 26px; bottom: 34px; width: 82px; height: 82px;
+  border-radius: 50%; pointer-events: auto;
+  background: rgba(184,137,62,0.82); border: 3px solid rgba(245,235,214,0.7);
+  color: var(--navy); font-family: JetBrains Mono, monospace; font-weight: 600;
+  font-size: 15px; letter-spacing: 0.04em;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4); -webkit-tap-highlight-color: transparent;
+  transition: transform 0.08s, background 0.12s;
+}
+#btn-a:active { transform: scale(0.92); background: rgba(204,156,76,0.95); }
+#btn-a.is-ready { animation: a-pulse 1.4s ease-in-out infinite; }
+@keyframes a-pulse { 0%,100% { box-shadow: 0 6px 16px rgba(0,0,0,0.4); } 50% { box-shadow: 0 6px 22px rgba(184,137,62,0.8); } }
+
+/* the on-screen walk prompt sits higher on touch so the A button doesn't cover it */
+body.is-touch #walk-prompt { bottom: 130px; }

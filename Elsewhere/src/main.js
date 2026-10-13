@@ -14,7 +14,6 @@ import * as Modal from './systems/Modal.js';
 import * as Ambience from './systems/Ambience.js';
 import * as Interactions from './systems/Interactions.js';
 import { Animator, loadImage } from './systems/Sprites.js';
-import { Windows } from './systems/Windows.js';
 
 const E = window.CabinEngine;
 const scene = window.CABIN_SCENE;
@@ -99,18 +98,25 @@ function buildMap(data) {
   for (const id in objs) MAP.images[id] = loadImage(objs[id]);
 }
 
-// ================= weather windows + backdrop =================
-let windows = null;
-function buildWindows(data) {
-  if (!SPR.sky) return;
-  windows = new Windows(scene, Ambience, { img: SPR.sky.img, def: data.sprites.sky });
-  Object.assign(MAP.images, windows.images());   // engine draws each window's live canvas
+// ================= weather sky (one shared animated layer) =================
+// The sky is a single layer: it fills the backdrop behind the island and
+// the windows are transparent cutouts onto this same layer. The engine
+// paints the backdrop; here we just animate the current weather's frames
+// and hand the frame rect to the engine. Window frame+ledge PNGs are plain
+// image swaps on the window objects.
+let skyAnim = null;
+function buildSky(data) {
+  if (SPR.sky) skyAnim = new Animator(data.sprites.sky);
+  for (const o of scene.objects)
+    if (o.category === 'mounted' && /window/.test(o.id))
+      MAP.images[o.id] = loadImage(`assets/sprites/${o.id}_frame.png`);
 }
-// the sky frame for the current weather, drawn behind the island
-function bgSky() {
+// the current sky frame rect (source), updated each frame by the loop
+let skyRect = [0, 0, 256, 256];
+function skyFrame(r, dpr) {
   if (!SPR.sky) return null;
-  const S = data.sprites.sky, col = (S.frames && S.frames[Ambience.currentWeather()]) ?? 0;
-  return { img: SPR.sky.img, sx: col * S.frameW, sy: 0, sw: S.frameW, sh: S.frameH };
+  return { img: SPR.sky.img, sx: skyRect[0], sy: skyRect[1], sw: skyRect[2], sh: skyRect[3],
+           dpr, screenW: r.width, screenH: r.height };
 }
 
 // ================= cats =================
@@ -264,7 +270,7 @@ async function interact(obj) {
 data = await loadAll();
 buildSprites(data);
 buildMap(data);
-buildWindows(data);
+buildSky(data);
 buildAccents(data);
 env = makeEnv();
 
@@ -306,6 +312,7 @@ function dropClone() {
       walkEnabled = true;
       document.getElementById('zoom-hud').classList.add('is-visible');
       document.getElementById('hint').classList.add('is-visible');
+      const tc = document.getElementById('touch-controls'); if (tc) tc.classList.add('is-live');
     }); }
   })(t0);
 }
@@ -337,11 +344,79 @@ hud.querySelector('[data-zoom="out"]').onclick = () => setZoom(zoom - ZOOM_STEP)
 canvas.addEventListener('wheel', e => { e.preventDefault(); setZoom(zoom + (e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP)); }, { passive: false });
 function setZoom(z) { zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, z)); }
 
+// ================= touch controls (mobile) =================
+// A floating joystick on the left half drives analog movement; the
+// right-hand button taps an interaction. The button just synthesizes an
+// E keypress, so every existing E path (interact, advance dialog) works.
+const touch = { x: 0, y: 0 };
+const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+if (isTouch) {
+  document.body.classList.add('is-touch');
+  const tc = document.getElementById('touch-controls');
+  const joy = document.getElementById('joystick');
+  const thumb = document.getElementById('joystick-thumb');
+  const btnA = document.getElementById('btn-a');
+  const R = 54, DEAD = 0.14;           // joystick radius (px) + dead-zone
+  let joyId = null, cx = 0, cy = 0;
+
+  const fromA = (t) => btnA.contains(document.elementFromPoint(t.clientX, t.clientY));
+
+  canvas.addEventListener('touchstart', e => {
+    for (const t of e.changedTouches) {
+      if (joyId !== null || fromA(t)) continue;
+      if (t.clientX > innerWidth * 0.62) continue;   // right side is for looking + the A button
+      joyId = t.identifier; cx = t.clientX; cy = t.clientY;
+      joy.style.left = cx + 'px'; joy.style.top = cy + 'px';
+      thumb.style.transform = 'translate(0,0)';
+      joy.classList.add('is-active');
+    }
+  }, { passive: true });
+
+  const moveJoy = (e) => {
+    for (const t of e.changedTouches) {
+      if (t.identifier !== joyId) continue;
+      let ox = t.clientX - cx, oy = t.clientY - cy;
+      const d = Math.hypot(ox, oy) || 1, cl = Math.min(d, R);
+      ox = ox / d * cl; oy = oy / d * cl;
+      thumb.style.transform = `translate(${ox}px,${oy}px)`;
+      const mag = cl / R, nx = ox / R, ny = oy / R;
+      touch.x = mag < DEAD ? 0 : nx; touch.y = mag < DEAD ? 0 : ny;
+    }
+  };
+  window.addEventListener('touchmove', moveJoy, { passive: true });
+
+  const endJoy = (e) => {
+    for (const t of e.changedTouches) {
+      if (t.identifier !== joyId) continue;
+      joyId = null; touch.x = 0; touch.y = 0;
+      joy.classList.remove('is-active');
+    }
+  };
+  window.addEventListener('touchend', endJoy, { passive: true });
+  window.addEventListener('touchcancel', endJoy, { passive: true });
+
+  // the interact button = a synthetic E press (reuses all existing E logic);
+  // debounce so touchstart + the synthesized click don't fire twice.
+  let lastA = 0;
+  const tapA = (e) => {
+    e.preventDefault();
+    const now = performance.now(); if (now - lastA < 350) return; lastA = now;
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'e' }));
+  };
+  btnA.addEventListener('touchstart', tapA, { passive: false });
+  btnA.addEventListener('click', tapA);
+
+  // expose so the loop can reveal controls + pulse the button when near something
+  window.__touchUI = { tc, btnA };
+}
+
 function updatePrompt() {
-  if (walkEnabled && nearby && !busy && !Dialog.isOpen() && !modalOpen()) {
+  const ready = walkEnabled && nearby && !busy && !Dialog.isOpen() && !modalOpen();
+  if (ready) {
     promptEl.innerHTML = `<kbd>E</kbd> ${escapeHtml(nearby.interaction.label)}`;
     promptEl.hidden = false;
   } else promptEl.hidden = true;
+  if (window.__touchUI) window.__touchUI.btnA.classList.toggle('is-ready', !!ready);
 }
 const escapeHtml = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 
@@ -356,7 +431,9 @@ function loop(t) {
     if (keys.has('a') || keys.has('arrowleft')) dx--;
     if (keys.has('d') || keys.has('arrowright')) dx++;
     const len = Math.hypot(dx, dy);
-    if (len) E.movePlayer(scene, player, dx / len * scene.spawn.speed * dt, dy / len * scene.spawn.speed * dt);
+    if (len) { dx /= len; dy /= len; }                 // keyboard → unit direction
+    if (touch.x || touch.y) { dx = touch.x; dy = touch.y; }   // joystick → analog (overrides)
+    if (dx || dy) E.movePlayer(scene, player, dx * scene.spawn.speed * dt, dy * scene.spawn.speed * dt);
   }
 
   // player animation
@@ -366,7 +443,7 @@ function loop(t) {
   for (const c of cats) c.update(dt, t);
   for (const id in spawned) { const p = spawned[id].parts[0]; if (p._anim) { const rr = p._anim.rect(t); p.sx = rr[0]; p.sy = rr[1]; p.sw = rr[2]; p.sh = rr[3]; } }
   for (const a of accents) if (a.visible) { const rr = a.anim.rect(t); a.part.sx = rr[0]; a.part.sy = rr[1]; a.part.sw = rr[2]; a.part.sh = rr[3]; }
-  if (windows) windows.update(t, dt);
+  if (skyAnim) { skyAnim.play(Ambience.currentWeather(), t); skyRect = skyAnim.rect(t); }
 
   const tx = player.x, ty = player.y - 1.2;
   cam.x += (tx - cam.x) * Math.min(1, dt * 8);
@@ -378,8 +455,11 @@ function loop(t) {
   if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.fillStyle = scene.palette.void;
-  ctx.fillRect(0, 0, r.width, r.height);
+  // Screen-space weather backdrop — the one sky layer. The windows cut
+  // onto this exact layer (engine, screen-space) so there's only one sky.
+  const sky = skyFrame(r, dpr);
+  if (sky && (sky.img.complete && sky.img.naturalWidth)) ctx.drawImage(sky.img, sky.sx, sky.sy, sky.sw, sky.sh, 0, 0, r.width, r.height);
+  else { ctx.fillStyle = scene.palette.void; ctx.fillRect(0, 0, r.width, r.height); }
 
   let playerSprite = null;
   if (SPR.player && playerAnim) {
@@ -391,7 +471,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images, bg: bgSky() });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images, sky });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);

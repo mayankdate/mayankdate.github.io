@@ -102,11 +102,11 @@
     ctx.fillStyle='#eee7ce';ctx.beginPath();ctx.ellipse(x-.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.ellipse(x+.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   function drawScene(ctx,scene,view){
-    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,bg=null}=view;
+    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,sky=null}=view;
     ctx.save();ctx.imageSmoothingEnabled=false;
-    // Weather sky backdrop behind the island; falls back to the flat void color.
-    if(bg&&rdy(bg.img)){ctx.drawImage(bg.img,bg.sx,bg.sy,bg.sw,bg.sh,0,0,64,64);}
-    else rect(ctx,[0,0,64,64],scene.palette.void);
+    // With a screen-space sky backdrop the void stays unpainted (the sky shows
+    // through the transparent-void ground); otherwise fill the flat void color.
+    if(!sky)rect(ctx,[0,0,64,64],scene.palette.void);
     // Hand-drawn ground layer replaces the whole terrain/floor/stairs block when present.
     if(rdy(ground)){ctx.drawImage(ground,0,0,64,64);}
     else{
@@ -134,6 +134,18 @@
         if(rdy(oi)){const vb=o.visualBounds;ctx.drawImage(oi,vb[0],vb[1],vb[2],vb[3]);}
         else for(const s of o.shapes)rect(ctx,s.rect,s.color);
         for(const child of scene.objects.filter(c=>c.parent===o.id)){
+          if(sky&&child.category==='mounted'&&/window/.test(child.id)){
+            // the glass is a cutout onto the one shared sky backdrop (aligned,
+            // screen-space) — not a copy; then the frame + ledge PNG over it.
+            const gs=(child.shapes.find(s=>s.role==='glass')||child.shapes[0]).rect;
+            ctx.save();ctx.beginPath();ctx.rect(gs[0],gs[1],gs[2],gs[3]);ctx.clip();
+            if(rdy(sky.img)){ctx.setTransform(sky.dpr,0,0,sky.dpr,0,0);ctx.drawImage(sky.img,sky.sx,sky.sy,sky.sw,sky.sh,0,0,sky.screenW,sky.screenH);}
+            ctx.restore();
+            const fr=images[child.id];
+            if(rdy(fr)){const cb=child.visualBounds;ctx.drawImage(fr,cb[0],cb[1],cb[2],cb[3]);}
+            else for(const s of child.shapes)rect(ctx,s.rect,s.color);
+            continue;
+          }
           const ci=images[child.id];
           if(rdy(ci)){const cb=child.visualBounds;ctx.drawImage(ci,cb[0],cb[1],cb[2],cb[3]);}
           else for(const s of child.shapes)rect(ctx,s.rect,s.color);
