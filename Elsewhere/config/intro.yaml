@@ -16,4 +16,4 @@ splash:
 dialog:
   - speaker: "Mayank"
     text: "Oops — the bioprinter ran out of ink, so we couldn't colour yours in. But hey, it's perfectly functional!"
-  - text: "WASD or the arrow keys to move. Walk up to the shelves, the record player, the frames on the wall — then click to take a look. Say hi to the cats on your way."
+  - text: "WASD or the arrow keys to move. Walk up to the shelves, the record player, the frames on the wall — then press E to take a look. Say hi to the cats on your way."

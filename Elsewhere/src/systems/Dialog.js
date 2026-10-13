@@ -26,8 +26,8 @@ export function run(lines, onDone) {
       <div class="dialog-prompt"><kbd>E</kbd> / <kbd>Space</kbd> ▸</div>
     </div>`;
   root.querySelector('.dialog-box').addEventListener('pointerdown', advance);
-  // Capture phase so we run before Phaser's own window keydown listener,
-  // which otherwise swallows the event before it reaches us.
+  // Capture phase so we advance before the game's own window keydown
+  // handler sees the key and routes it to a world interaction.
   window.addEventListener('keydown', onKey, true);
   showLine();
 }

@@ -151,7 +151,6 @@ export function cycleWeather(list) {
   return weather;
 }
 export function currentWeather() { return weather; }
-export function flashLevel() { return flash; }        // lightning, 1 → 0, for the windows to mirror
 // start (or re-apply) the current weather's audio layers — called once audio is unlocked
 export function applyWeather() { for (const n of ['rain', 'birds', 'thunder']) set(n, (WEATHER[weather] || []).includes(n)); }
 
@@ -176,7 +175,6 @@ export async function setSounds(map) {
 }
 
 export function toggleFire() { fireOn = !fireOn; set('fire', fireOn, 0.3); return fireOn; }
-export function isFireOn() { return fireOn; }
 
 // Screen-space visual overlay for the active layers.
 export function drawOverlay(ctx, w, h, dt, now) {
