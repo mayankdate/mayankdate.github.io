@@ -1,30 +1,38 @@
 # ---------------------------------------------------------------
 # AfterHours · map.yaml
 # ---------------------------------------------------------------
-# Hand-drawn map layers. Workflow:
-#   1. Open a template in assets/map/templates/ (ground.png or an
-#      object like wall_cafe.png). They're sized + positioned to
-#      match the world exactly (see templates/manifest.json).
-#   2. Paint over it. Keep the canvas size.
-#   3. Save it back at the same path — the game picks it up on
-#      refresh. (Or save elsewhere under assets/map/ and change
-#      the path here.)
-# Anything not listed stays code-drawn.
+# Every map layer is a full-canvas 2048×2048 "slice" — the island, the
+# house floor, and one per object (walls, stations, …). Workflow:
 #
-# `ground` is the whole terrain/floor/stairs as one 2048×2048
-# layer. `objects` maps a scene-object id to its PNG (drawn at the
-# object's exact position, sorted/occluded like the original).
+#   1. `python3 scripts/build_templates.py` exports the unpainted slices
+#      into assets/map/templates/ (+ _painter_reference.png to trace).
+#   2. Paint each slice in Procreate at 2048×2048 and export it (same
+#      filename) into assets/map/painted/.
+#   3. That's it — a painted slice overrides its template automatically:
+#      the game loads painted/<name>.png when it exists, else
+#      templates/<name>.png. No edits here needed to switch one over.
 #
-# NOTE: windows are deliberately not listed — they are live sky
-# cutouts, with a frame PNG at assets/map/templates/window_<id>_frame.png
-# (drawn over the glass; not animated, so it lives with the map art).
+# The paths below point at the templates (the always-present base); the
+# engine upgrades each to the painted/ version on its own. Anything not
+# listed stays code-drawn.
+#
+# NOTE: windows are live sky cutouts, with a frame PNG at
+# assets/map/templates/window_<id>_frame.png (also paint-overridable).
 # ---------------------------------------------------------------
 
-ground: assets/map/ground.png
+# Ground slices, drawn back-to-front: the island (grass + cliff) then the
+# house floor (+ stairs). They're separate so they take different colours.
+ground:
+  - assets/map/templates/island.png
+  - assets/map/templates/floor.png
 
 objects:
-  # front (south) walls — kept per-object so they still fade (cutaway) when
-  # you walk behind them. The back walls moved to the `back_walls` slice below.
+  # back + divider walls
+  wall_library:      assets/map/templates/wall_library.png
+  wall_cafe:         assets/map/templates/wall_cafe.png
+  wall_music:        assets/map/templates/wall_music.png
+  wall_gallery:      assets/map/templates/wall_gallery.png
+  wall_sushi:        assets/map/templates/wall_sushi.png
   wall_south_east:   assets/map/templates/wall_south_east.png
   wall_south_west_a: assets/map/templates/wall_south_west_a.png
   wall_south_west_b: assets/map/templates/wall_south_west_b.png
@@ -48,43 +56,3 @@ objects:
 
   # wall-mounted (non-window)
   gallery:           assets/map/templates/gallery.png
-
-# ---------------------------------------------------------------
-# Slices — full-canvas (2048×2048) painted layers, each covering several
-# objects and drawn at its own sortY. This is the Procreate-friendly path:
-# paint a whole tier as one layer group, export it 2048×2048, point it here.
-#
-# Rules:
-#   • Each entry is { path, sortY, objects: [ids this slice covers] }.
-#   • An object under a slice must NOT also be under `objects:` above. If it
-#     is listed in both, the SLICE wins and the per-object entry is ignored.
-#   • The engine also auto-detects any `objects:` PNG that is a full 2048×2048
-#     image and draws it full-canvas, so you don't strictly need this section —
-#     but it's the clearest way to group a tier under one sortY.
-#
-# Trade-off: a slice is one flat layer, so the per-object cutaway fade (a wall
-# going translucent while you stand behind it) can't apply to a sliced wall.
-# Keep a wall under `objects:` if you want it to fade (that's why the south
-# walls stay per-object above).
-#
-# Generated slices + the full tier list are in templates/manifest-slices.json.
-# ---------------------------------------------------------------
-slices:
-  # Drawn at sortY 11 — just behind the earliest wall — so the slice sits
-  # behind the furniture, windows and gallery that overlap the back walls
-  # (matching the old per-object draw order exactly).
-  - path: assets/map/templates/slices/back_walls.png
-    sortY: 11
-    objects: [wall_library, wall_cafe, wall_music, wall_gallery, wall_sushi]
-
-  # Flip more tiers to slices the same way (remove their ids from `objects:`).
-  # sortY values below match manifest-slices.json:
-  # - path: assets/map/templates/slices/sides.png
-  #   sortY: 19
-  #   objects: [side_library_w, side_library_e, side_cafe_w, side_music_w, side_music_e, side_east, side_east_stub]
-  # - path: assets/map/templates/slices/front_walls.png
-  #   sortY: 39
-  #   objects: [wall_south_east, wall_south_west_a, wall_south_west_b]
-  # - path: assets/map/templates/slices/stations.png
-  #   sortY: 30
-  #   objects: [bookshelf, gaming, fireplace, coffee, sushi, turntable]

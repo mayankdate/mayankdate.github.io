@@ -67,8 +67,9 @@ AfterHours/
 │   └── books/music/games/art.yaml   modal content
 ├── assets/sprites/    player, cat_*, cup, sushi, flame, platter, sky
 │                       ← animated sheets; PLACEHOLDERS, paint over these
-├── assets/map/        ground.png + templates/ (object guides, window
-│                       frames, sky_template.png, manifest.json)
+├── assets/map/        templates/ (unpainted 2048² slices: island, floor,
+│                       one per object, window frames, sky_template, manifest)
+│                       + painted/ (your painted slices; override templates)
 ├── assets/covers,art/ modal images
 ├── scripts/
 │   └── build_templates.py  regenerates the map/sky guides + manifest
@@ -115,111 +116,61 @@ so nothing breaks while you work.
 
 ---
 
-## Drawing the map (layers)
+## Drawing the map (slices)
 
-The static cabin — ground + every wall and furniture body — is also
-paintable, the same way, in layers.
+Every map layer is a **full-canvas 2048×2048 slice** — the island, the house
+floor, and one per object (each wall, each station, …). No cropping, no
+grouping: you paint each layer at full map size and stack them in Procreate.
 
-- **Templates** live in `assets/map/templates/`: `ground.png`
-  (the whole 2048×2048 terrain/floor/stairs) and one PNG per object
-  (`wall_cafe.png`, `fireplace.png`, …), each already the right size
-  and position. `templates/manifest.json` records every object's
-  pixel position, size, sort depth, and collision rect.
-- **To replace a layer:** paint over a template, keep its canvas
-  size, save it into `assets/map/`, and list it in `config/map.yaml`:
+**The two folders:**
 
-  ```yaml
-  ground: assets/map/ground.png
-  objects:
-    wall_cafe: assets/map/wall_cafe.png
-    fireplace: assets/map/fireplace.png
-  ```
+- `assets/map/templates/` — the **unpainted** slices the generator exports.
+- `assets/map/painted/` — the **painted** slices you make (same filenames).
 
-- Anything **not listed stays code-drawn**, so you redraw the map one
-  piece at a time and nothing breaks. Drawn layers keep the original
-  occlusion and sort order — walls still hide you, you still walk in
-  front of the counter.
-- **A station template includes what sits on it.** The device a station
-  carries — the monitors on the gaming desk, the espresso machine on the
-  coffee counter, the record player on the turntable cabinet, the plates
-  on the sushi display — is part of that station's template, not a
-  separate layer. Each station card is drawn tall enough for it: paint
-  the table at the foot and the device in the headroom above (see the
-  contact sheet — the transparent space above the box is yours).
-- **Only genuinely moving things are separate sprites**, in
-  `assets/sprites/` not `assets/map/`: the **flame**, the **spinning
-  record**, and the **coffee steam**. They loop over their hand-drawn sheet
-  (`flame.png`, `platter.png`, `cup.png`) and draw on top of the painted
-  station. Everything else that used to be code-drawn vector art is gone —
-  paint it into the station template.
-- **Where an interactive sprite lands is marked on its station template.**
-  The generator draws a magenta placeholder box (labelled with the sprite)
-  on the station it spawns over — `flame` on `fireplace`, `platter` on
-  `turntable`, `cup` (steam) on `coffee`. Paint the station *around* the
-  box so the animated sprite sits correctly; the box itself is scaffolding,
-  not art, so don't paint it in. Because the flat template doubles as the
-  live art until you paint it, the box shows in the running game while the
-  station is still a placeholder — paint over it and it's gone. The same
-  rects are in `manifest.json` under each object's `placeholders`, if you'd
-  rather keep the live template clean and reference the numbers instead.
+A painted slice **overrides** its template automatically: the game loads
+`painted/<name>.png` when it exists, otherwise `templates/<name>.png`. So to
+replace a layer you just drop your PNG in `painted/` — nothing else to edit.
 
-### Slices (the Procreate-friendly way)
+**Workflow:**
 
-Cropping each object to its own little PNG is fiddly in Procreate. The **slice**
-workflow lets you paint everything full-canvas instead — no cropping:
+1. `python3 scripts/build_templates.py` exports the unpainted slices into
+   `templates/`, plus `_painter_reference.png` (the ground + red collision
+   strips + an id label at each object's foot) to import as a tracing layer.
+2. In a **2048×2048** Procreate canvas, paint each slice on its own layer and
+   export it (same filename) into `assets/map/painted/`.
+3. Refresh — done.
 
-1. Open a **2048×2048** canvas in Procreate and import
-   `assets/map/templates/_painter_reference.png` as a bottom reference layer.
-   It shows your ground, red collision strips, a colour band per sort tier, and
-   an id label at every object's foot — so you always know what goes where.
-2. Paint each **tier on its own layer group**: back walls, side walls, front
-   walls, stations. (Seed each group from the matching
-   `templates/slices/<tier>.png` guide if you like.)
-3. Export each group as a **2048×2048 PNG** (transparent outside what you
-   painted) into `assets/map/`.
-4. Point `map.yaml` at it under a new `slices:` entry — `{ path, sortY, objects }`:
+**Ground is two slices:** `island.png` (grass + cliff) and `floor.png` (the
+house floor footprint + stairs), so they take different colours. They're listed
+under `ground:` in `map.yaml` and drawn back-to-front.
 
-   ```yaml
-   slices:
-     - path: assets/map/back_walls.png
-       sortY: 29
-       objects: [wall_library, wall_cafe, wall_music, wall_gallery, wall_sushi]
-   ```
+**Each object is its own slice at its own sortY**, so occlusion and the wall
+cutaway fade (a wall going translucent while you stand behind it) work exactly
+as before — the slices behave like the individual objects they represent.
 
-   The `sortY` controls when the whole layer draws relative to the player
-   (`templates/manifest-slices.json` lists the generated tiers + their sortY).
-   An object under a slice must **not** also be under `objects:` — if it is, the
-   slice wins.
+**A station slice includes the device that sits on it** (monitors, espresso
+machine, record player, plates) — paint the table at the foot and the device in
+the headroom above. Where its animated sprite lands (`flame` / `platter` /
+`cup` steam) is marked with a magenta placeholder box, labelled; paint *around*
+it, don't paint it in. (Those rects are also in `manifest.json`.)
 
-The engine recognises a slice by size: any map image that's a full **2048×2048**
-(`tileCount × 32` square) is drawn at the world origin instead of cropped to one
-object, so you can even point an `objects:` entry straight at a full-canvas PNG.
-By default `back_walls` already ships as a slice; the other tiers are per-object
-with commented `slices:` examples ready to switch on.
+**Only genuinely moving things stay sprites**, in `assets/sprites/`: the flame,
+the spinning record, the coffee steam (`flame.png`, `platter.png`, `cup.png`).
 
-**Trade-off:** a slice is one flat layer, so the per-object cutaway fade (a wall
-going translucent while you stand behind it) can't apply to a sliced wall — keep
-a wall under `objects:` if you want it to fade (that's why the south walls stay
-per-object).
+Anything not listed in `map.yaml` stays code-drawn, so nothing breaks while a
+slice is still unpainted.
 
-**The old per-object cropped workflow still works** — `templates/<id>.png` are
-unchanged, so nothing here is required; slices are an alternative, not a
-replacement.
-
-**Re-export templates** (after editing the scene) by running the generator:
+**Re-export after editing the scene:**
 
 ```bash
 cd AfterHours
 python3 scripts/build_templates.py          # --dry-run to preview
 ```
 
-It re-renders every cropped guide + `manifest.json` + the sky template, **plus**
-the full-canvas slices (`templates/slices/`), the grouped tier slices
-(`back_walls.png` / `sides.png` / `front_walls.png` / `stations.png`),
-`manifest-slices.json`, and the `_painter_reference.png` — all from `scene.js`
-and the configs. It only rewrites a file when its pixels actually change, and
-never touches your painted art (`assets/sprites/sky.png`, `assets/map/ground.png`,
-the window frames).
+It re-renders `island.png`, `floor.png`, every `<object>.png`,
+`sky_template.png`, `_painter_reference.png` and `manifest.json` from
+`scene.js` + the configs, only rewriting a file when its pixels change. It
+never touches `assets/map/painted/` or `assets/sprites/sky.png`.
 
 **Decorations & seasons** slot in here later: a cherry-blossom tree
 behind the house or props on the satellite islands are just more
@@ -282,8 +233,9 @@ and listing it in the windows' `cycle_weather`.
 The sky and the ground live in **different coordinate systems**, which is
 why they're sized differently:
 
-- **Ground** is *world-space*: one 2048×2048 layer = the 64×64-tile island
-  at 32 px / tile. Draw it at that exact size (`templates/ground.png`).
+- **Ground** is *world-space*: each 2048×2048 slice = the 64×64-tile island
+  at 32 px / tile. Draw at that exact size (`templates/island.png`,
+  `templates/floor.png`, and every `templates/<object>.png`).
 - **Sky** is *screen-space*: each frame is stretched to fill the whole
   viewport, whatever its size. So frame resolution is just "how crisp,"
   not tied to the map. It's now **2048×2048 — sixteen 512×512 cells**, a
