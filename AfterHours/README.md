@@ -163,6 +163,49 @@ paintable, the same way, in layers.
   rects are in `manifest.json` under each object's `placeholders`, if you'd
   rather keep the live template clean and reference the numbers instead.
 
+### Slices (the Procreate-friendly way)
+
+Cropping each object to its own little PNG is fiddly in Procreate. The **slice**
+workflow lets you paint everything full-canvas instead — no cropping:
+
+1. Open a **2048×2048** canvas in Procreate and import
+   `assets/map/templates/_painter_reference.png` as a bottom reference layer.
+   It shows your ground, red collision strips, a colour band per sort tier, and
+   an id label at every object's foot — so you always know what goes where.
+2. Paint each **tier on its own layer group**: back walls, side walls, front
+   walls, stations. (Seed each group from the matching
+   `templates/slices/<tier>.png` guide if you like.)
+3. Export each group as a **2048×2048 PNG** (transparent outside what you
+   painted) into `assets/map/`.
+4. Point `map.yaml` at it under a new `slices:` entry — `{ path, sortY, objects }`:
+
+   ```yaml
+   slices:
+     - path: assets/map/back_walls.png
+       sortY: 29
+       objects: [wall_library, wall_cafe, wall_music, wall_gallery, wall_sushi]
+   ```
+
+   The `sortY` controls when the whole layer draws relative to the player
+   (`templates/manifest-slices.json` lists the generated tiers + their sortY).
+   An object under a slice must **not** also be under `objects:` — if it is, the
+   slice wins.
+
+The engine recognises a slice by size: any map image that's a full **2048×2048**
+(`tileCount × 32` square) is drawn at the world origin instead of cropped to one
+object, so you can even point an `objects:` entry straight at a full-canvas PNG.
+By default `back_walls` already ships as a slice; the other tiers are per-object
+with commented `slices:` examples ready to switch on.
+
+**Trade-off:** a slice is one flat layer, so the per-object cutaway fade (a wall
+going translucent while you stand behind it) can't apply to a sliced wall — keep
+a wall under `objects:` if you want it to fade (that's why the south walls stay
+per-object).
+
+**The old per-object cropped workflow still works** — `templates/<id>.png` are
+unchanged, so nothing here is required; slices are an alternative, not a
+replacement.
+
 **Re-export templates** (after editing the scene) by running the generator:
 
 ```bash
@@ -170,10 +213,13 @@ cd AfterHours
 python3 scripts/build_templates.py          # --dry-run to preview
 ```
 
-It re-renders every guide + `manifest.json` + the sky template from
-`scene.js` and the configs, adds the placeholder boxes, and only rewrites a
-file when its pixels actually change. It never touches your painted art
-(`assets/sprites/sky.png`, `assets/map/ground.png`, the window frames).
+It re-renders every cropped guide + `manifest.json` + the sky template, **plus**
+the full-canvas slices (`templates/slices/`), the grouped tier slices
+(`back_walls.png` / `sides.png` / `front_walls.png` / `stations.png`),
+`manifest-slices.json`, and the `_painter_reference.png` — all from `scene.js`
+and the configs. It only rewrites a file when its pixels actually change, and
+never touches your painted art (`assets/sprites/sky.png`, `assets/map/ground.png`,
+the window frames).
 
 **Decorations & seasons** slot in here later: a cherry-blossom tree
 behind the house or props on the satellite islands are just more

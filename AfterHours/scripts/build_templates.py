@@ -25,6 +25,25 @@ so the 64×64-tile island is 2048×2048):
                                    4 animation frames). Paint it, then export
                                    as assets/sprites/sky.png.
 
+And, for the Procreate-friendly "slice" workflow (paint every layer full-
+canvas at 2048×2048, no cropping):
+
+  * ``slices/<object>.png``      — one full-canvas (2048×2048) guide per
+                                   object: its shapes at their WORLD position,
+                                   transparent everywhere else.
+  * ``slices/back_walls.png`` etc.— grouped full-canvas slices by sortY tier
+    ``slices/sides.png``           (back_walls / sides / front_walls /
+    ``slices/front_walls.png``     stations), each holding every member object.
+    ``slices/stations.png``        Point `map.yaml`'s `slices:` section at these.
+  * ``manifest-slices.json``     — which object ids each slice covers and the
+                                   sortY it draws at.
+  * ``_painter_reference.png``   — a 2048×2048 reference layer for Procreate:
+                                   the ground + collision strips (red) + sort-
+                                   tier colour bands + an id label at each foot.
+
+The cropped per-object guides and the slice guides are both valid inputs to
+the engine (it detects a full-canvas image by size), so either workflow works.
+
 Interactive sprites (the fireplace flame, the turntable's spinning disc, the
 coffee steam) get a labelled placeholder box drawn onto their station's guide,
 marking exactly where and how big the animated sprite lands, so you can draw
@@ -61,10 +80,32 @@ ROOT = Path(__file__).resolve().parent.parent        # the AfterHours/ dir
 SCENE_JS = ROOT / "scene.js"
 CONFIG = ROOT / "config"
 TEMPLATES = ROOT / "assets" / "map" / "templates"
+SLICES = TEMPLATES / "slices"
 
 # Guide colour for interactive-sprite placeholders — deliberately not a
 # palette colour, so it reads as "scaffolding, paint over me".
 PLACEHOLDER_RGB = (255, 45, 200)
+
+# Default sortY tiers for grouped slices, and the reference-layer band colour
+# for each. `None` catches mounted art (windows/gallery), which stays per-object.
+TIERS = ["back_walls", "sides", "front_walls", "stations"]
+TIER_COLORS = {
+    "back_walls": (70, 130, 255), "sides": (60, 200, 120),
+    "front_walls": (255, 150, 40), "stations": (190, 90, 255),
+    None: (40, 200, 220),
+}
+
+
+def tier_of(o):
+    """Which default slice tier an object belongs to (None = mounted/other)."""
+    i, c = o["id"], o.get("category")
+    if c == "station":
+        return "stations"
+    if i.startswith("side_"):
+        return "sides"
+    if i.startswith("wall_"):
+        return "front_walls" if "south" in i else "back_walls"
+    return None
 
 # Window frame art is painted + lives with the map art now; the generator
 # leaves those files alone.
@@ -186,6 +227,86 @@ def render_object(o, spawns_by_obj):
         draw.rectangle([x0, y0, x1, y1], fill=PLACEHOLDER_RGB + (70,),
                        outline=PLACEHOLDER_RGB + (255,), width=2)
         _label(draw, sp["ref"], x0, y0, x1, y1)
+    return img
+
+
+def _draw_object_world(draw, o, spawns_by_obj):
+    """Draw one object's shapes (+ its spawn placeholders) at WORLD position,
+    i.e. pixel = tile * 32, on whatever canvas `draw` belongs to."""
+    for s in o.get("shapes", []):
+        rx, ry, rw, rh = s["rect"]
+        draw.rectangle([px(rx), px(ry), px(rx + rw) - 1, px(ry + rh) - 1], fill=_hex(s["color"]))
+    for sp in spawns_by_obj.get(o["id"], []):
+        wx, wy, ww, wh = sp["world_rect"]
+        x0, y0 = px(wx), px(wy)
+        x1, y1 = px(wx + ww) - 1, px(wy + wh) - 1
+        draw.rectangle([x0, y0, x1, y1], fill=PLACEHOLDER_RGB + (70,),
+                       outline=PLACEHOLDER_RGB + (255,), width=2)
+        _label(draw, sp["ref"], x0, y0, x1, y1)
+
+
+def render_fullcanvas(objs, spawns_by_obj, scene):
+    """A full-canvas (tileCount*32 square, e.g. 2048²) slice holding the given
+    objects' shapes at their world positions, transparent everywhere else.
+    Drawn by the engine at (0,0,64,64) — no cropping, Procreate-friendly."""
+    size = scene["grid"]["columns"] * TILE
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    for o in objs:
+        _draw_object_world(draw, o, spawns_by_obj)
+    return img
+
+
+def render_painter_reference(scene, objects):
+    """A 2048×2048 reference layer to import into Procreate: the ground, then
+    translucent sort-tier colour bands over each object, red collision strips,
+    and an id label at each object's foot. Never loaded by the game."""
+    size = scene["grid"]["columns"] * TILE
+    gpath = ROOT / "assets" / "map" / "ground.png"
+    if gpath.exists():
+        try:
+            img = Image.open(gpath).convert("RGBA").resize((size, size), Image.LANCZOS)
+        except Exception:
+            img = render_ground(scene).convert("RGBA")
+    else:
+        img = render_ground(scene).convert("RGBA")
+    draw = ImageDraw.Draw(img, "RGBA")
+
+    # sort-tier bands: tint each object's visual bounds by its tier colour
+    for o in objects:
+        col = TIER_COLORS.get(tier_of(o), TIER_COLORS[None])
+        x, y, w, h = o["visualBounds"]
+        draw.rectangle([px(x), px(y), px(x + w) - 1, px(y + h) - 1], fill=col + (55,))
+    # collision strips in red
+    for o in objects:
+        cr = o.get("collisionRect")
+        if cr:
+            x, y, w, h = cr
+            draw.rectangle([px(x), px(y), px(x + w) - 1, px(y + h) - 1],
+                           fill=(255, 40, 40, 90), outline=(255, 40, 40, 230), width=2)
+    # id label at each object's foot (bottom-centre), white halo for legibility
+    font = _font(20)
+    for o in objects:
+        x, y, w, h = o["visualBounds"]
+        fx, fy = px(x + w / 2), px(y + h)
+        try:
+            bb = draw.textbbox((0, 0), o["id"], font=font)
+            tw = bb[2] - bb[0]
+        except Exception:
+            tw = len(o["id"]) * 10
+        draw.text((fx - tw / 2, fy - 22), o["id"], font=font, fill=(20, 20, 28, 255),
+                  stroke_width=3, stroke_fill=(255, 255, 255, 235))
+    # legend, top-left
+    ly = 16
+    for name in TIERS + ["mounted/other"]:
+        col = TIER_COLORS.get(name if name in TIER_COLORS else None, TIER_COLORS[None])
+        draw.rectangle([16, ly, 44, ly + 20], fill=col + (180,), outline=(0, 0, 0, 200))
+        draw.text((52, ly), name, font=font, fill=(20, 20, 28, 255),
+                  stroke_width=3, stroke_fill=(255, 255, 255, 235))
+        ly += 28
+    draw.rectangle([16, ly, 44, ly + 20], fill=(255, 40, 40, 160), outline=(0, 0, 0, 200))
+    draw.text((52, ly), "collision", font=font, fill=(20, 20, 28, 255),
+              stroke_width=3, stroke_fill=(255, 255, 255, 235))
     return img
 
 
@@ -327,6 +448,51 @@ def main():
     # Sky drawing template.
     if write_png_if_changed(render_sky_template(), TEMPLATES / "sky_template.png", args.dry_run):
         changed.append("sky_template.png")
+
+    # --- slice workflow: full-canvas 2048² layers (no cropping) ---
+    # Per-object full-canvas slices (so a painter can work on one object at
+    # full canvas); the cropped templates/<id>.png above still work too.
+    for o in objects:
+        if o.get("shapes"):
+            img = render_fullcanvas([o], spawns_by_obj, scene)
+            if write_png_if_changed(img, SLICES / f"{o['id']}.png", args.dry_run):
+                changed.append(f"slices/{o['id']}.png")
+
+    # Grouped slices by default sortY tier + the slice manifest.
+    members = {t: [o for o in objects if tier_of(o) == t] for t in TIERS}
+    slice_manifest = []
+    for t in TIERS:
+        if not members[t]:
+            continue
+        img = render_fullcanvas(members[t], spawns_by_obj, scene)
+        if write_png_if_changed(img, SLICES / f"{t}.png", args.dry_run):
+            changed.append(f"slices/{t}.png")
+        sorts = [m.get("sortY", 0) for m in members[t]]
+        # A slice is one flat layer, so its sortY must sit on the correct side
+        # of everything its members overlap. Background tiers (walls behind the
+        # furniture) draw just under their earliest member so they stay behind
+        # it all; foreground tiers draw at their latest member.
+        tier_sortY = (min(sorts) - 1) if t in ("back_walls", "sides") else max(sorts)
+        slice_manifest.append({
+            "file": f"slices/{t}.png",
+            "sortY": tier_sortY,
+            "objects": [m["id"] for m in members[t]],
+        })
+    manifest_slices = {
+        "tile": TILE,
+        "canvasPx": scene["grid"]["columns"] * TILE,
+        "note": "Grouped full-canvas slices by sortY tier. Point map.yaml's "
+                "`slices:` section at a file here; list the same objects under "
+                "`objects` and they are omitted from the per-object pass.",
+        "slices": slice_manifest,
+    }
+    if write_json_if_changed(manifest_slices, TEMPLATES / "manifest-slices.json", args.dry_run):
+        changed.append("manifest-slices.json")
+
+    # Painter's reference layer.
+    if write_png_if_changed(render_painter_reference(scene, objects),
+                            TEMPLATES / "_painter_reference.png", args.dry_run):
+        changed.append("_painter_reference.png")
 
     # Manifest.
     sky = sprites.get("sky", {})

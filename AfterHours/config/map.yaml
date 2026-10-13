@@ -23,12 +23,8 @@
 ground: assets/map/ground.png
 
 objects:
-  # back + divider walls
-  wall_library:      assets/map/templates/wall_library.png
-  wall_cafe:         assets/map/templates/wall_cafe.png
-  wall_music:        assets/map/templates/wall_music.png
-  wall_gallery:      assets/map/templates/wall_gallery.png
-  wall_sushi:        assets/map/templates/wall_sushi.png
+  # front (south) walls — kept per-object so they still fade (cutaway) when
+  # you walk behind them. The back walls moved to the `back_walls` slice below.
   wall_south_east:   assets/map/templates/wall_south_east.png
   wall_south_west_a: assets/map/templates/wall_south_west_a.png
   wall_south_west_b: assets/map/templates/wall_south_west_b.png
@@ -52,3 +48,43 @@ objects:
 
   # wall-mounted (non-window)
   gallery:           assets/map/templates/gallery.png
+
+# ---------------------------------------------------------------
+# Slices — full-canvas (2048×2048) painted layers, each covering several
+# objects and drawn at its own sortY. This is the Procreate-friendly path:
+# paint a whole tier as one layer group, export it 2048×2048, point it here.
+#
+# Rules:
+#   • Each entry is { path, sortY, objects: [ids this slice covers] }.
+#   • An object under a slice must NOT also be under `objects:` above. If it
+#     is listed in both, the SLICE wins and the per-object entry is ignored.
+#   • The engine also auto-detects any `objects:` PNG that is a full 2048×2048
+#     image and draws it full-canvas, so you don't strictly need this section —
+#     but it's the clearest way to group a tier under one sortY.
+#
+# Trade-off: a slice is one flat layer, so the per-object cutaway fade (a wall
+# going translucent while you stand behind it) can't apply to a sliced wall.
+# Keep a wall under `objects:` if you want it to fade (that's why the south
+# walls stay per-object above).
+#
+# Generated slices + the full tier list are in templates/manifest-slices.json.
+# ---------------------------------------------------------------
+slices:
+  # Drawn at sortY 11 — just behind the earliest wall — so the slice sits
+  # behind the furniture, windows and gallery that overlap the back walls
+  # (matching the old per-object draw order exactly).
+  - path: assets/map/templates/slices/back_walls.png
+    sortY: 11
+    objects: [wall_library, wall_cafe, wall_music, wall_gallery, wall_sushi]
+
+  # Flip more tiers to slices the same way (remove their ids from `objects:`).
+  # sortY values below match manifest-slices.json:
+  # - path: assets/map/templates/slices/sides.png
+  #   sortY: 19
+  #   objects: [side_library_w, side_library_e, side_cafe_w, side_music_w, side_music_e, side_east, side_east_stub]
+  # - path: assets/map/templates/slices/front_walls.png
+  #   sortY: 39
+  #   objects: [wall_south_east, wall_south_west_a, wall_south_west_b]
+  # - path: assets/map/templates/slices/stations.png
+  #   sortY: 30
+  #   objects: [bookshelf, gaming, fireplace, coffee, sushi, turntable]
