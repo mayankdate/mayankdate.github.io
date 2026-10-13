@@ -1,0 +1,22 @@
+# ---------------------------------------------------------------
+# AfterHours · music.yaml
+# ---------------------------------------------------------------
+# The record player opens this. `embeds` are Spotify embed URLs.
+#
+# To get one: open a playlist/album/track in Spotify →
+# Share → Embed → copy the src="..." from the iframe. It looks
+# like  https://open.spotify.com/embed/playlist/<id>?utm_source=generator
+# Paste that as `url`. Add as many as you like.
+# ---------------------------------------------------------------
+
+title: Music
+intro: |
+  `My Current playlists`
+
+embeds:
+  - label: "Strange Matter: Work and Drive"
+    url: "https://open.spotify.com/embed/playlist/6vs19jZrXKq3qdjQqiNTtF?utm_source=generator"
+  - label: "Pulsars: Work/Study LoFi"
+    url: "https://open.spotify.com/embed/playlist/0hsMeGn0e3ovRU7m8Ibx4f?utm_source=generator"
+  - label: "Entropy: Long Trips"
+    url: "https://open.spotify.com/embed/playlist/4kRzx8IFAGoxf7bgzJemJT?utm_source=generator"

@@ -1,0 +1,20 @@
+# ---------------------------------------------------------------
+# AfterHours · books.yaml
+# ---------------------------------------------------------------
+# Shows up when you interact with the bookshelf. Markdown works in `note`.
+# ---------------------------------------------------------------
+
+title: Reading nook
+intro: |
+  What I'm currently reading or carrying around
+
+shelf:
+  - title: Project Hail Mary
+    author: Andy Weir
+    note: |
+      The best science fiction of the decade in my opinion.
+
+  - title: There Is No Antimemetics Division
+    author: QNTM
+    note: |
+      One of the most mind-bending scifi thrillers I've ever read.
