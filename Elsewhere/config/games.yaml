@@ -5,19 +5,19 @@
 # Elsewhere/assets/covers/ and reference it by filename.
 # ---------------------------------------------------------------
 
-title: Game corner
+title: Games
 intro: |
-  Games that stuck — not a ranking, just a shelf of favourites.
+  `All time favourites and games I'm currently playing`
 
 games:
-  - title: Outer Wilds
-    cover: placeholder_1.png
-    note: The best 22 hours a solo dev ever gave anyone. Go in cold.
+  - title: Disco Elysium
+    cover: discoelysium.avif
+    note: 40+ hours in and I've barely scratched the surface of this game! 10/10
 
-  - title: Hollow Knight
-    cover: placeholder_2.png
-    note: Still think about Deepnest when I can't sleep.
+  - title: Witcher 3
+    cover: witcher3.jpg
+    note: Replaying this old classic in preparation for the upcoming DLC and Witcher 4.
 
-  - title: Celeste
-    cover: placeholder_3.png
-    note: Platformer as therapy. The chapter cards alone.
+  - title: Baldur's Gate 3
+    cover: bg3.png
+    note: Just love me some D&D

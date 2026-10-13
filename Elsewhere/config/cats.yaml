@@ -23,7 +23,7 @@
   level: 2
   speed: 1.5
   rest:  { idle: 4, sit: 1, sleep: 0 }
-  bio: "Apollo. Brown, one of the twins, the friendliest soul in the cabin. Already winding around your ankles."
+  bio: "The friendliest cat you'll ever meet. Already winding around your ankles. More laid back than his twin."
 
 - id: artemis
   name: Artemis
@@ -36,7 +36,7 @@
   level: 2
   speed: 2.0
   rest:  { idle: 5, sit: 0, sleep: 0 }
-  bio: "Artemis. Apollo's twin, equally brown, equally friendly, and a committed agent of chaos. You don't want to know what she just knocked off the counter."
+  bio: "Days since last mischief: 0. Has only floof between her ears. More chaotic than her twin."
 
 - id: sophie
   name: Sophie
@@ -49,7 +49,7 @@
   level: 2
   speed: 1.1
   rest:  { idle: 2, sit: 4, sleep: 1 }
-  bio: "Sophie. White and grey, reserved. On a good day — and only on a good day — she'll allow exactly one pet."
+  bio: "Quiet and reserved. She'll come close if you are deemed worthy."
 
 - id: hope
   name: Hope
@@ -62,4 +62,4 @@
   level: 2
   speed: 1.6
   rest:  { idle: 1, sit: 3, sleep: 3 }
-  bio: "Hope. White and brown, and she did not ask for company. *hiss.* Best admired from across the room."
+  bio: "*HISS!* Hope is best admired from across the room unless you like bleeding arms."

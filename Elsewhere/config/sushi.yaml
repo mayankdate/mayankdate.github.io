@@ -1,25 +1,26 @@
 # ---------------------------------------------------------------
 # Elsewhere · sushi.yaml
 # ---------------------------------------------------------------
-# The sushi counter serves a random piece each time. `frame` is
-# which sprite in sushi.png (0-5). Add as many as you draw.
+# The sushi counter serves a random piece each time.
+# `frame` selects a sprite in sushi.png (0-5).
+# Sprite artwork should match the six items below.
 # ---------------------------------------------------------------
 
-- name: Tuna nigiri
-  frame: 0
-  line: "Maguro. Clean, cold, correct. You eat it in one piece like a civilised person."
 - name: Salmon nigiri
+  frame: 0
+  line: "Salmon over rice. Simple, buttery, Perfect."
+- name: Spicy salmon roll
   frame: 1
-  line: "Sake. The gateway fish. No notes."
-- name: Tamago
+  line: "Salmon with a little heat. I could it 20 of these."
+- name: Shrimp tempura roll
   frame: 2
-  line: "The sweet egg one. Secretly the hardest to make well, which is the whole point."
-- name: Avocado roll
+  line: "Crispy shrimp, soft rice. What's not to love?"
+- name: Philadelphia roll
   frame: 3
-  line: "Not traditional. Delicious anyway. Fight about it later."
-- name: Tuna roll
+  line: "Salmon, cucumber, and cream cheese. I will not debate authenticity here."
+- name: Aburi salmon nigiri
   frame: 4
-  line: "Tekkamaki. Small, perfect, gone."
-- name: Ebi nigiri
+  line: "Salmon, kissed by a blowtorch. A little char, a creamy finish. Yes, this one."
+- name: Tuna roll
   frame: 5
-  line: "Cooked shrimp, butterflied over rice. The safe order, and there's no shame in it."
+  line: "Tuna tucked into rice and nori."

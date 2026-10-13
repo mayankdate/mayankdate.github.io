@@ -14,9 +14,9 @@ intro: |
   `My Current playlists`
 
 embeds:
-  - label: "Strange Matter: `Work and Drive`"
+  - label: "Strange Matter: Work and Drive"
     url: "https://open.spotify.com/embed/playlist/6vs19jZrXKq3qdjQqiNTtF?utm_source=generator"
-  - label: "Pulsars: `Work/Study LoFi`"
+  - label: "Pulsars: Work/Study LoFi"
     url: "https://open.spotify.com/embed/playlist/0hsMeGn0e3ovRU7m8Ibx4f?utm_source=generator"
-  - label: "Entropy: `Long Trips`"
+  - label: "Entropy: Long Trips"
     url: "https://open.spotify.com/embed/playlist/4kRzx8IFAGoxf7bgzJemJT?utm_source=generator"

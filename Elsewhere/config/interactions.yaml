@@ -27,7 +27,7 @@ coffee:
     - { sound: whirr, duration: 1600 }
     - { spawn: { ref: cup, id: _cup, at: [29.7, 20.6], sortY: 22.4, anim: steam } }
     - { wait: 350 }
-    - { dialog: [ "Teleporting you to physical space…", "…your firewall blocked the espresso. Try harder." ] }
+    - { dialog: [ "Teleporting coffee to physical space...", "...your firewall blocked the espresso. Try harder." ] }
     - { despawn: _cup }
 
 sushi:
