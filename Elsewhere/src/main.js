@@ -110,10 +110,10 @@ function buildSky(data) {
   if (SPR.sky) skyAnim = new Animator(data.sprites.sky);
   for (const o of scene.objects)
     if (o.category === 'mounted' && /window/.test(o.id))
-      MAP.images[o.id] = loadImage(`assets/sprites/${o.id}_frame.png`);
+      MAP.images[o.id] = loadImage(`assets/map/templates/${o.id}_frame.png`);
 }
 // the current sky frame rect (source), updated each frame by the loop
-let skyRect = [0, 0, 256, 256];
+let skyRect = [0, 0, 512, 512];
 function skyFrame(r, dpr) {
   if (!SPR.sky) return null;
   return { img: SPR.sky.img, sx: skyRect[0], sy: skyRect[1], sw: skyRect[2], sh: skyRect[3],
