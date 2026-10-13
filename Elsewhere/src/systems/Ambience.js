@@ -17,7 +17,7 @@ const samples = {};         // name -> decoded AudioBuffer (loaded from files, i
 let fireOn = false;
 let rainParticles = [];
 let flash = 0;
-let weather = 'clear';
+let weather = 'cloudy';
 // Four skies the windows cycle through. Each names the audio layers it mixes.
 const WEATHER = {
   cloudy: [],                   // calm overcast, quiet

@@ -102,7 +102,7 @@
     ctx.fillStyle='#eee7ce';ctx.beginPath();ctx.ellipse(x-.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.ellipse(x+.16,y-2.46+bob,.065,.13,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
   function drawScene(ctx,scene,view){
-    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,sky=null}=view;
+    const {time=0,player=scene.spawn,grid=false,footprints=false,selection=null,details=true,showWalls=true,cutaway=true,groundOnly=false,walking=false,playerSprite=null,images={},ground=null,sky=null,hidePlayer=false}=view;
     ctx.save();ctx.imageSmoothingEnabled=false;
     // With a screen-space sky backdrop the void stays unpainted (the sky shows
     // through the transparent-void ground); otherwise fill the flat void color.
@@ -123,7 +123,7 @@
     if(grid){ctx.strokeStyle='#24252c25';ctx.lineWidth=.025;ctx.beginPath();for(let n=0;n<=64;n++){ctx.moveTo(n,0);ctx.lineTo(n,64);ctx.moveTo(0,n);ctx.lineTo(64,n);}ctx.stroke();}
     if(!groundOnly){const groups=scene.objects.filter(o=>!o.parent).map((o,i)=>({o,sort:o.sortY,i}));
       groups.push({o:null,sort:player.y,i:999});groups.sort((a,b)=>a.sort-b.sort||a.i-b.i);
-      for(const g of groups){if(!g.o){
+      for(const g of groups){if(!g.o){if(hidePlayer)continue;
         const ps=playerSprite;
         if(ps&&ps.img&&ps.img.complete&&ps.img.naturalWidth){const _dx=player.x-ps.w/2,_dy=player.y-ps.h;ctx.save();if(ps.flip){ctx.translate(2*_dx+ps.w,0);ctx.scale(-1,1);}ctx.drawImage(ps.img,ps.sx,ps.sy,ps.sw,ps.sh,_dx,_dy,ps.w,ps.h);ctx.restore();}
         else drawPlayer(ctx,player,time,walking);

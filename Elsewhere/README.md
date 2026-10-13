@@ -41,8 +41,8 @@ bioprinter dialog (**E / Space**) → you walk.
 Interactions wired now: books / games / music / art (modals);
 **coffee** (whirrs, brews a cup, "firewall blocked the espresso",
 cup vanishes); **sushi** (a random piece + a line); **fireplace**
-(on/off + crackle); **either window** (cycles the weather: clear →
-rain → storm → cloudy — the sky in every window *and* the whole
+(on/off + crackle); **either window** (cycles the weather: cloudy →
+rain → storm → clear — the sky in every window *and* the whole
 backdrop change, with rain + thunder + lightning); four **cats**
 (pet with E).
 
@@ -190,8 +190,8 @@ add a candle flicker, steam, a bubbling pot the same way.
 **The weather** is one sky sheet (`sky.png`, four frames) used in two
 places: the **full backdrop** behind the floating island (the void is
 transparent now, so the sky shows through) and the **interior of every
-window**. Tapping either window steps the weather clear → rain → storm
-→ cloudy; `Ambience.currentWeather()` is the single source of truth and
+window**. Tapping either window steps the weather cloudy → rain → storm
+→ clear; `Ambience.currentWeather()` is the single source of truth and
 both the backdrop (`bgSky()` in `main.js`) and `Windows.js` read it.
 Rain streaks and the lightning flash draw live on top — across the
 screen (`Ambience.drawOverlay`) and inside each window (`Windows.js`).

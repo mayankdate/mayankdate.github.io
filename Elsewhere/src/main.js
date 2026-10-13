@@ -30,6 +30,7 @@ const player = { x: scene.spawn.x, y: scene.spawn.y };
 const cam = { x: player.x, y: player.y - 1.2 };
 const keys = new Set();
 let walkEnabled = false, busy = false, nearby = null, last = 0;
+let cloneShown = false;   // hidden until the intro drop starts
 
 const modalOpen = () => modalRoot.classList.contains('is-open');
 const byId = (id) => scene.objects.find(o => o.id === id);
@@ -291,7 +292,7 @@ requestAnimationFrame(loop);
 btn.addEventListener('click', async () => {
   Ambience.resume();                       // audio needs a user gesture
   Ambience.setSounds(data.sounds || {});    // register any audio files from sounds.yaml
-  Ambience.applyWeather();                  // start the default (clear) ambience
+  Ambience.applyWeather();                  // start the default (cloudy) ambience
   btn.disabled = true; splash.classList.add('is-loading');
   const bar = splash.querySelector('#clone-bar-fill');
   bar.style.transition = 'width 1.8s cubic-bezier(.4,.1,.3,1)';
@@ -304,6 +305,7 @@ btn.addEventListener('click', async () => {
 function dropClone() {
   const fromY = scene.spawn.y - 7;
   player.x = scene.spawn.x; player.y = fromY;
+  cloneShown = true;
   const t0 = performance.now(), dur = 950;
   (function step(now) {
     const k = Math.min(1, (now - t0) / dur);
@@ -446,7 +448,8 @@ function loop(t) {
   for (const a of accents) if (a.visible) { const rr = a.anim.rect(t); a.part.sx = rr[0]; a.part.sy = rr[1]; a.part.sw = rr[2]; a.part.sh = rr[3]; }
   if (skyAnim) { skyAnim.play(Ambience.currentWeather(), t); skyRect = skyAnim.rect(t); }
 
-  const tx = player.x, ty = player.y - 1.2;
+  // hold the camera on the landing spot until the clone has landed
+  const tx = walkEnabled ? player.x : scene.spawn.x, ty = (walkEnabled ? player.y : scene.spawn.y) - 1.2;
   cam.x += (tx - cam.x) * Math.min(1, dt * 8);
   cam.y += (ty - cam.y) * Math.min(1, dt * 8);
 
@@ -472,7 +475,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, ground: MAP.ground, images: MAP.images, sky });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, hidePlayer: !cloneShown, ground: MAP.ground, images: MAP.images, sky });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);
