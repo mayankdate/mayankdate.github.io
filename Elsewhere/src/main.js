@@ -290,6 +290,7 @@ requestAnimationFrame(loop);
 
 btn.addEventListener('click', async () => {
   Ambience.resume();                       // audio needs a user gesture
+  Ambience.setSounds(data.sounds || {});    // register any audio files from sounds.yaml
   Ambience.applyWeather();                  // start the default (clear) ambience
   btn.disabled = true; splash.classList.add('is-loading');
   const bar = splash.querySelector('#clone-bar-fill');

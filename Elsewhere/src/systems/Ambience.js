@@ -13,16 +13,17 @@
 
 let actx = null, master = null;
 const layers = {};          // name -> { gain, on, sources, timer }
+const samples = {};         // name -> decoded AudioBuffer (loaded from files, if any)
 let fireOn = false;
 let rainParticles = [];
 let flash = 0;
 let weather = 'clear';
 // Four skies the windows cycle through. Each names the audio layers it mixes.
 const WEATHER = {
-  clear:  ['birds'],            // sunny, birdsong
+  cloudy: [],                   // calm overcast, quiet
   rain:   ['rain'],             // overcast, raining
   storm:  ['rain', 'thunder'],  // dark, lightning + thunder
-  cloudy: [],                   // calm overcast, quiet
+  clear:  ['birds'],            // sunny, birdsong
 };
 
 function ac() {
@@ -51,21 +52,45 @@ function layer(name) {
   const L = { gain: g, on: false, sources: [], timer: null };
   layers[name] = L;
 
-  if (name === 'rain') {
-    const s = a.createBufferSource(); s.buffer = noise(a); s.loop = true;
-    const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 0.5;
-    s.connect(f); f.connect(g); s.start(); L.sources.push(s);
-  } else if (name === 'fire') {
-    const s = a.createBufferSource(); s.buffer = noise(a); s.loop = true;
-    const f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 420;
-    s.connect(f); f.connect(g); s.start(); L.sources.push(s);
-    L.timer = setInterval(() => { if (L.on) crackle(g); }, 200);
-  } else if (name === 'birds') {
-    L.timer = setInterval(() => { if (L.on && Math.random() < 0.55) chirp(g); }, 850);
+  // Looped ambient layers: use the loaded sample if one's registered,
+  // otherwise fall through to the synthesized version.
+  if (name === 'rain' || name === 'fire' || name === 'birds') {
+    if (samples[name]) {
+      const s = a.createBufferSource(); s.buffer = samples[name]; s.loop = true;
+      s.connect(g); s.start(); L.sources.push(s);
+      // the file carries its own fire crackle / bird chirps, so no timer here
+    } else if (name === 'rain') {
+      const s = a.createBufferSource(); s.buffer = noise(a); s.loop = true;
+      const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 0.5;
+      s.connect(f); f.connect(g); s.start(); L.sources.push(s);
+    } else if (name === 'fire') {
+      const s = a.createBufferSource(); s.buffer = noise(a); s.loop = true;
+      const f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 420;
+      s.connect(f); f.connect(g); s.start(); L.sources.push(s);
+      L.timer = setInterval(() => { if (L.on) crackle(g); }, 200);
+    } else { // birds
+      L.timer = setInterval(() => { if (L.on && Math.random() < 0.55) chirp(g); }, 850);
+    }
   } else if (name === 'thunder') {
-    L.timer = setInterval(() => { if (L.on && Math.random() < 0.28) { rumble(g); flash = 1; } }, 3200);
+    // thunder is still scheduled — use the sample on each cue if present,
+    // otherwise the synthesized rumble. The flash is a visual, keep it either way.
+    L.timer = setInterval(() => {
+      if (!L.on || Math.random() >= 0.28) return;
+      if (samples.thunder) playSample(samples.thunder, g);
+      else rumble(g);
+      flash = 1;
+    }, 3200);
   }
   return L;
+}
+
+// Play a decoded buffer once through the given gain node (used by thunder
+// one-shots and oneShot('whirr') when files are registered).
+function playSample(buf, g, { volume = 1 } = {}) {
+  const a = ac();
+  const s = a.createBufferSource(); s.buffer = buf;
+  const cg = a.createGain(); cg.gain.value = volume;
+  s.connect(cg); cg.connect(g || master); s.start();
 }
 
 function crackle(g) {
@@ -105,6 +130,8 @@ export function set(name, on, vol = 0.32) {
 
 export function oneShot(name) {
   if (name !== 'whirr') return;
+  // use the loaded sample if one's registered for this one-shot
+  if (samples[name]) { playSample(samples[name], master, { volume: 0.6 }); return; }
   const a = ac(), t = a.currentTime;
   const o = a.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 72;
   const nz = a.createBufferSource(); nz.buffer = noise(a); nz.loop = true;
@@ -127,6 +154,26 @@ export function currentWeather() { return weather; }
 export function flashLevel() { return flash; }        // lightning, 1 → 0, for the windows to mirror
 // start (or re-apply) the current weather's audio layers — called once audio is unlocked
 export function applyWeather() { for (const n of ['rain', 'birds', 'thunder']) set(n, (WEATHER[weather] || []).includes(n)); }
+
+// Register audio files for layers / one-shots. Pass a map like
+// { rain: 'assets/sounds/rain.mp3', fire: '...', birds: '...', thunder: '...', whirr: '...' }.
+// Each is fetched + decoded; after this, the matching layer uses the file
+// instead of the synthesizer. Unlisted names keep the synth. Call once at
+// boot, after the user gesture that resumes audio.
+export async function setSounds(map) {
+  const a = ac();
+  await Promise.all(Object.entries(map || {}).map(async ([name, url]) => {
+    if (!url) return;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const ab = await res.arrayBuffer();
+      samples[name] = await a.decodeAudioData(ab);
+    } catch (e) {
+      console.error(`[Ambience] failed to load ${name} from ${url}:`, e);
+    }
+  }));
+}
 
 export function toggleFire() { fireOn = !fireOn; set('fire', fireOn, 0.3); return fireOn; }
 export function isFireOn() { return fireOn; }

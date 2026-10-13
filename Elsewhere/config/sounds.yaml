@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------
+# Elsewhere · sounds.yaml
+# ---------------------------------------------------------------
+# Optional audio files that replace the synthesized ambience. Drop
+# files into assets/sounds/ and uncomment the matching line below.
+# Anything left out keeps its synthesized version (Web Audio noise +
+# filters) — so you can swap one layer at a time.
+#
+# Formats: whatever the browser decodes — mp3, ogg, wav all work.
+# Loop files: rain / fire / birds are seamlessly looped by the engine,
+# so pick a sample that stitches cleanly end-to-start (20–60s ambient
+# recordings designed to loop work best). Thunder and whirr are
+# one-shots, so a single rumble / brewing sound is fine.
+#
+# Good sources: freesound.org (CC0 and CC-BY), pixabay.com/sound-effects,
+# zapsplat.com. Prefer royalty-free. Keep attributions somewhere if the
+# license requires it.
+# ---------------------------------------------------------------
+
+# rain:    assets/sounds/rain.mp3        # looped ambient rain
+# fire:    assets/sounds/fire.mp3        # looped fireplace crackle
+# birds:   assets/sounds/birds.mp3       # looped daytime birdsong
+# thunder: assets/sounds/thunder.mp3     # played on each thunder cue (one-shot)
+# whirr:   assets/sounds/whirr.mp3       # coffee machine brewing (one-shot)

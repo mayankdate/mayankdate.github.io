@@ -13,7 +13,7 @@ export async function loadYaml(path) {
 }
 
 export async function loadAll() {
-  const names = ['intro', 'interactions', 'cats', 'sprites', 'accents', 'sushi', 'map', 'books', 'music', 'games', 'art'];
+  const names = ['intro', 'interactions', 'cats', 'sprites', 'accents', 'sushi', 'sounds', 'map', 'books', 'music', 'games', 'art'];
   const loaded = await Promise.all(names.map(n => loadYaml(`config/${n}.yaml`)));
   const d = {};
   names.forEach((n, i) => { d[n] = loaded[i]; });

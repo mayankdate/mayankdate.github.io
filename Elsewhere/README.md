@@ -210,3 +210,37 @@ audio file later behind the same on/off call.
 ## Libraries (CDN)
 
 js-yaml 4.1.0 · marked 11.1.1. Everything else is local.
+
+# Audio drop-in folder
+
+Downloaded ambient audio files go here. They replace the synthesized
+versions in `Ambience.js` on a per-layer basis.
+
+## How to use
+
+1. Download a file (freesound.org, pixabay, etc.) — mp3, ogg, or wav.
+2. Save it in this folder, e.g. `rain.mp3`.
+3. Open `../config/sounds.yaml` and uncomment / add the matching line:
+
+   ```yaml
+   rain: assets/sounds/rain.mp3
+   ```
+
+4. Refresh the game. The file takes over from the synthesizer.
+
+## Which sounds use what
+
+| Layer | Mode | Good source clip |
+|---|---|---|
+| `rain` | looped | 20–60s steady rain, no thunder in it |
+| `fire` | looped | 20–60s fireplace crackle, no voices |
+| `birds` | looped | 20–60s daytime birdsong, no traffic |
+| `thunder` | one-shot (per cue) | a single rumble / clap, 2–5s |
+| `whirr` | one-shot (coffee brew) | an espresso machine's 1–2s whirr |
+
+`rain`, `fire`, `birds` are seamlessly looped — pick clips designed to
+loop so the join isn't audible. `thunder` and `whirr` play once per
+trigger, so a single sample is fine.
+
+A layer left out of `sounds.yaml` keeps its synthesized version, so you
+can swap one at a time.
