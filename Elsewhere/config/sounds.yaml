@@ -17,8 +17,8 @@
 # license requires it.
 # ---------------------------------------------------------------
 
-# rain:    assets/sounds/rain.mp3        # looped ambient rain
-# fire:    assets/sounds/fire.mp3        # looped fireplace crackle
-# birds:   assets/sounds/birds.mp3       # looped daytime birdsong
+rain:    assets/sounds/rain.ogg        # looped ambient rain
+fire:    assets/sounds/fire.ogg        # looped fireplace crackle
+birds:   assets/sounds/birds.ogg       # looped daytime birdsong
 # thunder: assets/sounds/thunder.mp3     # played on each thunder cue (one-shot)
 # whirr:   assets/sounds/whirr.mp3       # coffee machine brewing (one-shot)
