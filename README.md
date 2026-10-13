@@ -8,7 +8,7 @@ Live at **<https://mayankdate.github.io>**.
 
 Four content pages — **home, projects, research, contact** — are rendered
 from YAML configs by a small Python + Jinja2 build script. Beside them lives
-**Elsewhere**, a small explorable pixel-art cabin at `/Elsewhere/` embedded
+**AfterHours**, a small explorable pixel-art cabin at `/AfterHours/` embedded
 into the site. GitHub Pages serves the built HTML directly from this repo —
 no CI, no backend.
 
@@ -27,8 +27,8 @@ mayankdate.github.io/
 ├── projects.html
 ├── research.html
 ├── contact.html
-├── elsewhere.html         ← wrapper that iframes the Elsewhere subsite
-└── Elsewhere/             the pixel cabin — fully self-contained, own README
+├── afterhours.html         ← wrapper that iframes the AfterHours subsite
+└── AfterHours/             the pixel cabin — fully self-contained, own README
 ```
 
 ---
@@ -37,8 +37,8 @@ mayankdate.github.io/
 
 - **Content** → a file in `config/` (bio, projects, publications, tag order).
 - **Appearance** → the CSS variables at the top of `static/style.css`.
-- **The pixel cabin** → `Elsewhere/config/*.yaml` or paint over
-  `Elsewhere/assets/map/templates/*.png`.
+- **The pixel cabin** → `AfterHours/config/*.yaml` or paint over
+  `AfterHours/assets/map/templates/*.png`.
 
 Then rebuild and push:
 
@@ -49,7 +49,7 @@ git push
 ```
 
 GitHub Pages serves the update within a minute or two. Preview locally first
-with `python -m http.server 8000` from the repo root. The Elsewhere subsite is
+with `python -m http.server 8000` from the repo root. The AfterHours subsite is
 static and does **not** need rebuilding — the build script only touches the
 four content pages.
 
@@ -62,7 +62,7 @@ four content pages.
 | Full walkthrough of editing, building, and pushing | **[CLAUDE.md](CLAUDE.md)** |
 | Every YAML field each config file supports | **[CONFIG_GUIDE.md](CONFIG_GUIDE.md)** |
 | First-time setup (new machine, new GitHub account) | **[PUSH_TO_GITHUB.md](PUSH_TO_GITHUB.md)** |
-| The Elsewhere subsite — engine, systems, art pipeline | **[Elsewhere/README.md](Elsewhere/README.md)** |
+| The AfterHours subsite — engine, systems, art pipeline | **[AfterHours/README.md](AfterHours/README.md)** |
 
 ---
 
@@ -73,7 +73,7 @@ four content pages.
   preprints with **rapidfuzz**.
 - **segno** generates the vCard / site / LinkedIn QR codes at build time.
 - **GitHub Pages** serves the committed HTML.
-- The **Elsewhere** subsite is plain HTML + Canvas 2D + ES modules; the only
+- The **AfterHours** subsite is plain HTML + Canvas 2D + ES modules; the only
   CDN scripts it uses are **js-yaml** and **marked**.
 
 Dependencies in `requirements.txt`.
@@ -83,7 +83,7 @@ Dependencies in `requirements.txt`.
 ## For a fresh Claude session
 
 Start with **CLAUDE.md** — it has the full repo map and the edit-rebuild-push
-loop. For the pixel cabin, read **Elsewhere/README.md** — it's a different
+loop. For the pixel cabin, read **AfterHours/README.md** — it's a different
 mental model (a canvas engine with data-driven interactions) and lives in its
 own folder on purpose. Field-level config reference is in **CONFIG_GUIDE.md**.
 

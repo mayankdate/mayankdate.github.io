@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>AfterHours · Mayank Date</title>
+  <meta name="description" content="A quiet pixel cabin. WASD to wander, E to look closer." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <canvas id="game"></canvas>
+
+  <div id="walk-prompt" hidden></div>
+  <div id="hint">
+    <kbd>WASD</kbd>/<kbd>↑↓←→</kbd> move · <kbd>E</kbd>/<kbd>Space</kbd> interact · <kbd>+</kbd><kbd>−</kbd> zoom
+  </div>
+
+  <div id="zoom-hud" aria-label="Zoom controls">
+    <button type="button" data-zoom="in"  aria-label="Zoom in">+</button>
+    <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+  </div>
+
+  <!-- touch controls: floating joystick (left) + interact button (right) -->
+  <div id="touch-controls" hidden>
+    <div id="joystick"><div id="joystick-thumb"></div></div>
+    <button id="btn-a" type="button" aria-label="Interact">E</button>
+  </div>
+
+  <div id="dialog-root" aria-live="polite"></div>
+  <div id="modal-root" aria-live="polite"></div>
+
+  <div id="splash">
+    <div class="splash-card">
+      <img class="splash-portrait" src="assets/mayank_portrait.png" alt="Pixel portrait of Mayank" />
+      <div id="splash-greeting" class="splash-greeting"></div>
+      <div class="clone-bar"><div id="clone-bar-fill"></div></div>
+      <button id="load-clone" type="button">Load clone</button>
+    </div>
+  </div>
+
+  <!-- World engine + scene (classic scripts; expose globals before the module) -->
+  <script src="engine.js"></script>
+  <script src="scene.js"></script>
+  <script src="vendor/js-yaml.min.js"></script>
+  <script src="vendor/marked.min.js"></script>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

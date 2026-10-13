@@ -220,7 +220,7 @@ def render_all(root: Path, cfg: dict) -> None:
         **base_ctx,
     )
     render_mod.render_page(
-        env, "elsewhere.html.j2", root / "elsewhere.html",
+        env, "afterhours.html.j2", root / "afterhours.html",
         **base_ctx,
     )
 
