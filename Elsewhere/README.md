@@ -65,19 +65,26 @@ Elsewhere/
 │   ├── sushi.yaml          random sushi variants
 │   ├── intro.yaml          splash + bioprinter dialog
 │   └── books/music/games/art.yaml   modal content
-├── assets/sprites/    player, cat_*, cup, sushi  ← PLACEHOLDERS, paint over these
+├── assets/sprites/    player, cat_*, cup, sushi, flame, platter, sky
+│                       ← animated sheets; PLACEHOLDERS, paint over these
+├── assets/map/        ground.png + templates/ (object guides, window
+│                       frames, sky_template.png, manifest.json)
 ├── assets/covers,art/ modal images
+├── scripts/
+│   └── build_templates.py  regenerates the map/sky guides + manifest
+├── vendor/            js-yaml + marked (self-hosted, no CDN)
 └── src/
-    ├── main.js        glue: camera, movement, player/cat animators, spawns, env
+    ├── main.js        glue: camera, movement, animators, spawns, env, sky
     └── systems/
         ├── Sprites.js      sheet loader + per-entity Animator
         ├── Interactions.js effect runner (data → actions)
-        ├── Windows.js      live sky viewports (weather) + frame overlay
         ├── Ambience.js     Web Audio layers + screen overlays
         ├── Dialog.js       DOM dialog, E/Space advance
         ├── Modal.js        content popups
         └── Config.js       loads the YAML
 ```
+(Window viewports + the weather sky live in `engine.js` + `main.js`, not a
+separate module.)
 
 ---
 
@@ -95,8 +102,12 @@ keeps animating. Layout is in `sprites.yaml`:
 | `sushi.png` | 6×1 | 28×28 | one piece per frame |
 | `flame.png` | 4×1 | 48×48 | fireplace fire, flicker loop |
 | `platter.png` | 4×1 | 32×32 | turntable vinyl, spin loop |
-| `sky.png` | 4×1 | 256×256 | weather backdrop + window view: clear/rain/storm/cloudy |
-| `window_<id>_frame.png` | — | per window | frame + ledge over the glass; transparent panes |
+| `sky.png` | 4×4 | 512×512 | weather backdrop + window view: clear/rain/storm/cloudy (a row each, 4 frames across) |
+
+The **window frames** (`window_<id>_frame.png`) are not animated, so they
+moved out of `assets/sprites/` to `assets/map/templates/` — draw them with
+the rest of the map art. The **sky** is drawn from its own template, see
+"Drawing the sky" below.
 
 Change a frame size? Update it in `sprites.yaml` and redraw at that
 size. Missing sheet? The engine falls back to the code-drawn shape,
@@ -136,15 +147,33 @@ paintable, the same way, in layers.
   the table at the foot and the device in the headroom above (see the
   contact sheet — the transparent space above the box is yours).
 - **Only genuinely moving things are separate sprites**, in
-  `assets/sprites/` not `assets/map/`: the **flame** and the **spinning
-  record**. They loop over their hand-drawn sheet (`flame.png`,
-  `platter.png`) and draw on top of the painted station. Everything else
-  that used to be code-drawn vector art is gone — paint it into the
-  station template.
+  `assets/sprites/` not `assets/map/`: the **flame**, the **spinning
+  record**, and the **coffee steam**. They loop over their hand-drawn sheet
+  (`flame.png`, `platter.png`, `cup.png`) and draw on top of the painted
+  station. Everything else that used to be code-drawn vector art is gone —
+  paint it into the station template.
+- **Where an interactive sprite lands is marked on its station template.**
+  The generator draws a magenta placeholder box (labelled with the sprite)
+  on the station it spawns over — `flame` on `fireplace`, `platter` on
+  `turntable`, `cup` (steam) on `coffee`. Paint the station *around* the
+  box so the animated sprite sits correctly; the box itself is scaffolding,
+  not art, so don't paint it in. Because the flat template doubles as the
+  live art until you paint it, the box shows in the running game while the
+  station is still a placeholder — paint over it and it's gone. The same
+  rects are in `manifest.json` under each object's `placeholders`, if you'd
+  rather keep the live template clean and reference the numbers instead.
 
-**Re-export templates** (after editing the scene) with the exporter
-in the project notes; it re-renders every template + the manifest
-from `scene.js`.
+**Re-export templates** (after editing the scene) by running the generator:
+
+```bash
+cd Elsewhere
+python3 scripts/build_templates.py          # --dry-run to preview
+```
+
+It re-renders every guide + `manifest.json` + the sky template from
+`scene.js` and the configs, adds the placeholder boxes, and only rewrites a
+file when its pixels actually change. It never touches your painted art
+(`assets/sprites/sky.png`, `assets/map/ground.png`, the window frames).
 
 **Decorations & seasons** slot in here later: a cherry-blossom tree
 behind the house or props on the satellite islands are just more
@@ -188,19 +217,38 @@ side.
 fireplace toggle. The flame and the spinning record are the two today;
 add a candle flicker, steam, a bubbling pot the same way.
 
-**The weather** is one sky sheet (`sky.png`, four frames) used in two
-places: the **full backdrop** behind the floating island (the void is
-transparent now, so the sky shows through) and the **interior of every
-window**. Tapping either window steps the weather cloudy → rain → storm
-→ clear; `Ambience.currentWeather()` is the single source of truth and
-both the backdrop (`bgSky()` in `main.js`) and `Windows.js` read it.
-Rain streaks and the lightning flash draw live on top — across the
-screen (`Ambience.drawOverlay`) and inside each window (`Windows.js`).
-A window is drawn in three layers: the sky frame, the live rain/flash,
-then its **frame + ledge** PNG (`assets/sprites/window_<id>_frame.png`)
-— paint that to redraw the woodwork; the glass stays a viewport. Add a
-weather by adding a `sky.png` frame + a `WEATHER` entry in `Ambience.js`
+**The weather** is one sky sheet (`sky.png`) used in two places: the
+**full backdrop** behind the floating island (the void is transparent, so
+the sky shows through) and the **interior of every window**. Tapping either
+window steps the weather cloudy → rain → storm → clear;
+`Ambience.currentWeather()` is the single source of truth, and both the
+backdrop (`skyFrame()` in `main.js`) and the window cutouts (in
+`engine.js`'s `drawScene`) read the same frame. Rain streaks and the
+lightning flash draw live on top (`Ambience.drawOverlay`). A window is
+drawn in three layers: the sky frame, the live rain/flash, then its
+**frame + ledge** PNG (`assets/map/templates/window_<id>_frame.png`) —
+paint that to redraw the woodwork; the glass stays a viewport. Add a
+weather by adding a `sky.png` row + a `WEATHER` entry in `Ambience.js`
 and listing it in the windows' `cycle_weather`.
+
+### Drawing the sky
+
+The sky and the ground live in **different coordinate systems**, which is
+why they're sized differently:
+
+- **Ground** is *world-space*: one 2048×2048 layer = the 64×64-tile island
+  at 32 px / tile. Draw it at that exact size (`templates/ground.png`).
+- **Sky** is *screen-space*: each frame is stretched to fill the whole
+  viewport, whatever its size. So frame resolution is just "how crisp,"
+  not tied to the map. It's now **2048×2048 — sixteen 512×512 cells**, a
+  row per weather (clear / rain / storm / cloudy) and 4 animation frames
+  across.
+
+Paint `assets/map/templates/sky_template.png` (the labelled 4×4 grid the
+generator emits), keep the 512 px cells and the row order, then export it
+back as `assets/sprites/sky.png`. To draw at a different resolution, change
+`frameW`/`frameH` on `sky` in `sprites.yaml` and redraw at that cell size —
+the engine adapts automatically.
 
 **Ambience** layers (`rain`, `fire`, `birds`, `thunder`) are
 synthesized in `Ambience.js`. Each is a swap-point: drop in a real

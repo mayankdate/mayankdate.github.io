@@ -16,7 +16,8 @@
 # object's exact position, sorted/occluded like the original).
 #
 # NOTE: windows are deliberately not listed — they are live sky
-# cutouts, with a frame PNG at assets/sprites/window_<id>_frame.png.
+# cutouts, with a frame PNG at assets/map/templates/window_<id>_frame.png
+# (drawn over the glass; not animated, so it lives with the map art).
 # ---------------------------------------------------------------
 
 ground: assets/map/ground.png

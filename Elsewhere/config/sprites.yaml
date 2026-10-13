@@ -72,15 +72,16 @@ platter:
   anims:
     spin: { row: 0, from: 0, to: 3, fps: 8 }
 
-# The one weather sky — a single animated layer. 1024×1024: a ROW per
-# weather, 4 animation frames across (clouds sway). It fills the whole
-# backdrop behind the island AND the windows are transparent cutouts
-# onto this same layer. Rain + lightning draw on top, live. Paint over
-# the 16 frames, keep the grid + row order.
+# The one weather sky — a single animated layer. 2048×2048: a ROW per
+# weather, 4 animation frames across (clouds sway) — sixteen 512×512
+# cells. It fills the whole backdrop behind the island AND the windows
+# are transparent cutouts onto this same layer. Rain + lightning draw on
+# top, live. Paint over assets/map/templates/sky_template.png (same grid)
+# and export it back here; keep the 512px grid + row order.
 sky:
   sheet: assets/sprites/sky.png
-  frameW: 256
-  frameH: 256
+  frameW: 512
+  frameH: 512
   anims:
     clear:  { row: 0, from: 0, to: 3, fps: 3 }
     rain:   { row: 1, from: 0, to: 3, fps: 3 }
