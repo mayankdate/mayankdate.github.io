@@ -7,18 +7,19 @@
 
 title: Gallery
 intro: |
-  A small wall of things I've painted — mostly watercolour,
-  mostly places. Swap these placeholders for your own scans.
+  A small wall of things I've painted
 
 pieces:
-  - title: Druid Hill
-    image: placeholder_1.png
-    note: watercolour, 2025
+  - title: luna
+    image: luna.jpg
+    note: Procreate, 2026
 
-  - title: Low Tide
-    image: placeholder_2.png
-    note: watercolour, 2025
+pieces:
+  - title: Inland Empire
+    image: inlandempire.jpg
+    note: Procreate, 2025
 
-  - title: Night Garden
-    image: placeholder_3.png
-    note: gouache, 2024
+pieces:
+  - title: Flux
+    image: flux.jpg
+    note: Procreate, 2024
