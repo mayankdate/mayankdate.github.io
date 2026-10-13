@@ -9,13 +9,14 @@
 # Paste that as `url`. Add as many as you like.
 # ---------------------------------------------------------------
 
-title: Listening lounge
+title: Music
 intro: |
-  What's on while I work, cook, or pretend to tidy. Hit play.
-  (Swap these for your own — the how-to is in `music.yaml`.)
+  `My Current playlists`
 
 embeds:
-  - label: Writing hours
-    url: "https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO?utm_source=generator"
-  - label: Late-night model-fitting
-    url: "https://open.spotify.com/embed/playlist/37i9dQZF1DWTkxQvqMy4WW?utm_source=generator"
+  - label: Strange Matter: `Work and Drive`
+    url: "https://open.spotify.com/embed/playlist/6vs19jZrXKq3qdjQqiNTtF?utm_source=generator"
+  - label: Pulsars: `Work/Study LoFi`
+    url: "https://open.spotify.com/embed/playlist/0hsMeGn0e3ovRU7m8Ibx4f?utm_source=generator"
+  - label: Entropy: `Long Trips`
+    url: "https://open.spotify.com/embed/playlist/4kRzx8IFAGoxf7bgzJemJT?utm_source=generator"
