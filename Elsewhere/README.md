@@ -19,8 +19,9 @@ cd Elsewhere
 python -m http.server 8000      # open http://localhost:8000
 ```
 
-CDN scripts: js-yaml + marked only. No build step. The world is
-drawn by `engine.js`; animated things blit from sprite sheets.
+Fully self-contained — js-yaml + marked are vendored under `vendor/`,
+so there are no external script dependencies and no build step. The
+world is drawn by `engine.js`; animated things blit from sprite sheets.
 
 ---
 
@@ -207,9 +208,10 @@ audio file later behind the same on/off call.
 
 ---
 
-## Libraries (CDN)
+## Libraries
 
-js-yaml 4.1.0 · marked 11.1.1. Everything else is local.
+js-yaml 4.1.0 · marked 11.1.1, both vendored under `vendor/` (served
+from the repo, not a CDN). Everything else is local too.
 
 # Audio drop-in folder
 

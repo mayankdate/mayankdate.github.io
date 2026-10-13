@@ -1,8 +1,7 @@
 # ---------------------------------------------------------------
 # Elsewhere · books.yaml
 # ---------------------------------------------------------------
-# Shows up when the firefly clicks the reading-nook bookshelf.
-# Markdown works in `note`.
+# Shows up when you interact with the bookshelf. Markdown works in `note`.
 # ---------------------------------------------------------------
 
 title: Reading nook

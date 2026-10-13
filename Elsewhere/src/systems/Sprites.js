@@ -29,11 +29,4 @@ export class Animator {
     return [(a.from + i) * this.def.frameW, a.row * this.def.frameH,
             this.def.frameW, this.def.frameH];
   }
-
-  done(now) {
-    const a = this.def.anims && this.def.anims[this.cur];
-    if (!a || a.loop !== false) return false;
-    const n = a.to - a.from + 1;
-    return (now - this.start) >= n * (1000 / a.fps);
-  }
 }

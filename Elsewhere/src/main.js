@@ -268,39 +268,49 @@ async function interact(obj) {
 }
 
 // ================= boot =================
-data = await loadAll();
-buildSprites(data);
-buildMap(data);
-buildSky(data);
-buildAccents(data);
-env = makeEnv();
-
-// attach / override interaction labels from the config (incl. the window)
-for (const id in data.interactions) {
-  const o = byId(id);
-  if (o) { o.interaction = o.interaction || {}; o.interaction.label = data.interactions[id].label || o.interaction.label || id; }
-}
-cats = data.cats.map(d => new CatNPC(d, data));
-
+// Anything thrown here would otherwise leave the splash frozen on the
+// portrait + button with no greeting and a dead button, so surface it.
 const splash = document.getElementById('splash');
-splash.querySelector('#splash-greeting').innerHTML = data.intro.splash.greeting.map(p => `<p>${p}</p>`).join('');
-const btn = splash.querySelector('#load-clone');
-btn.textContent = data.intro.splash.button;
+try {
+  data = await loadAll();
+  buildSprites(data);
+  buildMap(data);
+  buildSky(data);
+  buildAccents(data);
+  env = makeEnv();
 
-requestAnimationFrame(loop);
+  // attach / override interaction labels from the config (incl. the window)
+  for (const id in data.interactions) {
+    const o = byId(id);
+    if (o) { o.interaction = o.interaction || {}; o.interaction.label = data.interactions[id].label || o.interaction.label || id; }
+  }
+  cats = data.cats.map(d => new CatNPC(d, data));
 
-btn.addEventListener('click', async () => {
-  Ambience.resume();                       // audio needs a user gesture
-  Ambience.setSounds(data.sounds || {});    // register any audio files from sounds.yaml
-  Ambience.applyWeather();                  // start the default (cloudy) ambience
-  btn.disabled = true; splash.classList.add('is-loading');
-  const bar = splash.querySelector('#clone-bar-fill');
-  bar.style.transition = 'width 1.8s cubic-bezier(.4,.1,.3,1)';
-  requestAnimationFrame(() => { bar.style.width = '100%'; });
-  await new Promise(r => setTimeout(r, 1900));
-  splash.classList.add('is-gone');
-  setTimeout(() => { splash.style.display = 'none'; dropClone(); }, 600);
-});
+  splash.querySelector('#splash-greeting').innerHTML = data.intro.splash.greeting.map(p => `<p>${p}</p>`).join('');
+  const btn = splash.querySelector('#load-clone');
+  btn.textContent = data.intro.splash.button;
+
+  requestAnimationFrame(loop);
+
+  btn.addEventListener('click', async () => {
+    Ambience.resume();                       // audio needs a user gesture
+    Ambience.setSounds(data.sounds || {});    // register any audio files from sounds.yaml
+    Ambience.applyWeather();                  // start the default (cloudy) ambience
+    btn.disabled = true; splash.classList.add('is-loading');
+    const bar = splash.querySelector('#clone-bar-fill');
+    bar.style.transition = 'width 1.8s cubic-bezier(.4,.1,.3,1)';
+    requestAnimationFrame(() => { bar.style.width = '100%'; });
+    await new Promise(r => setTimeout(r, 1900));
+    splash.classList.add('is-gone');
+    setTimeout(() => { splash.style.display = 'none'; dropClone(); }, 600);
+  });
+} catch (err) {
+  console.error('[Elsewhere] boot failed:', err);
+  const greeting = splash.querySelector('#splash-greeting');
+  if (greeting) greeting.innerHTML = '<p>Elsewhere couldn’t load.</p><p>Something went wrong starting the cabin. Reload to try again.</p>';
+  const btn = splash.querySelector('#load-clone');
+  if (btn) { btn.disabled = false; btn.textContent = 'Reload'; btn.onclick = () => location.reload(); }
+}
 
 function dropClone() {
   const fromY = scene.spawn.y - 7;
