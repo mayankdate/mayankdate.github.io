@@ -92,15 +92,22 @@ function setAccent(id, on) {
 }
 
 // ================= hand-drawn map layers =================
-const MAP = { ground: null, images: {}, slices: [] };
+const MAP = { grounds: [], images: {} };
+// Every map layer is a full-canvas (2048²) slice. Resolve a painted version
+// first: a `templates/<x>.png` path auto-upgrades to `painted/<x>.png` when
+// the artist has dropped one there, otherwise the unpainted export is used.
+function loadMapImage(path) {
+  const painted = path.replace('/templates/', '/painted/');
+  const im = new Image();
+  if (painted !== path) { im.onerror = () => { im.onerror = null; im.src = path; }; im.src = painted; }
+  else im.src = path;
+  return im;
+}
 function buildMap(data) {
-  if (data.map && data.map.ground) MAP.ground = loadImage(data.map.ground);
+  const g = (data.map && data.map.ground) || [];
+  MAP.grounds = (Array.isArray(g) ? g : [g]).map(loadMapImage);
   const objs = (data.map && data.map.objects) || {};
-  for (const id in objs) MAP.images[id] = loadImage(objs[id]);
-  // Full-canvas "slices": one painted PNG covering several objects, drawn at
-  // its own sortY. Objects it covers are skipped in the per-object pass.
-  MAP.slices = ((data.map && data.map.slices) || [])
-    .map(s => ({ img: loadImage(s.path), sortY: s.sortY, objectIds: s.objects || [] }));
+  for (const id in objs) MAP.images[id] = loadMapImage(objs[id]);
 }
 
 // ================= weather sky (one shared animated layer) =================
@@ -114,7 +121,7 @@ function buildSky(data) {
   if (SPR.sky) skyAnim = new Animator(data.sprites.sky);
   for (const o of scene.objects)
     if (o.category === 'mounted' && /window/.test(o.id))
-      MAP.images[o.id] = loadImage(`assets/map/templates/${o.id}_frame.png`);
+      MAP.images[o.id] = loadMapImage(`assets/map/templates/${o.id}_frame.png`);
 }
 // the current sky frame rect (source), updated each frame by the loop
 let skyRect = [0, 0, 512, 512];
@@ -489,7 +496,7 @@ function loop(t) {
   ctx.translate(r.width / 2, r.height / 2);
   ctx.scale(zoom, zoom);
   ctx.translate(-cam.x, -cam.y);
-  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, hidePlayer: !cloneShown, ground: MAP.ground, images: MAP.images, slices: MAP.slices, sky });
+  E.drawScene(ctx, scene, { time: t, player, walking: !!(dx || dy), cutaway: true, details: true, playerSprite, hidePlayer: !cloneShown, grounds: MAP.grounds, images: MAP.images, sky });
   ctx.restore();
 
   Ambience.drawOverlay(ctx, r.width, r.height, dt, t);
