@@ -16,10 +16,14 @@ Outputs, all in ``assets/map/templates/`` and all 2048×2048:
   * ``floor.png``         the house floor footprint + stairs, painted in a
                           different colour from the island.
   * ``<object>.png``      one slice per scene object (walls, sides, stations,
-                          gallery, window glass): the object's shapes at their
-                          WORLD position, transparent everywhere else. Stations
-                          carry a magenta placeholder box where their animated
-                          sprite (flame / disc / steam) lands.
+                          gallery): the object's shapes at their WORLD position,
+                          transparent everywhere else. Stations carry a magenta
+                          placeholder box where their animated sprite (flame /
+                          disc / steam) lands.
+  * ``window_<id>_frame.png``  windows export a full-canvas frame guide instead
+                          (frame + sill filled, the glass punched open as the
+                          live sky viewport), so the frame stacks like any other
+                          slice.
   * ``sky_template.png``  the weather-sky drawing grid (4 weather rows × 4
                           frames of 512 px). Paint it, export to
                           assets/sprites/sky.png.
@@ -182,6 +186,23 @@ def render_object_slice(o, spawns_by_obj, scene):
     return img
 
 
+def _is_window(o):
+    return o.get("category") == "mounted" and "window" in o["id"]
+
+
+def render_window_frame(o, scene):
+    """A full-canvas frame guide for a window: the frame/sill filled, with the
+    glass punched transparent (it's a live sky viewport) and outlined. Painted
+    full-canvas like every other slice, so it stacks on the map in place."""
+    img, draw = _canvas(scene)
+    _rect(draw, o["visualBounds"], "#9b7b99")
+    glass = next((s for s in o["shapes"] if s.get("role") == "glass"), o["shapes"][0])["rect"]
+    gx, gy, gw, gh = glass
+    img.paste((0, 0, 0, 0), (px(gx), px(gy), px(gx + gw), px(gy + gh)))
+    draw.rectangle([px(gx), px(gy), px(gx + gw) - 1, px(gy + gh) - 1], outline=(70, 80, 110, 255), width=3)
+    return img
+
+
 def render_island(scene):
     """grass + cliff — the floating island ground."""
     img, draw = _canvas(scene)
@@ -331,13 +352,18 @@ def main():
                 "rectPx": [px(sp["world_rect"][0]), px(sp["world_rect"][1]),
                            px(sp["world_rect"][2]), px(sp["world_rect"][3])],
             } for sp in spawns_by_obj[o["id"]]]
-        if re.search(r"window", o["id"]) and o.get("category") == "mounted":
+        if _is_window(o):
             entry["frame"] = f"{o['id']}_frame.png"
         manifest_objects.append(entry)
         if o.get("shapes"):
-            img = render_object_slice(o, spawns_by_obj, scene)
-            if write_png_if_changed(img, TEMPLATES / f"{o['id']}.png", dry):
-                changed.append(f"{o['id']}.png")
+            # Windows export a full-canvas FRAME guide (glass left open); every
+            # other object exports its full-canvas body slice.
+            if _is_window(o):
+                img, name = render_window_frame(o, scene), f"{o['id']}_frame.png"
+            else:
+                img, name = render_object_slice(o, spawns_by_obj, scene), f"{o['id']}.png"
+            if write_png_if_changed(img, TEMPLATES / name, dry):
+                changed.append(name)
 
     # Sky drawing grid + painter reference.
     if write_png_if_changed(render_sky_template(), TEMPLATES / "sky_template.png", dry):

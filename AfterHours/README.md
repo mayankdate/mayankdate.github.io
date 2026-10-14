@@ -105,10 +105,10 @@ keeps animating. Layout is in `sprites.yaml`:
 | `platter.png` | 4×1 | 32×32 | turntable vinyl, spin loop |
 | `sky.png` | 4×4 | 512×512 | weather backdrop + window view: clear/rain/storm/cloudy (a row each, 4 frames across) |
 
-The **window frames** (`window_<id>_frame.png`) are not animated, so they
-moved out of `assets/sprites/` to `assets/map/templates/` — draw them with
-the rest of the map art. The **sky** is drawn from its own template, see
-"Drawing the sky" below.
+The **window frames** (`window_<id>_frame.png`) are not animated, so they're
+map art, not sprites — a full-canvas 2048² slice like everything else (the
+glass is left open as the live sky viewport). The **sky** is drawn from its
+own template, see "Drawing the sky" below.
 
 Change a frame size? Update it in `sprites.yaml` and redraw at that
 size. Missing sheet? The engine falls back to the code-drawn shape,

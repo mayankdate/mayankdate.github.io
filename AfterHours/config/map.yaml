@@ -16,8 +16,9 @@
 # engine upgrades each to the painted/ version on its own. Anything not
 # listed stays code-drawn.
 #
-# NOTE: windows are live sky cutouts, with a frame PNG at
-# assets/map/templates/window_<id>_frame.png (also paint-overridable).
+# NOTE: windows are live sky cutouts; their frame is a full-canvas slice at
+# assets/map/templates/window_<id>_frame.png (glass left open), painted the
+# same way (drop painted/window_<id>_frame.png to override).
 # ---------------------------------------------------------------
 
 # Ground slices, drawn back-to-front: the island (grass + cliff) then the
