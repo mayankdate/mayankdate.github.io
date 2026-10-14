@@ -125,8 +125,8 @@
     if(!groundOnly){
       // Each object is its own full-canvas (tileCount×32 square, e.g. 2048²)
       // slice: when its image is that size it's drawn at (0,0,64,64), else it
-      // falls back to a tight crop at the object's bounds (small painted art
-      // like window frames). Objects draw in sortY order, so occlusion and the
+      // falls back to a tight crop at the object's bounds (a safety net for any
+      // non-full-canvas PNG). Objects draw in sortY order, so occlusion and the
       // wall cutaway fade work exactly as they did per-object.
       const TILES=(scene.grid&&scene.grid.columns)||64,FULL=TILES*32;
       const isFull=im=>rdy(im)&&im.naturalWidth===FULL&&im.naturalHeight===FULL;
