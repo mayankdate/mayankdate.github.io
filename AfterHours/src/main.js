@@ -475,7 +475,10 @@ function loop(t) {
   cam.y += (ty - cam.y) * Math.min(1, dt * 8);
 
   const r = canvas.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  // Cap DPR at 1.5 — pixel art looks indistinguishable from DPR 2 with image-
+  // smoothing off, and the fill-rate saving (2.25× fewer pixels per frame) is
+  // what keeps high-DPI laptops at 60fps once the painted slices are in play.
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   const cw = Math.round(r.width * dpr), ch = Math.round(r.height * dpr);
   if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
 

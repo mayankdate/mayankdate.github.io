@@ -124,13 +124,14 @@
     if(grid){ctx.strokeStyle='#24252c25';ctx.lineWidth=.025;ctx.beginPath();for(let n=0;n<=64;n++){ctx.moveTo(n,0);ctx.lineTo(n,64);ctx.moveTo(0,n);ctx.lineTo(64,n);}ctx.stroke();}
     if(!groundOnly){
       // Each object is its own full-canvas (tileCount×32 square, e.g. 2048²)
-      // slice: when its image is that size it's drawn at (0,0,64,64), else it
-      // falls back to a tight crop at the object's bounds (a safety net for any
-      // non-full-canvas PNG). Objects draw in sortY order, so occlusion and the
-      // wall cutaway fade work exactly as they did per-object.
-      const TILES=(scene.grid&&scene.grid.columns)||64,FULL=TILES*32;
+      // slice. Full-canvas slices are sampled as a TIGHT CROP of the object's
+      // own world rect — not blitted whole — so even on a high-DPI laptop a
+      // per-object draw only fills that object's pixels, not the entire 2048².
+      // Objects draw in sortY order, so occlusion and the wall cutaway fade
+      // work exactly as they did when every object had its own cropped PNG.
+      const TILES=(scene.grid&&scene.grid.columns)||64,FULL=TILES*32,T=32;
       const isFull=im=>rdy(im)&&im.naturalWidth===FULL&&im.naturalHeight===FULL;
-      const put=(im,vb)=>{if(isFull(im))ctx.drawImage(im,0,0,64,64);else ctx.drawImage(im,vb[0],vb[1],vb[2],vb[3]);};
+      const put=(im,vb)=>{if(isFull(im))ctx.drawImage(im,vb[0]*T,vb[1]*T,vb[2]*T,vb[3]*T,vb[0],vb[1],vb[2],vb[3]);else ctx.drawImage(im,vb[0],vb[1],vb[2],vb[3]);};
       const groups=scene.objects.filter(o=>!o.parent).map((o,i)=>({o,sort:o.sortY,i}));
       groups.push({o:null,sort:player.y,i:999});groups.sort((a,b)=>a.sort-b.sort||a.i-b.i);
       for(const g of groups){
