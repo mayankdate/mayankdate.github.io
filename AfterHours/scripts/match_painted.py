@@ -39,7 +39,7 @@ from pathlib import Path
 try:
     from PIL import Image
 except ImportError:
-    sys.exit("missing dependency: Pillow. Install with: pip install Pillow")
+    sys.exit("missing dependency: Pillow. Install with: uv sync")
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = ROOT / "assets" / "map" / "templates"

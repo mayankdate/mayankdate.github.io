@@ -483,7 +483,7 @@ It appears as a button on the contact page and a link in the footer. (It won't a
 ## After any config change
 
 ```powershell
-python scripts/build.py
+uv run python scripts/build.py
 git add .
 git commit -m "update: <what changed>"
 git push

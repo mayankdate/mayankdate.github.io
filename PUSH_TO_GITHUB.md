@@ -110,7 +110,7 @@ Edit a YAML file or swap an asset → rebuild → push:
 # ---- edit config/profile.yaml, say ----
 
 # Then rebuild:
-python scripts/build.py            # or run scripts/build.ipynb
+uv run python scripts/build.py     # or run scripts/build.ipynb
 
 # Then push:
 git add .
