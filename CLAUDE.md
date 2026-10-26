@@ -68,7 +68,8 @@ jupyter notebook scripts/build.ipynb
 Or run the CLI:
 
 ```bash
-python scripts/build.py
+uv sync                      # first time: creates .venv from uv.lock
+uv run python scripts/build.py
 ```
 
 This:
@@ -80,7 +81,7 @@ This:
 ### 3. Preview locally (optional)
 
 ```bash
-python -m http.server 8000
+uv run python -m http.server 8000
 ```
 
 Then visit <http://localhost:8000>.

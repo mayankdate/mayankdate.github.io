@@ -43,13 +43,13 @@ mayankdate.github.io/
 Then rebuild and push:
 
 ```bash
-python scripts/build.py                 # rebuilds the four content pages
+uv run python scripts/build.py          # rebuilds the four content pages
 git add . && git commit -m "update"
 git push
 ```
 
 GitHub Pages serves the update within a minute or two. Preview locally first
-with `python -m http.server 8000` from the repo root. The AfterHours subsite is
+with `uv run python -m http.server 8000` from the repo root. The AfterHours subsite is
 static and does **not** need rebuilding — the build script only touches the
 four content pages.
 
@@ -76,7 +76,8 @@ four content pages.
 - The **AfterHours** subsite is plain HTML + Canvas 2D + ES modules; the only
   CDN scripts it uses are **js-yaml** and **marked**.
 
-Dependencies in `requirements.txt`.
+Dependencies are in `pyproject.toml` (exact versions in `uv.lock`). Run
+`uv sync` once to create `.venv`; pick it as the kernel for `scripts/build.ipynb`.
 
 ---
 

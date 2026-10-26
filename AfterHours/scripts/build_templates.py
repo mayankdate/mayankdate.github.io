@@ -51,7 +51,7 @@ try:
     import yaml
     from PIL import Image, ImageDraw, ImageFont
 except ImportError as e:  # pragma: no cover
-    sys.exit(f"missing dependency: {e}. Install with: pip install Pillow PyYAML")
+    sys.exit(f"missing dependency: {e}. Install with: uv sync")
 
 TILE = 32
 ROOT = Path(__file__).resolve().parent.parent        # the AfterHours/ dir

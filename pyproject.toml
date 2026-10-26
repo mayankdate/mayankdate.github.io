@@ -1,0 +1,16 @@
+[project]
+name = "online-profile"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "jinja2>=3.1",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+    "segno>=1.5",
+    "rapidfuzz>=3.0",
+    "markdown>=3.5",
+    # For placeholder asset generation (optional — only used if you re-run the
+    # placeholder helpers in scripts/).
+    "Pillow>=10.0",
+    "reportlab>=4.0",
+]

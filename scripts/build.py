@@ -3,7 +3,7 @@
 CLI entry point for building the site.
 
 Run from the repo root:
-    python scripts/build.py
+    uv run python scripts/build.py
 
 Or run the notebook `scripts/build.ipynb` instead — same output.
 """
