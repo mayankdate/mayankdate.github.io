@@ -35,8 +35,8 @@ projects:
       built the sample size calculator. The distribution explorer is inspired by
       [Matt Bognar's probability applets](https://mabognar.github.io/apps/).
     links:
-      WebApp: "https://mayankdate.github.io/BioStatsApp/"
-      Github Repo: "https://github.com/mayankdate/BioStatsApp"
+      WebApp: "https://mayankdate.github.io/biostats-app/"
+      Github Repo: "https://github.com/mayankdate/biostats-app"
 
   - title: "AI Assisted Systematic Review Screener"
     year: 2026
@@ -83,8 +83,8 @@ projects:
       that visualises global development indicators on a fixed 1990–2100 time axis and runs a small 
       integrated assessment model (IAM) coupling climate, economy, and demography. Pulls data from World Bank, OWID, UN WPP, CCKP.
     links:
-      Dashboard: "https://mayankdate.github.io/World-Model/dashboard.html"
-      Github Repo: "https://github.com/mayankdate/World-Model"
+      Dashboard: "https://mayankdate.github.io/world-model/dashboard.html"
+      Github Repo: "https://github.com/mayankdate/world-model"
 
   - title: "The Daily Brief"
     year: 2026
@@ -94,8 +94,8 @@ projects:
       tracking my tasks for the day, fitness routines,
       news topics. As well as updated to music, comics, gamesm, and more.
     links:
-      Today's Brief: "https://mayankdate.github.io/Daily_Update/daily_brief.html"
-      Github Repo: "https://github.com/mayankdate/Daily_Update"
+      Today's Brief: "https://mayankdate.github.io/daily-update/daily_brief.html"
+      Github Repo: "https://github.com/mayankdate/daily-update"
 
   - title: "Internet Speed Log"
     year: 2026
@@ -104,7 +104,7 @@ projects:
         My nuke in the war against my ISP. An internet speed logger that runs in the background and logs internet speed to a CSV file every 5 minutes.
         It also generates a dfetailed report of the internet speed to show how trash my ISP's service is.
     links:
-      Github Repo: "https://github.com/mayankdate/InternetSpeedLog"
+      Github Repo: "https://github.com/mayankdate/internet-speed-log"
 
   - title: "Map Poster Maker"
     year: 2026
@@ -113,7 +113,7 @@ projects:
       A local Python script that opens a browser tab for designing and exporting printable, 
       label-free street maps from OpenStreetMap data — the style used in those city poster prints.
     links:
-      Github Repo: "https://github.com/mayankdate/MapMaker"
+      Github Repo: "https://github.com/mayankdate/map-maker"
 
   - title: "Book to Movie Prints"
     year: 2026
@@ -122,7 +122,7 @@ projects:
       A fun little poster builder that pulls data from TMDB to generate printable posters of Movies that were adapted from books.
       The posters include the book cover, movie poster, and a QR code that links to the movie's TMDB page.
     links:
-      Github Repo: "https://github.com/mayankdate/Book_to_Movie_Prints"
+      Github Repo: "https://github.com/mayankdate/book-to-movie-prints"
 
   - title: "This website & AfterHours"
     year: 2026
