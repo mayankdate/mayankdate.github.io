@@ -24,13 +24,13 @@
         </header>
         <ul class="chips chips-sm">
           {% for t in p.tags_ordered %}
-            <li class="chip chip-{{ t }}">{{ tag_labels[t] | default(t | title) }}</li>
+            <li class="chip chip-{{ t }}">{{ tag_labels.get(t, t | title) }}</li>
           {% endfor %}
         </ul>
         <div class="card-blurb">{{ p.blurb | md }}</div>
-        {% if p.links %}
+        {% if p.links and p.links.values() | select | list %}
           <ul class="link-row">
-            {% for label, url in p.links.items() %}
+            {% for label, url in p.links.items() if url %}
               <li><a href="{{ url }}" {{ url | new_tab }}>{{ label }}</a></li>
             {% endfor %}
           </ul>

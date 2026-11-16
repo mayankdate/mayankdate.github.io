@@ -2,15 +2,34 @@
 # PROJECTS  —  shown on the Projects page.
 # ============================================================
 #
-# Required: title, year, tags (list), blurb
+# tags: one entry per tag group, in the order the groups appear on the
+# page (first = top). A project with several tags is listed under the
+# highest one here; all its tags show as chips. A tag used by a project
+# but missing here is appended at the end with a title-cased label.
+#
+# Each project — required: title, year, tags (list), blurb
 # Optional:
 #   links:                        # map of label → url (local path or external)
 #     DOI: "https://doi.org/..."
 #     Repo: "https://github.com/..."
-#     Live: "https://..."
+#   Links with an empty url are skipped, so placeholders are safe.
 #
-# Sort inside each tag section is by year, descending.
+# Inside each tag group, projects sort by year, newest first.
 # ============================================================
+
+tags:
+  work:
+    label: "Work"
+    description: "Work-related projects."
+  research:
+    label: "Research"
+    description: "Projects tied to academic research."
+  personal:
+    label: "Personal"
+    description: "Personal projects and experiments."
+  vibecoded:
+    label: "Vibecoded"
+    description: "Making Claude bring my ideas to life."
 
 projects:
   # ----- WORK -----
@@ -42,7 +61,7 @@ projects:
     year: 2026
     tags: [work, research]
     blurb: >
-      **WORK IN PROGRESS**. Using LLMS to assist with title abstract screening for systematic reviews.
+      **WORK IN PROGRESS**. Using LLMs to assist with title abstract screening for systematic reviews.
       The workflow uses Covidence extract to run multi-agent title abstract screening with human in the loop.
     links: {}
 
@@ -65,11 +84,11 @@ projects:
     links:
        Capstone Paper: "assets/docs/Mayank_Date_MPH_Capstone.pdf"
   
-  - title: "Aritifical Life"
+  - title: "Artificial Life"
     year: 2026
     tags: [research, personal, vibecoded]
     blurb: >
-      **WORK IN PROGRESS**. My personal quest to understand the nature of life and evolutionary biology though the lens of simulated evolution. As well as attempst to test my own hypotheses about AI and purpose.
+      **WORK IN PROGRESS**. My personal quest to understand the nature of life and evolutionary biology through the lens of simulated evolution. As well as attempts to test my own hypotheses about AI and purpose.
     links:
       Dashboard: ""
       Github Repo: ""
@@ -90,9 +109,9 @@ projects:
     year: 2026
     tags: [personal, vibecoded]
     blurb: >
-      A personal news feed that summarized my day ahead from various sources. Starting with a weather report and 
+      A personal news feed that summarizes my day ahead from various sources. Starting with a weather report and 
       tracking my tasks for the day, fitness routines,
-      news topics. As well as updated to music, comics, gamesm, and more.
+      news topics. As well as updates on music, comics, games, and more.
     links:
       Today's Brief: "https://mayankdate.github.io/daily-update/daily_brief.html"
       Github Repo: "https://github.com/mayankdate/daily-update"
@@ -102,7 +121,7 @@ projects:
     tags: [personal, vibecoded]
     blurb: >
         My nuke in the war against my ISP. An internet speed logger that runs in the background and logs internet speed to a CSV file every 5 minutes.
-        It also generates a dfetailed report of the internet speed to show how trash my ISP's service is.
+        It also generates a detailed report of the internet speed to show how trash my ISP's service is.
     links:
       Github Repo: "https://github.com/mayankdate/internet-speed-log"
 

@@ -111,7 +111,7 @@
         <div class="bcard-top">
           <div class="bcard-eyebrow">Connect on LinkedIn</div>
           <h2 class="bcard-title">{{ profile.name }}</h2>
-          <div class="bcard-subtitle">linkedin.com/in/mayankdate</div>
+          <div class="bcard-subtitle">{{ linkedin_url | replace('https://', '') | replace('www.', '') }}</div>
         </div>
         <div class="bcard-qr">
           <img src="assets/qr/linkedin.png" alt="Scan to connect on LinkedIn" />

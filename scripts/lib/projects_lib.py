@@ -1,4 +1,4 @@
-"""Group and order projects by the tag_order config."""
+"""Group and order projects by the `tags:` block at the top of projects.yaml."""
 
 from __future__ import annotations
 
@@ -13,52 +13,42 @@ class TagGroup:
     projects: list[dict]
 
 
+def tag_labels(tags_cfg: dict) -> dict[str, str]:
+    """Map tag key → display label (title-cased key when no label is set)."""
+    return {k: (v or {}).get("label", k.title()) for k, v in tags_cfg.items()}
+
+
 def group_projects(projects: list[dict], tags_cfg: dict) -> list[TagGroup]:
     """
-    Return projects grouped by their primary tag, in tag_order sequence.
+    Return projects grouped by their primary tag, in `tags:` order.
 
-    A project appears under its *highest-priority* tag (the one earliest
-    in tag_order).  Tags that appear in projects but not in tag_order
-    are appended to the end automatically.
+    A project appears under its highest-priority tag (the one listed
+    first in `tags:`). Tags used by projects but not listed there are
+    appended to the end automatically. Each project also gets
+    `tags_ordered`, its own tags sorted the same way, for the chips.
     """
-    tag_order: list[str] = list(tags_cfg.get("tag_order", []))
-    tag_labels: dict = tags_cfg.get("tag_labels", {})
-    tag_descriptions: dict = tags_cfg.get("tag_descriptions", {})
-
-    # Discover unknown tags, append to tag_order
+    order: list[str] = list(tags_cfg)
     for p in projects:
-        for t in p.get("tags", []):
-            if t not in tag_order:
-                tag_order.append(t)
+        order += [t for t in p.get("tags", []) if t not in order]
+    index = {t: i for i, t in enumerate(order)}
 
-    index = {t: i for i, t in enumerate(tag_order)}
-
-    def primary_tag(p: dict) -> str:
-        tags = p.get("tags", [])
+    groups: dict[str, list[dict]] = {t: [] for t in order}
+    for p in projects:
+        tags = sorted(p.get("tags", []), key=index.__getitem__)
         if not tags:
-            return "untagged"
-        return min(tags, key=lambda t: index.get(t, 999))
-
-    groups: dict[str, list[dict]] = {t: [] for t in tag_order}
-    for p in projects:
-        groups[primary_tag(p)].append(p)
+            continue
+        p["tags_ordered"] = tags
+        groups[tags[0]].append(p)
 
     out: list[TagGroup] = []
-    for key in tag_order:
-        items = sorted(groups[key], key=lambda p: -p.get("year", 0))
-        if not items:
+    for key in order:
+        if not groups[key]:
             continue
+        meta = tags_cfg.get(key) or {}
         out.append(TagGroup(
             key=key,
-            label=tag_labels.get(key, key.title()),
-            description=tag_descriptions.get(key, ""),
-            projects=items,
+            label=meta.get("label", key.title()),
+            description=meta.get("description", ""),
+            projects=sorted(groups[key], key=lambda p: -p.get("year", 0)),
         ))
     return out
-
-
-def all_tags_in_order(tags: list[str], tags_cfg: dict) -> list[str]:
-    """Return the project's tags sorted by tag_order."""
-    order = tags_cfg.get("tag_order", [])
-    index = {t: i for i, t in enumerate(order)}
-    return sorted(tags, key=lambda t: index.get(t, 999))

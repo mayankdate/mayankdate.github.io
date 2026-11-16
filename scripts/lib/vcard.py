@@ -16,7 +16,8 @@ def build_vcard(profile: dict) -> str:
     given = parts[0]
     family = " ".join(parts[1:]) if len(parts) > 1 else ""
 
-    org = "Johns Hopkins Bloomberg School of Public Health"
+    # Current employer = first entry of the experience timeline.
+    org = (profile.get("experience") or [{}])[0].get("org", "")
     title = profile.get("title", "")
     url = profile.get("site_url", "")
 
@@ -40,12 +41,20 @@ def build_vcard(profile: dict) -> str:
     if url:
         lines.append(f"URL:{url}")
 
-    for social in profile.get("socials", []):
-        if social.get("icon") == "linkedin":
-            lines.append(f"URL;TYPE=LinkedIn:{social['url']}")
+    linkedin = linkedin_url(profile)
+    if linkedin:
+        lines.append(f"URL;TYPE=LinkedIn:{linkedin}")
 
     lines.append("END:VCARD")
     return "\r\n".join(lines) + "\r\n"
+
+
+def linkedin_url(profile: dict) -> str | None:
+    """URL of the social whose name is LinkedIn, if any."""
+    for social in profile.get("socials", []):
+        if social.get("name", "").lower() == "linkedin":
+            return social["url"]
+    return None
 
 
 def _vcard_escape(s: str) -> str:
