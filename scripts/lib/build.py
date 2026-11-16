@@ -42,7 +42,6 @@ def load_configs(root: Path) -> dict[str, Any]:
     cfg_dir = root / "config"
     return {
         "profile": _yaml(cfg_dir / "profile.yaml"),
-        "tags": _yaml(cfg_dir / "tags.yaml"),
         "projects": _yaml(cfg_dir / "projects.yaml"),
         "publications": _yaml(cfg_dir / "publications.yaml"),
     }
@@ -57,7 +56,7 @@ def _yaml(path: Path) -> dict:
 # ORCID
 # --------------------------------------------------------------------
 
-def build_publications(cfg: dict) -> list[publications_lib.PubGroup]:
+def build_publications(cfg: dict) -> tuple[list[publications_lib.PubGroup], list[orcid_mod.Publication]]:
     orcid_id = cfg["profile"].get("orcid_id")
     overrides = cfg["publications"].get("orcid_overrides") or {}
     manual = cfg["publications"].get("manual") or []
@@ -73,9 +72,8 @@ def build_publications(cfg: dict) -> list[publications_lib.PubGroup]:
     orcid_pubs = orcid_mod.apply_overrides(orcid_pubs, overrides)
     orcid_pubs = orcid_mod.dedup_preprints(orcid_pubs)
 
-    manual_pubs = publications_lib.manual_to_publications(manual)
-    all_pubs = orcid_pubs + manual_pubs
-    return publications_lib.group_publications(all_pubs), orcid_pubs + manual_pubs
+    all_pubs = orcid_pubs + publications_lib.manual_to_publications(manual)
+    return publications_lib.group_publications(all_pubs), all_pubs
 
 
 # --------------------------------------------------------------------
@@ -95,10 +93,9 @@ def build_qrs(root: Path, profile: dict) -> None:
     qr_mod.write_qr(profile["site_url"], qr_dir / "site.png")
 
     # LinkedIn
-    for s in profile.get("socials", []):
-        if s.get("icon") == "linkedin":
-            qr_mod.write_qr(s["url"], qr_dir / "linkedin.png")
-            break
+    linkedin = vcard_mod.linkedin_url(profile)
+    if linkedin:
+        qr_mod.write_qr(linkedin, qr_dir / "linkedin.png")
 
 
 # --------------------------------------------------------------------
@@ -148,15 +145,9 @@ def build_sparkline(pubs: list[orcid_mod.Publication]) -> str | None:
 # Projects
 # --------------------------------------------------------------------
 
-def build_projects(cfg: dict):
-    tags_cfg = cfg["tags"]
+def build_projects(cfg: dict) -> list[projects_lib.TagGroup]:
     projects = cfg["projects"].get("projects") or []
-    groups = projects_lib.group_projects(projects, tags_cfg)
-    # Order each project's tags for display
-    for g in groups:
-        for p in g.projects:
-            p["tags_ordered"] = projects_lib.all_tags_in_order(p.get("tags", []), tags_cfg)
-    return groups
+    return projects_lib.group_projects(projects, cfg["projects"].get("tags") or {})
 
 
 # --------------------------------------------------------------------
@@ -194,8 +185,8 @@ def render_all(root: Path, cfg: dict) -> None:
 
     base_ctx = dict(
         profile=cfg["profile"],
-        tag_labels=cfg["tags"].get("tag_labels", {}),
-        tag_descriptions=cfg["tags"].get("tag_descriptions", {}),
+        tag_labels=projects_lib.tag_labels(cfg["projects"].get("tags") or {}),
+        linkedin_url=vcard_mod.linkedin_url(cfg["profile"]),
         show_writing_tab=bool(substack_posts),
     )
 

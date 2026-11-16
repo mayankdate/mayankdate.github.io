@@ -18,7 +18,7 @@ no CI, no backend.
 
 ```
 mayankdate.github.io/
-├── config/                YAML content — bio, projects, publications, tags
+├── config/                YAML content — bio, projects (with tag groups), publications
 ├── templates/             Jinja2 templates for the four content pages
 ├── static/                CSS, theme toggle, carousel
 ├── assets/                photos, CVs, QRs, logos
@@ -35,7 +35,7 @@ mayankdate.github.io/
 
 ## Changing something
 
-- **Content** → a file in `config/` (bio, projects, publications, tag order).
+- **Content** → a file in `config/` (bio, projects and their tag order, publications).
 - **Appearance** → the CSS variables at the top of `static/style.css`.
 - **The pixel cabin** → `AfterHours/config/*.yaml` or paint over
   `AfterHours/assets/map/templates/*.png`.

@@ -46,7 +46,7 @@
         <a href="/projects.html" {% if page == 'projects' %}aria-current="page"{% endif %}>Projects</a>
         <a href="/research.html" {% if page == 'research' %}aria-current="page"{% endif %}>Research</a>
         {% if profile.substack and profile.substack.url and show_writing_tab %}
-          <a href="/writing.html" {% if page == 'writing' %}aria-current="page"{% endif %}>Writing</a>
+          <a href="{{ profile.substack.url }}" target="_blank" rel="noopener noreferrer">Writing</a>
         {% endif %}
         <a href="/afterhours.html" {% if page == 'afterhours' %}aria-current="page"{% endif %}>AfterHours</a>
         <a href="/contact.html" {% if page == 'contact' %}aria-current="page"{% endif %}>Contact</a>

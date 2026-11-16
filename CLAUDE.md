@@ -3,8 +3,9 @@
 Personal homepage, CV repository, and conference business card for **Mayank Date**.
 Hosted at **https://mayankdate.github.io**.
 
-Four pages (home, projects, research, contact), plus a hidden Writing tab
-that lights up when `profile.substack.url` is set in `config/profile.yaml`.
+Five pages (home, projects, research, AfterHours, contact), plus a hidden
+Writing tab that links to Substack once `substack.url` is set in
+`config/profile.yaml`.
 On a phone the contact page becomes a swipeable set of business cards with
 QR codes for the vCard, the site itself, and LinkedIn.
 
@@ -16,14 +17,14 @@ QR codes for the vCard, the site itself, and LinkedIn.
 mayankdate.github.io/
 ├── config/           ← edit here to change what appears on the site
 │   ├── profile.yaml      bio, phones, emails, education, experience, socials, ORCID
-│   ├── tags.yaml         project tag order & labels
-│   ├── projects.yaml     project cards
+│   ├── projects.yaml     tag groups (top of file) + project cards
 │   └── publications.yaml ORCID overrides + manual (non-ORCID) entries
 │
 ├── assets/           ← files served alongside the site
-│   ├── photo.jpg
-│   ├── CV_Academic.pdf
-│   ├── CV_OnePage.pdf
+│   ├── photo_noring.png
+│   ├── Mayank Date_Academic_CV_Full.pdf
+│   ├── Mayank Date_Resume_1page.pdf
+│   ├── docs/             longer documents linked from projects
 │   ├── logos/            JHU shield, MUHS mark (SVG preferred)
 │   ├── presentations/    posters and slides you link from publications
 │   └── qr/               generated at build time; don't edit manually
@@ -38,6 +39,7 @@ mayankdate.github.io/
 ├── index.html        ← built pages, committed to the repo
 ├── projects.html         GitHub Pages serves these from the repo root
 ├── research.html
+├── afterhours.html
 └── contact.html
 ```
 
@@ -51,7 +53,7 @@ mayankdate.github.io/
 
 Change what you want to update in `config/*.yaml`. Common edits:
 
-- Replace `assets/CV_Academic.pdf` and `assets/CV_OnePage.pdf` with your real CVs (keep the filenames so the download links don't break).
+- Replace the two CV PDFs in `assets/` with new versions (keep the filenames so the download links don't break).
 - Add a new project to `config/projects.yaml`.
 - Add a poster or non-ORCID presentation to the `manual:` list in `config/publications.yaml`.
 - Add an award on an ORCID publication via `orcid_overrides` (keyed by DOI).

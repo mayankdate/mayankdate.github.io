@@ -14,7 +14,6 @@ does, whether it's required, and shows a worked example.
 ## Contents
 
 - [`config/profile.yaml`](#configprofileyaml) — identity, contact, experience, education, skills
-- [`config/tags.yaml`](#configtagsyaml) — project tag ordering and labels
 - [`config/projects.yaml`](#configprojectsyaml) — the project cards
 - [`config/publications.yaml`](#configpublicationsyaml) — ORCID overrides and non-ORCID entries
 - [Common tasks](#common-tasks) — recipes for the edits you'll actually make
@@ -31,11 +30,10 @@ The main identity file. Drives the home page, contact page, and header/footer.
 |---|---|---|---|
 | `name` | 🔴 | string | Shown in the hero, nav brand, footer, and vCard. |
 | `title` | 🔴 | string | One-line descriptor under the name in the hero and in the browser tab. |
-| `headline` | 🟢 | string | Currently unused by templates — kept for future flexibility. Safe to leave matching `title`. |
 | `blurb` | 🔴 | string (multi-line) | The "About" paragraph on the home page. Use `>` for folded multi-line text (preserves readability, folds newlines to spaces). |
 | `site_url` | 🔴 | string | Your public URL, e.g. `"https://mayankdate.github.io"`. Encoded into the "visit site" QR on the contact page and used in meta tags. |
 | `location` | 🟢 | string | Shown on the contact page, e.g. `"Baltimore, MD / Mumbai, IN"`. |
-| `photo` | 🔴 | string path | Relative path to your portrait, e.g. `"assets/photo.jpg"`. Used on home hero and contact page. |
+| `photo` | 🔴 | string path | Relative path to your portrait, e.g. `"assets/photo_noring.png"`. Used on home hero and contact page. |
 
 ### `emails:` (list)
 
@@ -141,7 +139,7 @@ education:
   - degree: "Master of Public Health (MPH)"
     institution: "Johns Hopkins Bloomberg School of Public Health"
     year: 2023
-    logo: "assets/logos/jhu-shield.svg"
+    logo: "assets/logos/jhu-shield-black.svg"
     logo_invert_on_dark: true
 ```
 
@@ -181,7 +179,7 @@ Downloadable CV links. The first CV is the one wired to the big "Download CV" bu
 | `file` | 🔴 | string path | Path to the PDF, usually under `assets/`. |
 | `description` | 🟢 | string | Optional tooltip-style description. Currently not surfaced in the UI but kept for future use. |
 
-Keep the file paths stable (e.g. `assets/CV_Academic.pdf`) so email signatures and QR codes don't break when you update the file. Swap the file in place.
+Keep the file paths stable (e.g. `assets/Mayank Date_Academic_CV_Full.pdf`) so email signatures and QR codes don't break when you update the file. Swap the file in place.
 
 ### `substack:` (block)
 
@@ -194,50 +192,25 @@ Writing section hook.
 
 ---
 
-## `config/tags.yaml`
-
-Governs how projects are grouped and ordered on the Projects page.
-
-### `tag_order:` (list of tag keys)
-
-The order in which tag groups appear on the Projects page, and the priority used to decide which group a multi-tagged project belongs to.
-
-```yaml
-tag_order:
-  - work
-  - research
-  - idea
-  - vibecoded
-```
-
-A project with `tags: [research, work]` gets grouped under **Work** because Work ranks higher in `tag_order`. New tag keys that appear in `projects.yaml` but not here get appended to the end automatically — the build never crashes.
-
-### `tag_labels:` (map of key → label)
-
-How the tag chip and the group header text read on the page.
-
-```yaml
-tag_labels:
-  work: "Work"
-  vibecoded: "Vibecoded"
-```
-
-### `tag_descriptions:` (map of key → long string)
-
-One-line descriptions shown under each group header on the Projects page. Optional per-tag; omit a key and no description renders for that group.
-
-```yaml
-tag_descriptions:
-  vibecoded: >
-    Projects built with Claude as the engineering partner.
-    The code is Claude's, the problem framing and ideas are mine.
-```
-
----
-
 ## `config/projects.yaml`
 
-The project cards. One top-level key: `projects:` which is a list.
+Two top-level keys: `tags:` (how projects are grouped) and `projects:` (the cards).
+
+### `tags:` (map of tag key → label and description)
+
+Listed in the order the groups appear on the Projects page. A project with several tags is shown under the one listed first here, and all of its tags appear as chips. A tag used by a project but missing here is appended at the end with a title-cased label, so the build never breaks.
+
+```yaml
+tags:
+  work:
+    label: "Work"
+    description: "Work-related projects."
+  vibecoded:
+    label: "Vibecoded"
+    description: "Making Claude bring my ideas to life."
+```
+
+### `projects:` (list)
 
 Each project can take:
 
@@ -245,7 +218,7 @@ Each project can take:
 |---|---|---|---|
 | `title` | 🔴 | string | Card title (serif, bold). |
 | `year` | 🔴 | int | Year shown next to the title. Projects within a tag group sort by year descending. |
-| `tags` | 🔴 | list of strings | Tag keys from `tags.yaml`. At least one. Determines grouping (highest-priority tag wins) and which chips show. |
+| `tags` | 🔴 | list of strings | Tag keys from the `tags:` block at the top of the file. At least one. Determines grouping (highest-priority tag wins) and which chips show. |
 | `blurb` | 🔴 | string | Card body text. Use `>` for multi-line folded. |
 | `links` | 🟢 | map of label → url | Named links shown at the bottom of the card. Keys become the link text (`DOI`, `Repo`, `Live`, `Slides`, anything). Values can be external URLs or local paths like `assets/presentations/foo.pdf`. |
 
@@ -424,26 +397,18 @@ Open `config/profile.yaml`, add a new entry at the top of `experience:` (newest 
 
 ### Change the project tag ordering
 
-Open `config/tags.yaml` and reorder `tag_order`. Everything else rearranges automatically.
+Reorder the entries in the `tags:` block at the top of `config/projects.yaml`. Everything else rearranges automatically.
 
 ### Add a new tag entirely
 
-Just use it in a project — the build auto-appends unknown tags to the end of `tag_order`. For a nicer label and description, add entries to `tag_labels` and `tag_descriptions`:
+Just use it in a project — the build appends unknown tags to the end with a title-cased label. For a nicer label, a description, or a different position, add it to the `tags:` block in `config/projects.yaml`:
 
 ```yaml
-# tags.yaml
-tag_order:
-  - work
-  - research
-  - teaching          # new
-  - idea
-  - vibecoded
-
-tag_labels:
-  teaching: "Teaching"
-
-tag_descriptions:
-  teaching: "Courses, workshops, and training materials I've designed."
+tags:
+  work: {label: "Work", description: "Work-related projects."}
+  teaching:                       # new
+    label: "Teaching"
+    description: "Courses, workshops, and training materials I've designed."
 ```
 
 ### Turn on the Writing tab (when you start a Substack)
@@ -460,11 +425,11 @@ Rebuild. The Writing nav tab appears automatically and the home page starts show
 
 ### Replace a CV
 
-Just overwrite the file at the same path (`assets/CV_Academic.pdf` or `assets/CV_OnePage.pdf`). No YAML change needed. Rebuild, commit, push.
+Just overwrite the file at the same path (`assets/Mayank Date_Academic_CV_Full.pdf` or `assets/Mayank Date_Resume_1page.pdf`). No YAML change needed. Rebuild, commit, push.
 
 ### Update your portrait
 
-Drop the new image at `assets/photo.jpg` (keep the filename). Any aspect ratio — the CSS crops it to a circle on the home page and contact card.
+Drop the new image at `assets/photo_noring.png` (keep the filename). Any aspect ratio — the CSS crops it to a circle on the home page and contact card.
 
 ### Add a social profile
 
