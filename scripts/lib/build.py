@@ -40,11 +40,39 @@ def repo_root() -> Path:
 
 def load_configs(root: Path) -> dict[str, Any]:
     cfg_dir = root / "config"
+    profile = _yaml(cfg_dir / "profile.yaml")
+    private_path = cfg_dir / "private.yaml"
+    if private_path.exists():
+        private = _yaml(private_path)
+        for key in ("emails", "phones"):
+            if key in private:
+                profile[key] = private[key] or []
+    else:
+        print("  note: config/private.yaml not found; no emails/phones will be shown")
     return {
-        "profile": _yaml(cfg_dir / "profile.yaml"),
+        "full_profile": profile,
+        "profile": public_profile(profile),
         "projects": _yaml(cfg_dir / "projects.yaml"),
         "publications": _yaml(cfg_dir / "publications.yaml"),
     }
+
+
+def public_profile(profile: dict) -> dict:
+    """
+    Copy of the profile with only the contact entries marked `show: true`.
+
+    Everything published (pages, vCard, QR) is built from this, so a
+    hidden email or phone can't leak into a committed file. Entries
+    without a `show` key count as hidden.
+    """
+    out = dict(profile)
+    for key in ("emails", "phones"):
+        out[key] = [e for e in profile.get(key) or [] if e.get("show") is True]
+    # Primary email first, so templates can use emails[0].
+    out["emails"].sort(key=lambda e: not e.get("primary"))
+    if not profile.get("show_location", True):
+        out["location"] = ""
+    return out
 
 
 def _yaml(path: Path) -> dict:

@@ -38,3 +38,8 @@ logs/
 # NOTE: unlike a typical analysis project, this repo does NOT ignore
 # the built output (index.html, assets/qr/, etc).  Those files ARE the
 # site that GitHub Pages serves — they must be committed.
+
+# ---- Private contact data ----
+# Real emails/phones and the offline conference QR. Never commit these.
+config/private.yaml
+private/
