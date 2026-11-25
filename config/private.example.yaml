@@ -1,0 +1,19 @@
+# Copy this file to config/private.yaml (gitignored) and fill in real values.
+# Nothing in config/private.yaml is committed.
+#
+# show: true   → shown on the site AND included in the public vCard / QR
+# show: false  → kept off the site; only in the offline QR (scripts/offline_card.py)
+
+emails:
+  - address: "you@example.com"
+    label: "Personal"
+    primary: true        # used in the footer and the mobile Email button (if shown)
+    show: false
+  - address: "you@work.example.edu"
+    label: "Work"
+    show: false
+
+phones:
+  - number: "+1-555-555-0100"
+    label: "USA"
+    show: false

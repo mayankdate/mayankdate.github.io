@@ -42,21 +42,18 @@ timezone: "Asia/Kolkata"   # IANA tz — pick the one matching your current city
 photo: "assets/photo_noring.png"
 
 # ============================================================
-# CONTACT  — all of these appear on the Contact page and in the vCard
+# CONTACT  — emails and phone numbers live in config/private.yaml
 # ============================================================
+#
+# config/private.yaml is gitignored, so the raw addresses and numbers
+# never reach GitHub. Each entry there has a `show:` toggle:
+#   show: true   → printed on the Contact page and put in the public vCard/QR
+#   show: false  → kept out of every published file (the default)
+# Hidden entries still go into the offline conference QR made by
+#   uv run python scripts/offline_card.py
+# Copy config/private.example.yaml to config/private.yaml to start.
 
-emails:
-  - address: "mayank.date@gmail.com"
-    label: "Personal"
-    primary: true           # shown in the footer and hero CTA
-  - address: "mdate1@jhu.edu"
-    label: "work-JHU"
-
-phones:
-  - number: "+1-480-280-5530"
-    label: "USA"
-  - number: "+91-9619439292"
-    label: "India"
+show_location: true   # "Based in …" on home and contact pages
 
 # ============================================================
 # SOCIALS  — the Contact page renders a button for each.

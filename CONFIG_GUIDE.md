@@ -33,43 +33,42 @@ The main identity file. Drives the home page, contact page, and header/footer.
 | `blurb` | 🔴 | string (multi-line) | The "About" paragraph on the home page. Use `>` for folded multi-line text (preserves readability, folds newlines to spaces). |
 | `site_url` | 🔴 | string | Your public URL, e.g. `"https://mayankdate.github.io"`. Encoded into the "visit site" QR on the contact page and used in meta tags. |
 | `location` | 🟢 | string | Shown on the contact page, e.g. `"Baltimore, MD / Mumbai, IN"`. |
+| `show_location` | 🟢 | bool | `false` hides the location on the home and contact pages. Default `true`. |
 | `photo` | 🔴 | string path | Relative path to your portrait, e.g. `"assets/photo_noring.png"`. Used on home hero and contact page. |
 
-### `emails:` (list)
+### Private contact: `config/private.yaml`
 
-Each entry can take:
+Emails and phone numbers are **not** in `profile.yaml`. They live in
+`config/private.yaml`, which is gitignored, so the raw values never reach
+GitHub. Start by copying `config/private.example.yaml` to `config/private.yaml`.
+
+Every entry has a `show` toggle:
+
+- `show: true` puts it on the Contact page, footer, mobile buttons, the public `.vcf` and the vCard QR.
+- `show: false` (or no `show` key) keeps it out of every published file.
+
+### `emails:` (list, in private.yaml)
 
 | Field | Required? | Type | What it does |
 |---|---|---|---|
 | `address` | 🔴 | string | The email address. |
 | `label` | 🟢 | string | Shown in the vCard and on the contact page, e.g. `"Personal"`, `"Work"`. |
-| `primary` | 🟢 | bool | If `true`, this is the one in the footer and the hero mailto link. First email with `primary: true` wins; otherwise the first entry is used. |
+| `primary` | 🟢 | bool | If `true` and shown, this is the one in the footer and the mobile Email button. |
+| `show` | 🟢 | bool | Publish this address? Default `false`. |
 
-```yaml
-emails:
-  - address: "mayank.date@gmail.com"
-    label: "Personal"
-    primary: true
-  - address: "mdate1@jhu.edu"
-    label: "Work"
-```
-
-### `phones:` (list)
-
-Each entry can take:
+### `phones:` (list, in private.yaml)
 
 | Field | Required? | Type | What it does |
 |---|---|---|---|
-| `number` | 🔴 | string | Full international format recommended (e.g. `"+1-480-280-5530"`). This exact string goes into the vCard. |
+| `number` | 🔴 | string | Full international format recommended (e.g. `"+1-555-555-0100"`). This exact string goes into the vCard. |
 | `label` | 🟢 | string | Appears next to the number and in the vCard, e.g. `"US"`, `"India"`. |
+| `show` | 🟢 | bool | Publish this number? Default `false`. |
 
-```yaml
-phones:
-  - number: "+1-480-280-5530"
-    label: "US"
-  - number: "+91-9619439292"
-    label: "India"
-```
+### Offline conference QR
+
+`uv run python scripts/offline_card.py` writes `private/contact-full.png`
+and `private/contact-full.vcf` with **every** email and phone, hidden ones
+included. `private/` is gitignored. Show the QR in person; don't commit it.
 
 ### `socials:` (list)
 

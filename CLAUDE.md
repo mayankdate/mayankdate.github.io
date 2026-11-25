@@ -16,7 +16,8 @@ QR codes for the vCard, the site itself, and LinkedIn.
 ```
 mayankdate.github.io/
 ├── config/           ← edit here to change what appears on the site
-│   ├── profile.yaml      bio, phones, emails, education, experience, socials, ORCID
+│   ├── profile.yaml      bio, education, experience, socials, ORCID
+│   ├── private.yaml      emails + phones with show/hide toggles (gitignored)
 │   ├── projects.yaml     tag groups (top of file) + project cards
 │   └── publications.yaml ORCID overrides + manual (non-ORCID) entries
 │
